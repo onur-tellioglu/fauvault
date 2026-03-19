@@ -1,0 +1,69 @@
+import { redirect } from 'next/navigation'
+import { getSession } from '@/lib/auth'
+import { getProgress } from '@/lib/progress'
+import { content } from '@/lib/content'
+
+export default async function ProfilePage() {
+  const session = await getSession()
+  if (!session) redirect('/')
+
+  const rows = await getProgress(session.userId)
+  const byLecture = Object.fromEntries(rows.map(r => [r.lecture_id, r]))
+  const completed = rows.filter(r => r.completed_at).length
+  const scores = rows.map(r => r.final_quiz_result?.score).filter((s): s is number => s !== undefined && s !== null)
+  const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
+
+  return (
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto' }}>
+        <a href="/dashboard" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>← Dashboard</a>
+        <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '2rem', fontWeight: 400, color: 'var(--text-primary)', margin: '0.75rem 0 1.5rem' }}>
+          {session.username}
+        </h1>
+
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem', marginBottom: '2rem' }}>
+          {[
+            { label: 'Completed', value: `${completed} / ${content.lectures.length}` },
+            { label: 'Avg Score', value: scores.length ? `${Math.round(avg * 100)}%` : '—' },
+          ].map(({ label, value }) => (
+            <div key={label} style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 10, padding: '1rem 1.25rem' }}>
+              <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{label}</p>
+              <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '1.5rem', color: 'var(--accent)', marginTop: 4 }}>{value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Per-lecture list */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          {content.lectures.map(l => {
+            const p = byLecture[l.id]
+            const score = p?.final_quiz_result?.score
+            return (
+              <a key={l.id} href={`/lecture/${l.id}`} style={{ textDecoration: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 14px', background: 'var(--bg-surface)', borderRadius: 8, border: '1px solid var(--border-subtle)', transition: 'border-color 150ms ease' }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-default)')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+                >
+                  <span style={{ fontSize: '0.85rem', color: p?.completed_at ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                    {l.id}. {l.title}
+                  </span>
+                  {score !== undefined ? (
+                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.78rem', color: score >= 0.9 ? 'var(--success)' : score >= 0.7 ? 'var(--accent)' : 'var(--error)' }}>
+                      {Math.round(score * 100)}%
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                      {p ? 'In progress' : 'Not started'}
+                    </span>
+                  )}
+                </div>
+              </a>
+            )
+          })}
+        </div>
+
+      </div>
+    </main>
+  )
+}
