@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-content": "tsx src/scripts/generate-content.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
