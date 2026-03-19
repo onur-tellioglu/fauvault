@@ -18,7 +18,7 @@ export async function getProgress(userId: number): Promise<ProgressRow[]> {
   return sql`
     SELECT lecture_id, concept_index, mini_quiz_results, final_quiz_result, completed_at
     FROM progress WHERE user_id = ${userId}
-  ` as Promise<ProgressRow[]>
+  ` as unknown as Promise<ProgressRow[]>
 }
 
 export async function upsertProgress(
