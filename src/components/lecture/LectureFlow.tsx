@@ -57,9 +57,9 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
     }
   }
 
-  function afterFinal(qi: number, score: number) {
+  function afterFinal(qi: number, selected: number[], score: number) {
     const updated = [...finalAnswers]
-    updated[qi] = { selected: [], score }
+    updated[qi] = { selected, score }
     setFinalAnswers(updated)
     setAnswered(true)
   }
@@ -115,7 +115,7 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
         </p>
         <QuizQuestion
           question={q}
-          onAnswer={(_, score) => afterFinal(stage.qi, score)}
+          onAnswer={(selected, score) => afterFinal(stage.qi, selected, score)}
           questionIndex={stage.qi}
           totalQuestions={finalQs.length}
         />
