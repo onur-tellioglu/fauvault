@@ -121,6 +121,7 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
           Lecture Quiz
         </p>
         <QuizQuestion
+          key={q.id}
           question={q}
           onAnswer={(selected, score) => afterFinal(stage.qi, selected, score)}
           questionIndex={stage.qi}
