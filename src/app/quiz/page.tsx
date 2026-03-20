@@ -14,9 +14,27 @@ export default function QuizPage() {
     ? content.lectures.flatMap(l => l.questions)
     : (content.lectures.find(l => l.id === lectureId)?.questions ?? [])
 
-  function handleAnswer(_: number[], score: number) {
+  async function handleAnswer(selected: number[], score: number) {
     setScores(prev => [...prev, score])
     setAnswered(true)
+    if (lectureId !== 'all') {
+      await fetch('/api/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lectureId,
+          patch: {
+            mini_quiz_results: {
+              [questions[qi].id]: {
+                answers: [selected],
+                score,
+                submittedAt: new Date().toISOString(),
+              },
+            },
+          },
+        }),
+      })
+    }
   }
 
   function next() {
@@ -66,6 +84,7 @@ export default function QuizPage() {
         {questions.length > 0 ? (
           <>
             <QuizQuestion
+              key={questions[qi].id}
               question={questions[qi]}
               onAnswer={handleAnswer}
               questionIndex={qi}
