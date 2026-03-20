@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import type { Lecture } from '@/lib/types'
 import type { ProgressRow } from '@/lib/progress'
@@ -16,7 +17,7 @@ export function LectureCard({ lecture, progress }: Props) {
         borderRadius: 12, padding: '1.25rem 1.25rem 1rem', cursor: 'pointer', overflow: 'hidden',
         transition: 'border-color 150ms ease',
       }}
-        onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-strong)')}
+        onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--accent)')}
         onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-default)')}
       >
         <span style={{
@@ -57,7 +58,7 @@ export function LectureCard({ lecture, progress }: Props) {
         </div>
 
         <p style={{ fontSize: '0.7rem', color: done ? 'var(--success)' : progress ? 'var(--accent)' : 'var(--text-muted)', marginTop: 8 }}>
-          {done ? 'Done ✓' : progress ? 'Continue →' : 'Not started'}
+          {done ? 'Tamamlandı ✓' : progress ? 'Devam Et →' : 'Başla →'}
         </p>
       </article>
     </Link>
