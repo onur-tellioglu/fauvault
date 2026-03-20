@@ -3,7 +3,6 @@ import { useState, useMemo } from 'react'
 import type { Lecture } from '@/lib/types'
 import { ConceptSection } from './ConceptSection'
 import { QuizQuestion } from '@/components/quiz/QuizQuestion'
-import { useFlaggedQuestions } from '@/lib/flags'
 
 type Stage =
   | { kind: 'concept'; ci: number }
@@ -34,7 +33,6 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
     () => Object.values(miniMap).reduce((sum, qs) => sum + qs.length, 0),
     [miniMap]
   )
-  const { flagged, toggle: toggleFlag } = useFlaggedQuestions()
   const [stage, setStage] = useState<Stage>({ kind: 'concept', ci: initialConceptIndex })
   const [answered, setAnswered] = useState(false)
   const [finalAnswers, setFinalAnswers] = useState<{ selected: number[]; score: number }[]>([])
@@ -141,8 +139,6 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
           onAnswer={(selected, score) => afterFinal(stage.qi, selected, score)}
           questionIndex={stage.qi + miniQuestionCount}
           totalQuestions={lecture.questions.length}
-          flagged={flagged.has(q.id)}
-          onFlag={() => toggleFlag(q.id)}
         />
         {answered && (
           <button style={btnStyle} onClick={() => nextFinal(stage.qi)}>
