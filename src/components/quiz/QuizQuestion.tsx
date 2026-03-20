@@ -12,9 +12,11 @@ type Props = {
   onAnswer: (selected: number[], score: number) => void
   questionIndex?: number
   totalQuestions?: number
+  flagged?: boolean
+  onFlag?: () => void
 }
 
-export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions }: Props) {
+export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions, flagged, onFlag }: Props) {
   const [selected, setSelected] = useState<number[]>([])
   const [submitted, setSubmitted] = useState(false)
 
@@ -46,14 +48,29 @@ export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions
   return (
     <div>
       {totalQuestions != null && (
-        <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 12 }}>
-          Q {(questionIndex ?? 0) + 1} / {totalQuestions}
-          {question.type === 'multiple' && (
-            <span style={{ marginLeft: 10, color: 'var(--accent)', background: 'var(--accent-subtle)', borderRadius: 4, padding: '1px 7px', fontSize: '0.68rem' }}>
-              Multiple correct
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.72rem', color: 'var(--text-muted)', margin: 0 }}>
+            Q {(questionIndex ?? 0) + 1} / {totalQuestions}
+            {question.type === 'multiple' && (
+              <span style={{ marginLeft: 10, color: 'var(--accent)', background: 'var(--accent-subtle)', borderRadius: 4, padding: '1px 7px', fontSize: '0.68rem' }}>
+                Multiple correct
+              </span>
+            )}
+          </p>
+          {onFlag && (
+            <button
+              onClick={onFlag}
+              title={flagged ? 'İşareti kaldır' : 'İşaretle'}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '1.1rem', opacity: flagged ? 1 : 0.35,
+                transition: 'opacity 150ms ease', padding: '2px 6px',
+              }}
+            >
+              🚩
+            </button>
           )}
-        </p>
+        </div>
       )}
 
       <p style={{ fontSize: '0.975rem', color: 'var(--text-primary)', lineHeight: 1.65, marginBottom: '1.125rem' }}>
