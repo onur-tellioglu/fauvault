@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import type { Lecture } from '@/lib/types'
 import { ConceptSection } from './ConceptSection'
 import { QuizQuestion } from '@/components/quiz/QuizQuestion'
@@ -12,14 +12,14 @@ type Stage =
   | { kind: 'done'; score: number; total: number }
 
 // Map first N questions as mini-quiz (one per concept), rest go to final quiz
-function split(lecture: Lecture) {
+export function split(lecture: Lecture) {
   const miniMap: Record<number, typeof lecture.questions[number][]> = {}
   let qi = 0
   for (let ci = 0; ci < lecture.concepts.length && qi < lecture.questions.length; ci++) {
     miniMap[ci] = [lecture.questions[qi++]]
   }
   const finalQs = lecture.questions.slice(qi)
-  return { miniMap, finalQs: finalQs.length > 0 ? finalQs : lecture.questions }
+  return { miniMap, finalQs }
 }
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
 }
 
 export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props) {
-  const { miniMap, finalQs } = split(lecture)
+  const { miniMap, finalQs } = useMemo(() => split(lecture), [lecture])
   const { flagged, toggle: toggleFlag } = useFlaggedQuestions()
   const [stage, setStage] = useState<Stage>({ kind: 'concept', ci: initialConceptIndex })
   const [answered, setAnswered] = useState(false)
