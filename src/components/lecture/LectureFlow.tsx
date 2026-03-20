@@ -25,9 +25,10 @@ type Props = {
   lecture: Lecture
   initialConceptIndex: number
   onProgress: (patch: object) => void
+  nextLectureId: number | null
 }
 
-export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props) {
+export function LectureFlow({ lecture, initialConceptIndex, onProgress, nextLectureId }: Props) {
   const { miniMap, finalQs } = useMemo(() => split(lecture), [lecture])
   const miniQuestionCount = useMemo(
     () => Object.values(miniMap).reduce((sum, qs) => sum + qs.length, 0),
@@ -159,10 +160,20 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
       <p style={{ color: 'var(--text-secondary)', marginTop: 12, fontSize: '0.875rem' }}>
         Lecture complete · {stage.total} questions
       </p>
-      <a href="/dashboard" style={{
-        display: 'inline-block', marginTop: '2rem', padding: '10px 24px',
-        background: 'var(--accent)', color: '#0C0C10', borderRadius: 8, textDecoration: 'none', fontWeight: 600,
-      }}>← Back to Dashboard</a>
+      <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '2rem', flexWrap: 'wrap' }}>
+        {nextLectureId !== null && (
+          <a href={`/lecture/${nextLectureId}`} style={{
+            display: 'inline-flex', alignItems: 'center', padding: '10px 24px', minHeight: 44,
+            background: 'var(--accent)', color: '#0C0C10', borderRadius: 8, textDecoration: 'none', fontWeight: 600,
+            fontFamily: 'var(--font-body)',
+          }}>Sonraki Ders →</a>
+        )}
+        <a href="/dashboard" style={{
+          display: 'inline-flex', alignItems: 'center', padding: '10px 24px', minHeight: 44,
+          border: '1px solid var(--border-default)', color: 'var(--text-secondary)',
+          borderRadius: 8, textDecoration: 'none', fontSize: '0.9rem',
+        }}>← Dashboard</a>
+      </div>
     </div>
   )
 }
