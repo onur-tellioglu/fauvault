@@ -30,6 +30,10 @@ type Props = {
 
 export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props) {
   const { miniMap, finalQs } = useMemo(() => split(lecture), [lecture])
+  const miniQuestionCount = useMemo(
+    () => Object.values(miniMap).reduce((sum, qs) => sum + qs.length, 0),
+    [miniMap]
+  )
   const { flagged, toggle: toggleFlag } = useFlaggedQuestions()
   const [stage, setStage] = useState<Stage>({ kind: 'concept', ci: initialConceptIndex })
   const [answered, setAnswered] = useState(false)
@@ -91,7 +95,7 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
         },
         completed_at: new Date().toISOString(),
       })
-      setStage({ kind: 'done', score: avg, total: finalQs.length })
+      setStage({ kind: 'done', score: avg, total: lecture.questions.length })
     }
   }
 
@@ -135,8 +139,8 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
           key={q.id}
           question={q}
           onAnswer={(selected, score) => afterFinal(stage.qi, selected, score)}
-          questionIndex={stage.qi}
-          totalQuestions={finalQs.length}
+          questionIndex={stage.qi + miniQuestionCount}
+          totalQuestions={lecture.questions.length}
           flagged={flagged.has(q.id)}
           onFlag={() => toggleFlag(q.id)}
         />
