@@ -34,6 +34,7 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
   const [stage, setStage] = useState<Stage>({ kind: 'concept', ci: initialConceptIndex })
   const [answered, setAnswered] = useState(false)
   const [finalAnswers, setFinalAnswers] = useState<{ selected: number[]; score: number }[]>([])
+  const [miniScores, setMiniScores] = useState<number[]>([])
 
   const btnStyle: React.CSSProperties = {
     marginTop: '1.5rem', padding: '10px 22px',
@@ -54,6 +55,16 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
     if (ci + 1 < lecture.concepts.length) {
       setStage({ kind: 'concept', ci: ci + 1 })
       onProgress({ concept_index: ci + 1 })
+    } else if (finalQs.length === 0) {
+      // All questions were used as mini-quizzes — skip final, go to done
+      const avg = miniScores.length > 0
+        ? miniScores.reduce((a, b) => a + b, 0) / miniScores.length
+        : 0
+      onProgress({
+        final_quiz_result: { answers: [], score: avg, submittedAt: new Date().toISOString() },
+        completed_at: new Date().toISOString(),
+      })
+      setStage({ kind: 'done', score: avg, total: lecture.questions.length })
     } else {
       setStage({ kind: 'final', qi: 0 }); setAnswered(false)
     }
@@ -103,7 +114,7 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
         <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.7rem', color: 'var(--accent)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Concept Check
         </p>
-        <QuizQuestion question={q} onAnswer={() => setAnswered(true)} />
+        <QuizQuestion question={q} onAnswer={(_, score) => { setMiniScores(prev => [...prev, score]); setAnswered(true) }} />
         {answered && (
           <button style={btnStyle} onClick={() => { nextAfterMini(stage.ci); setAnswered(false) }}>
             Continue →
