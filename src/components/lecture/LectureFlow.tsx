@@ -69,8 +69,13 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress }: Props)
       setStage({ kind: 'final', qi: qi + 1 }); setAnswered(false)
     } else {
       const avg = finalAnswers.reduce((s, a) => s + (a?.score ?? 0), 0) / finalQs.length
+      const answers = finalQs.map((_, i) => finalAnswers[i]?.selected ?? [])
       onProgress({
-        final_quiz_result: { score: avg, submittedAt: new Date().toISOString() },
+        final_quiz_result: {
+          answers,
+          score: avg,
+          submittedAt: new Date().toISOString(),
+        },
         completed_at: new Date().toISOString(),
       })
       setStage({ kind: 'done', score: avg, total: finalQs.length })
