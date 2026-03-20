@@ -2,15 +2,12 @@
 import { useState } from 'react'
 import { content } from '@/lib/content'
 import { QuizQuestion } from '@/components/quiz/QuizQuestion'
-import { useFlaggedQuestions } from '@/lib/flags'
-
 export default function QuizPage() {
   const [lectureId, setLectureId] = useState<number | 'all'>('all')
   const [qi, setQi] = useState(0)
   const [scores, setScores] = useState<number[]>([])
   const [answered, setAnswered] = useState(false)
   const [done, setDone] = useState(false)
-  const { flagged, toggle: toggleFlag } = useFlaggedQuestions()
 
   const questions = lectureId === 'all'
     ? content.lectures.flatMap(l => l.questions)
@@ -55,16 +52,11 @@ export default function QuizPage() {
             {Math.round(avg * 100)}%
           </div>
           <p style={{ color: 'var(--text-secondary)', marginTop: 10 }}>{scores.length} questions</p>
-          {flagged.size > 0 && (
-            <p style={{ color: 'var(--accent)', fontSize: '0.85rem', marginTop: 6 }}>
-              🚩 {flagged.size} soru işaretlendi
-            </p>
-          )}
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '2rem' }}>
-            <button onClick={reset} style={{ padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+            <button onClick={reset} style={{ padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', minHeight: 44 }}>
               Try Again
             </button>
-            <a href="/dashboard" style={{ padding: '10px 22px', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', display: 'flex', alignItems: 'center' }}>
+            <a href="/dashboard" style={{ padding: '10px 22px', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', display: 'flex', alignItems: 'center', minHeight: 44 }}>
               ← Dashboard
             </a>
           </div>
@@ -83,7 +75,7 @@ export default function QuizPage() {
             onChange={e => { setLectureId(e.target.value === 'all' ? 'all' : Number(e.target.value)); reset() }}
             style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', color: 'var(--text-primary)', padding: '6px 10px', borderRadius: 6, fontSize: '0.8rem' }}
           >
-            <option value="all">All Lectures</option>
+            <option value="all">Tüm Dersler (Pratik)</option>
             {content.lectures.map(l => <option key={l.id} value={l.id}>L{l.id} — {l.title}</option>)}
           </select>
         </div>
@@ -96,24 +88,9 @@ export default function QuizPage() {
               onAnswer={handleAnswer}
               questionIndex={qi}
               totalQuestions={questions.length}
-              flagged={flagged.has(questions[qi].id)}
-              onFlag={() => toggleFlag(questions[qi].id)}
             />
-            {!answered && (
-              <button
-                onClick={() => { toggleFlag(questions[qi].id); next() }}
-                style={{
-                  marginTop: '0.75rem', padding: '8px 18px',
-                  background: 'none', border: '1px solid var(--border-default)',
-                  color: 'var(--text-muted)', borderRadius: 8, cursor: 'pointer',
-                  fontSize: '0.8rem', fontFamily: 'var(--font-body)',
-                }}
-              >
-                🚩 İşaretle & Geç
-              </button>
-            )}
             {answered && (
-              <button onClick={next} style={{ marginTop: '1.5rem', padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+              <button onClick={next} style={{ marginTop: '1.5rem', padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', minHeight: 44 }}>
                 {qi + 1 < questions.length ? 'Next →' : 'Results →'}
               </button>
             )}
