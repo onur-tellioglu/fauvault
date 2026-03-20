@@ -56,7 +56,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.875rem' }}>
+        <div className="lecture-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.875rem' }}>
           {content.lectures.map((lecture, i) => (
             <div key={lecture.id} style={{ animation: `fadeSlideUp 300ms ease ${i * 30}ms both` }}>
               <LectureCard lecture={lecture} progress={byLecture[lecture.id]} />

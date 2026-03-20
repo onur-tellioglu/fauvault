@@ -114,6 +114,8 @@
 html { background: var(--bg-base); color: var(--text-primary); }
 body { font-family: var(--font-sans, sans-serif); }
 
+.profile-row:hover { border-color: var(--border-default) !important; }
+
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -129,5 +131,12 @@ body { font-family: var(--font-sans, sans-serif); }
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Responsive: single-column grid on narrow screens */
+@media (max-width: 480px) {
+  .lecture-grid {
+    grid-template-columns: 1fr !important;
   }
 }
