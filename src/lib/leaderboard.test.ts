@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@/lib/db', () => ({
+vi.mock('./db', () => ({
   default: vi.fn(),
 }))
 
-import sql from '@/lib/db'
+import sql from './db'
 import { getLeaderboard } from './leaderboard'
 
 describe('getLeaderboard', () => {
