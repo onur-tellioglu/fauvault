@@ -21,7 +21,7 @@ export default async function LeaderboardPage() {
               Leaderboard
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              {rows.length} participant{rows.length !== 1 ? 's' : ''}
+              {rows.length} participant{rows.length !== 1 ? 's' : ''} · completed at least 1 lecture
             </p>
           </div>
           <Link href="/dashboard" style={{
