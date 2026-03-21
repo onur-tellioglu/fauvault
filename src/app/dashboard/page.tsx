@@ -45,7 +45,7 @@ export default async function DashboardPage() {
 
         {/* Quick actions */}
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.75rem', flexWrap: 'wrap' }}>
-          {[{ label: 'Pratik Modu', href: '/quiz' }, { label: 'Profil', href: '/profile' }].map(({ label, href }) => (
+          {[{ label: 'Practice Mode', href: '/quiz' }, { label: 'Leaderboard', href: '/leaderboard' }, { label: 'Profile', href: '/profile' }].map(({ label, href }) => (
             <Link key={href} href={href} style={{
               padding: '9px 18px', border: '1px solid var(--border-default)', borderRadius: 7,
               color: 'var(--text-secondary)', fontSize: '0.82rem', textDecoration: 'none',
