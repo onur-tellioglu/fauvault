@@ -4,6 +4,7 @@ import { getProgress } from '@/lib/progress'
 import { content } from '@/lib/content'
 import { LectureCard } from '@/components/dashboard/LectureCard'
 import { ProgressRing } from '@/components/dashboard/ProgressRing'
+import { ExamCountdown } from '@/components/layout/ExamCountdown'
 import Link from 'next/link'
 
 export default async function DashboardPage() {
@@ -15,8 +16,9 @@ export default async function DashboardPage() {
   const completed = rows.filter(r => r.completed_at).length
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: 0 }}>
+      <ExamCountdown />
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '2.5rem 1.5rem' }}>
 
         {/* Header */}
         <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
