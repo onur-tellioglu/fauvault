@@ -24,9 +24,10 @@ const UNITS = [
 ]
 
 export function ExamCountdown() {
-  const [left, setLeft] = useState(getTimeLeft)
+  const [left, setLeft] = useState<ReturnType<typeof getTimeLeft>>(null)
 
   useEffect(() => {
+    setLeft(getTimeLeft())
     const id = setInterval(() => setLeft(getTimeLeft()), 1000)
     return () => clearInterval(id)
   }, [])
