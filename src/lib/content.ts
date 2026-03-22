@@ -9,7 +9,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Facts to Memorize",
-          "body": "- Exam format: **90 minutes**, written, **2-3 questions per presentation slot**"
+          "body": "- Exam format: **90 minutes**, written, **2-3 questions per presentation slot**\n- Lecturer: **Prof. Dr. Claudio Castellini** (AIROB Lab, AIBE Department, FAU)\n- AI at FAU started: **1975** (Prof. Heinrich Niemann, pattern recognition & ML)\n- AIBE Department founded: **2020**\n- Bavarian AI network has **4 nodes**: Health, Intelligent Robotics, Data Science, Mobility"
         }
       ],
       "questions": [
@@ -29,7 +29,7 @@ export const content: Content = {
             2,
             4
           ],
-          "explanation": "Sınav 90 dakikadır (A), slayt başına 2-3 soru vardır (B), AI FAU'da 1975'te Prof. Heinrich Niemann ile başladı (C), Bavyera AI ağının 4 düğümü vardır (E). AIBE Departmanı 2010'da değil 2020'de kuruldu (D yanlış).",
+          "explanation": "The exam is 90 minutes (A), there are 2–3 questions per slot (B), AI at FAU started in 1975 with Prof. Heinrich Niemann (C), the Bavarian AI network has 4 nodes (E). The AIBE Department was founded in 2020, not 2010 (D is wrong).",
           "type": "multiple"
         }
       ]
@@ -41,7 +41,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Medical Robotics categories:**"
+          "body": "**Medical Robotics categories:**\n\n- Exoskeletons (walking support)\n- Prosthetics (replacement limbs)\n- Surgical robots\n- Care robots\n- Rehabilitation devices\n\n**Medical Robotics = unusual combination of:**\nmechatronics + medicine + psychology + mathematics + neuroscience + smart materials\n\n**Why prosthetics is uniquely challenging:**\n\n- Must be nearly permanent\n- Must be totally body-compatible\n- Can only work using body signals (e.g., EMG)\n- An error can lead to trauma/accident → **reliability is the main issue**\n\n**Co-adaptation (core concept):**\n\n- The device learns from the user _while_ the user learns to use the device\n- Both sides adapt to each other simultaneously\n- Applies to all medical robots:\n  - Surgical robots → adapt to surgeon's style\n  - Walking exoskeletons → adapt to patient's desires\n  - Rehabilitation devices → adapt to patient's improving condition\n  - Prostheses → learn to understand amputee's signals\n\n**Brain plasticity in prosthetics:**\n\n- The brain's ability to (re-)learn is exploited\n- User is not just a customer — they are a **teacher** for the robot AND a **learner** taught by the robot\n\n**Improving data quality (3 directions):**\n\n1. Bring the user in from the start (user as data source)\n2. Improve sensors: high-density, multi-modal, wearable/wireless/unobtrusive\n3. Improve interaction: interactive ML + interactive human learning"
         }
       ],
       "questions": [
@@ -57,7 +57,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Görüntüleme sistemleri tıbbi robotik kategorisinde yer almaz. Sunumda sayılan 5 kategori: exoskeleton, prosthetics, surgical robots, care robots, rehabilitation.",
+          "explanation": "Diagnostic imaging systems are not listed as a medical robotics category. The 5 categories from the lecture: exoskeletons, prosthetics, surgical robots, care robots, and rehabilitation devices.",
           "type": "single"
         },
         {
@@ -72,7 +72,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Co-adaptation: cihaz kullanıcıdan öğrenirken, kullanıcı da cihazı kullanmayı öğrenir. Her ikisi zaman içinde birbirine adapte olur.",
+          "explanation": "Co-adaptation means the device learns from the user while the user learns to use the device. Both sides adapt to each other over time.",
           "type": "single"
         },
         {
@@ -87,7 +87,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Protezler neredeyse kalıcı olmalı, vücut uyumlu olmalı ve sadece vücut sinyalleriyle çalışabilir. Hata toleransı çok düşüktür; bir hata travmaya yol açabilir.",
+          "explanation": "Prosthetics must be nearly permanent, fully body-compatible, and can only work with body signals. Error tolerance is extremely low; a single mistake can cause trauma.",
           "type": "single"
         },
         {
@@ -102,7 +102,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Kullanıcı hem robotun öğretmeni hem de robotun öğrencisidir. Bu ikili rol, co-adaptation paradigmasının temelidir.",
+          "explanation": "The user is both a teacher for the robot and a learner taught by it. This dual role is the foundation of the co-adaptation paradigm.",
           "type": "single"
         },
         {
@@ -117,7 +117,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Sunumda sayılan alanlar: mechatronics, medicine, psychology, mathematics, neuroscience, smart materials. Ekonomi bu listede yok.",
+          "explanation": "The fields listed in the lecture: mechatronics, medicine, psychology, mathematics, neuroscience, and smart materials. Economics is not on this list.",
           "type": "single"
         },
         {
@@ -132,7 +132,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Veri kalitesini artırmak için sensor özellikleri: high-density, multi-modal, wearable, wireless, unobtrusive.",
+          "explanation": "Sensor properties emphasized for improving data quality: high-density, multi-modal, wearable, wireless, and unobtrusive.",
           "type": "single"
         },
         {
@@ -153,7 +153,7 @@ export const content: Content = {
             4,
             5
           ],
-          "explanation": "Sunumda sayılan 5 tıbbi robotik kategorisi: exoskeleton, prosthetics, care robots, surgical robots, rehabilitation devices. Tanı görüntüleme sistemleri (B) bu kategoride yer almaz.",
+          "explanation": "The 5 medical robotics categories listed: exoskeletons, prosthetics, care robots, surgical robots, and rehabilitation devices. Diagnostic imaging systems (B) are not in this category.",
           "type": "multiple"
         }
       ]
@@ -165,7 +165,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**The AI hierarchy (nested, largest to smallest):**"
+          "body": "**The AI hierarchy (nested, largest to smallest):**\n\n```\nArtificial Intelligence (1955) ⊃ Machine Learning (1980) ⊃ Deep Learning (2010) ⊃ Foundation Models (2017)\n```\n\n- **AI (1955):** Imitate intelligent behaviour in computers\n- **ML (1980):** AI by learning and predicting from data\n- **DL (2010):** ML using deep neural networks\n- **Foundation Models (2017):** Generative AI based on pretrained transformers\n\n**Are LLMs intelligent? → No, not really**\n\n- High performance ≠ human-like behaviour\n- LLMs fail on adversarial inputs trivial for humans (e.g., unusual 3D viewpoints)\n- \"Error consistency\" measures whether AI and humans fail on the _same_ examples — DNNs and humans fail differently\n\n**Tool vs. Model distinction:**\n\n- **Tool:** Statistical algorithm, no claim about human behaviour (e.g., DNN for image classification)\n- **Model:** Formal representation of a scientific theory, used to explain/predict a phenomenon\n\n**Remaining challenges of current AI:**\n\n1. **Robustness and Safety** — vulnerable to adversarial attacks\n2. **Non-Generalizable Single-Purpose Design** — models trained for one task can't transfer\n\n**AI Success Stories (specific examples):**\n| System | Purpose |\n|--------|---------|\n| AlphaGo | Mastering the game of Go |\n| AlphaFold | Predicting protein 3D structures |\n| MyShake | Earthquake early warning system (smartphone network) |\n| Apple Watch ECG | Detecting atrial fibrillation & left ventricular ejection fraction |\n| Autonomous driving | Perception & path planning (e.g., Waymo) |\n\n**What AI needs: Data & Compute**\n\n- ChatGPT's success driven by growth in both data and compute\n- Europe is falling behind the US and China in AI capacity\n\n**Consciousness in AI:**\n\n- No consensus on what consciousness is — subjective and hard to measure\n- Key distinction: **intelligence ≠ consciousness**\n- Main theories: Global Workspace Theory (GWT), Integrated Information Theory (IIT), Higher-Order Theories, Panpsychism\n- Expert camps: Skeptical / Optimistic / Pragmatic / Ethical (\"better safe than sorry\")\n- Efficiency gap: **1,000 artificial neurons** needed to simulate a **single biological neuron**"
         }
       ],
       "questions": [
@@ -181,7 +181,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Kronoloji: AI (1955) → ML (1980) → DL (2010) → Foundation Models (2017).",
+          "explanation": "Timeline: AI (1955) → ML (1980) → DL (2010) → Foundation Models (2017).",
           "type": "single"
         },
         {
@@ -196,7 +196,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Hiyerarşi: AI ⊃ ML ⊃ DL ⊃ Foundation Models. Her biri bir öncekinin alt kümesidir.",
+          "explanation": "Hierarchy: AI ⊃ ML ⊃ DL ⊃ Foundation Models. Each is a subset of the one above.",
           "type": "single"
         },
         {
@@ -211,7 +211,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "MyShake, akıllı telefonları sismik sensör ağı olarak kullanan bir deprem erken uyarı sistemidir.",
+          "explanation": "MyShake is an earthquake early warning system that uses smartphones as a seismic sensor network.",
           "type": "single"
         },
         {
@@ -226,7 +226,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Error consistency, yapay zeka ile insanların _aynı_ örneklerde hata yapıp yapmadığını ölçer. Yüksek performans, insan benzeri davranış anlamına gelmez.",
+          "explanation": "Error consistency measures whether AI and humans fail on the same examples. High performance does not mean human-like behavior.",
           "type": "single"
         },
         {
@@ -241,7 +241,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Sunumda vurgulanan iki temel kalan zorluk: (1) adversarial saldırılara karşı sağlamlık/güvenlik, (2) tek amaçlı tasarımın genelleşememesi.",
+          "explanation": "The two main remaining challenges highlighted: (1) robustness/safety against adversarial attacks, (2) non-generalizable single-purpose design.",
           "type": "single"
         },
         {
@@ -256,7 +256,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Tool: istatistiksel algoritma, insan davranışı hakkında doğrudan iddia yok. Model: bilimsel teorinin formel temsili, bir fenomeni açıklamak/tahmin etmek için kullanılır.",
+          "explanation": "Tool: a statistical algorithm with no direct claim about human behavior. Model: a formal representation of a scientific theory used to explain/predict a phenomenon.",
           "type": "single"
         },
         {
@@ -271,7 +271,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Bilinç tartışmalı ve öznel bir kavramdır. Bilinçli AI mümkün olabilir ancak bunu nasıl bileceğimiz belirsizdir.",
+          "explanation": "Consciousness is a controversial and subjective concept. Conscious AI may be possible but we cannot know for certain how to verify it.",
           "type": "single"
         },
         {
@@ -286,7 +286,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Sunumda verilen oran: 1,000 yapay nöron = 1 biyolojik nöron. Bu, yapay zekanın biyolojik verimliliğe ne kadar uzak olduğunu gösterir.",
+          "explanation": "The ratio given in the lecture: 1,000 artificial neurons = 1 biological neuron. This shows how far artificial AI is from biological efficiency.",
           "type": "single"
         },
         {
@@ -305,7 +305,7 @@ export const content: Content = {
             3,
             4
           ],
-          "explanation": "Sunumda sayılan başarı öyküleri: AlphaGo (Go oyunu), AlphaFold (protein yapısı tahmini), MyShake (deprem uyarı sistemi), Apple Watch ECG (kalp ritim bozukluğu tespiti) ve otonom sürüş. DALL-E sunumda sayılmamıştır.",
+          "explanation": "AI success stories listed: AlphaGo (Go game), AlphaFold (protein structure prediction), MyShake (earthquake warning system), Apple Watch ECG (arrhythmia detection), and autonomous driving. DALL-E was not mentioned in this lecture.",
           "type": "multiple"
         }
       ]
@@ -317,7 +317,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**The core MRI problem (3-way trade-off):**"
+          "body": "**The core MRI problem (3-way trade-off):**\n\n- Scan time ↔ Resolution ↔ SNR (Signal-to-Noise Ratio)\n- Long scan times → patient discomfort, motion artefacts, high cost\n\n**MRI data acquisition — k-space:**\n\n- Raw MRI data is acquired in **Fourier (k-) space**, not image space\n- Fully sampled k-space → clean image; undersampled k-space → artefacts\n- Scan acceleration = collecting fewer k-space lines (e.g., R=4 means 4× fewer measurements)\n\n**3 approaches to AI-based MRI reconstruction:**\n\n1. **Image processing based** — treat reconstruction as a denoising/post-processing problem\n2. **k-space recovery** — directly recover missing data in the frequency domain\n3. **DL iterative reconstruction** — unroll physics-based gradient descent steps into a neural network (learns T gradient descent steps end-to-end)\n\n**DL iterative reconstruction (most important approach):**\n\n- Physics (known MRI forward model) + Learning combined\n- \"Unrolled iterations mapped on neural network\"\n- Key paper: Hammernik MRM 2018\n- Result: Reconstruction network outperforms image processing (denoising) network in SSIM\n\n**fastMRI dataset (open benchmark):**\n\n- Created by NYU + Facebook Research\n- Contains: Knee (1398 cases), Brain (7002 cases), Prostate (312 cases), Breast (300 cases)\n- ~9,000 visitors/year, 961 TB downloaded/year\n\n**Key challenges & limitations of AI MRI reconstruction:**\n\n- **Hallucinations** — AI can generate anatomical structures that aren't there (dangerous in clinical setting)\n- **Out-of-domain generalization** — model trained on one scanner may fail on another\n- **Bayesian Uncertainty Estimation** — used to flag uncertain reconstructions"
         }
       ],
       "questions": [
@@ -333,7 +333,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "K-space, MRI ham verisinin toplandığı Fourier (frekans) uzayıdır. Bu veriden görüntüye geçmek için ters Fourier dönüşümü uygulanır.",
+          "explanation": "K-space is the Fourier (frequency) domain where raw MRI data is collected. An inverse Fourier transform is applied to convert k-space data into an image.",
           "type": "single"
         },
         {
@@ -348,7 +348,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "MRI'da temel ödünleşim: Tarama süresi ↔ Çözünürlük ↔ Sinyal-Gürültü Oranı (SNR). Birini iyileştirmek diğerlerini olumsuz etkiler.",
+          "explanation": "The fundamental MRI trade-off: Scan time ↔ Resolution ↔ Signal-to-Noise Ratio (SNR). Improving one negatively affects the others.",
           "type": "single"
         },
         {
@@ -363,7 +363,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "K-space recovery, görüntü uzayında değil doğrudan frekans uzayında eksik verileri tahmin eder.",
+          "explanation": "K-space recovery estimates missing data directly in the frequency domain, not in image space.",
           "type": "single"
         },
         {
@@ -378,7 +378,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "DL iterative reconstruction, bilinen MRI fiziğini (forward model) öğrenilmiş gradient descent adımlarıyla birleştirir ve bunları bir sinir ağı olarak \"açar\" (unroll eder).",
+          "explanation": "DL iterative reconstruction combines known MRI physics (forward model) with learned gradient descent steps and \"unrolls\" them as a neural network.",
           "type": "single"
         },
         {
@@ -393,7 +393,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "AI rekonstrüksiyon modelleri gerçekte var olmayan anatomik yapılar üretebilir (halüsinasyon). Bu, klinik kullanımda ciddi bir tanı hatasına yol açabilir.",
+          "explanation": "AI reconstruction models can generate anatomical structures that do not actually exist (hallucination). This can cause serious diagnostic errors in clinical use.",
           "type": "single"
         },
         {
@@ -408,7 +408,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Bayesian belirsizlik tahmini, modelin hangi bölgelerde güvensiz olduğunu işaretlemek için kullanılır. Bu, klinisyenlerin AI çıktısını ne kadar güvenebileceğini anlamalarına yardımcı olur.",
+          "explanation": "Bayesian uncertainty estimation flags regions where the model's reconstruction is uncertain. This helps clinicians understand how much to trust the AI output.",
           "type": "single"
         },
         {
@@ -426,7 +426,7 @@ export const content: Content = {
             1,
             2
           ],
-          "explanation": "Knoll'un sunduğu 3 AI tabanlı MRI rekonstrüksiyon yaklaşımı: görüntü işleme tabanlı, k-space recovery ve DL iteratif rekonstrüksiyon. D ve E sunumda yer almaz.",
+          "explanation": "Knoll's 3 AI-based MRI reconstruction approaches: image processing based, k-space recovery, and DL iterative reconstruction. D and E are not in the lecture.",
           "type": "multiple"
         }
       ]
@@ -438,7 +438,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**3 aims of Sensory Neuroengineering:**"
+          "body": "**3 aims of Sensory Neuroengineering:**\n\n1. Understand the neurobiology of (multi-)sensing\n2. Diagnose impairments in sensory processing\n3. Restore sensory impairments\n\n**Hearing & communication disorders:**\n\n- Affect **20% of people worldwide**, more than **5% in children**\n- Progress with age → major problem in aging society\n- Types: sensorineural hearing loss, hidden hearing loss, auditory processing disorder (APD), language disorders (e.g., after stroke)\n\n**Building blocks of speech (timescales):**\n| Unit | Duration |\n|------|----------|\n| Phoneme | ~20 ms |\n| Syllable | 50–100 ms |\n| Word | 200–300 ms |\n\n**Brain oscillations & speech synchronization:**\n\n- The brain synchronizes (entrains) to the rhythm of speech\n- Measured via **EEG** (oscillatory brain activity)\n- Key bands: delta (1–4 Hz), theta (4–8 Hz), alpha (8–12 Hz)\n- Theta band → entrains to speech **envelope** (syllable-level rhythm)\n- Attentional modulation found in **delta** but NOT in theta band\n\n**Two models for decoding speech from EEG:**\n\n- **Forward model:** predict EEG from acoustic stimulus\n- **Backward model:** reconstruct speech features from EEG\n\n**What can be decoded from brain activity:**\n\n- **Clarity** (acoustic quality of speech)\n- **Comprehension** (cognitive understanding)\n- **Auditory attention** — which speaker a person is attending to (real-time)\n\n**Auditory Attention Decoding — the vision:**\n\n- Hearing aids + cochlear implants struggle in noisy environments (\"cocktail party problem\")\n- EEG can decode _which_ speaker the user is attending to\n- This enables **neurofeedback-driven hearing instruments** that amplify the attended speaker\n\n**GAN for audiovisual speech:**\n\n- A Generative Adversarial Network (GAN) generates realistic talking-face video from speech + a still image\n- Turing test result: humans **cannot differentiate** between real and synthetic videos\n- Synthetic videos improve **speech-in-noise comprehension** (but not as much as natural videos)\n\n**Vibrotactile stimulation:**\n\n- Pulses delivered to **fingertips** at the rhythm of syllables (theta rhythm)\n- Enhances speech comprehension in noise\n- EEG confirms the brain's multisensory integration of tactile + auditory signals\n\n**Summary (from slides):**\n\n- Brain waves synchronize to speech rhythms\n- Speech comprehension AND attention can be decoded from this synchronization\n- Visual and tactile signals can enhance speech comprehension in noise"
         }
       ],
       "questions": [
@@ -454,7 +454,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "İşitme ve iletişim bozuklukları dünya genelinde nüfusun %20'sini, çocuklarda ise %5'ten fazlasını etkiler.",
+          "explanation": "Hearing and communication disorders affect 20% of the world's population and more than 5% of children.",
           "type": "single"
         },
         {
@@ -469,7 +469,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Theta bandı (4–8 Hz) konuşmanın hece düzeyindeki (syllable) ritmiyle senkronize olur.",
+          "explanation": "The theta band (4–8 Hz) synchronizes with the syllable-level rhythm of speech.",
           "type": "single"
         },
         {
@@ -484,7 +484,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Clarity (netlik) akustik/fiziksel kaliteyi, comprehension (anlama) bilişsel kavramayı yansıtır. EEG ile her ikisi de ayrı ayrı decode edilebilir.",
+          "explanation": "Clarity reflects acoustic/physical quality; comprehension reflects cognitive understanding. Both can be decoded separately from EEG.",
           "type": "single"
         },
         {
@@ -499,7 +499,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "EEG'den hangi konuşmacıya dikkat edildiğini çözerek, işitme cihazlarının otomatik olarak o konuşmacıyı amplify etmesi sağlanabilir.",
+          "explanation": "By decoding which speaker the listener is attending to from EEG, hearing aids can automatically amplify that speaker.",
           "type": "single"
         },
         {
@@ -514,7 +514,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Turing testi sonucu: insanlar gerçek ve sentetik konuşan-yüz videolarını birbirinden ayırt edemedi.",
+          "explanation": "Turing test result: humans could not distinguish between real and synthetic talking-face videos.",
           "type": "single"
         },
         {
@@ -529,7 +529,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Parmak uçlarına hece ritmiyle (theta) senkronize titreşimsel uyarı (vibrotactile) uygulandığında gürültülü ortamda konuşma anlama iyileşti.",
+          "explanation": "Applying vibrotactile stimulation synchronized with syllable rhythm (theta) to fingertips improved speech comprehension in noisy environments.",
           "type": "single"
         },
         {
@@ -547,7 +547,7 @@ export const content: Content = {
             1,
             2
           ],
-          "explanation": "EEG'den decode edilebilen üç şey: Clarity (akustik kalite), Comprehension (bilişsel anlama) ve Auditory Attention (hangi konuşmacıya dikkat edildiği). Konuşmacı kimliği (D) veya duygusal durum (E) Reichenbach'ın sunduğu decode edilen bilgiler arasında değildir.",
+          "explanation": "Three things decodable from EEG: Clarity (acoustic quality), Comprehension (cognitive understanding), and Auditory Attention (which speaker is attended to). Speaker identity (D) and emotional state (E) are not among the decoded signals in Reichenbach's lecture.",
           "type": "multiple"
         }
       ]
@@ -559,7 +559,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**The brain's resource demands:**"
+          "body": "**The brain's resource demands:**\n\n- Only **2% of body weight** but consumes a **disproportionately high share** of O2 and nutrients\n- Requires a continuous supply of blood (via arteries); waste removed via veins\n- Blood circulation serves **two roles**: (A) Delivery of O2/nutrients, (B) Clearance of waste (amyloid, tau, CO2)\n\n**Cerebral Small Vessel Disease (cSVD):**\n\n- = damage to small blood vessels in the brain\n- **5 MRI markers of cSVD:**\n  1. White matter hyperintensities\n  2. Lacunes\n  3. Microbleeds\n  4. Perivascular spaces\n  5. Atrophy\n- **Prevalence:** affects **90% of subjects in late life**, 20–50% in midlife\n- **Clinical impact:**\n  - Present in **50% of dementia cases** (incl. Alzheimer's)\n  - Primary contributor to **vascular dementia** (2nd most common dementia)\n  - Behind **80% of intracerebral haemorrhages** in late life\n  - Cause of **25% of ischaemic strokes** worldwide\n\n**Key concept: asymptomatic → tipping point → symptomatic**\n\n- cSVD damage accumulates silently (tolerable) until a tipping point → stroke or dementia (intolerable)\n- Goal: detect and intervene _before_ the tipping point\n\n**CIR Lab research focus (2 pillars):**\n\n1. **Quantification** — AI-powered tools to describe cSVD quantitatively\n2. **Modelling** — disentangle cSVD complexity; phenotyping, staging, clinical implications\n\n**Supervised vs. Unsupervised Learning (Bernal's AI intro):**\n\n- **Supervised:** find a function that maps input features → labels (e.g., classify animal species)\n- **Unsupervised:** find groups based on similarities in input features, with no labels\n\n**Domain Randomisation (key specific project):**\n\n- Problem: not enough real patient data + not enough variability → model doesn't generalize\n- Solution: **simulate your own training data** with random variations\n- Particularly useful when **shapes are somewhat consistent across subjects** (e.g., brain lesions)\n- **Advantages:** no need for real patient data or manual annotations; train with many varied images\n- **Disadvantage:** the data generation model must be realistic enough — if it's too far from real-world data, the trained model won't transfer"
         }
       ],
       "questions": [
@@ -575,7 +575,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Beyin vücut ağırlığının yalnızca %2'sini oluşturur, ancak orantısız biçimde yüksek miktarda oksijen ve besin tüketir.",
+          "explanation": "The brain makes up only 2% of body weight but consumes a disproportionately high amount of oxygen and nutrients.",
           "type": "single"
         },
         {
@@ -590,7 +590,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "cSVD'nin 5 MRI belirteci: white matter hyperintensities, lacunes, microbleeds, perivascular spaces ve atrofi. Tümöre bağlı kortikal incelme bu listede yoktur.",
+          "explanation": "The 5 MRI markers of cSVD: white matter hyperintensities, lacunes, microbleeds, perivascular spaces, and atrophy. Tumor-related cortical thinning is not in this list.",
           "type": "single"
         },
         {
@@ -605,7 +605,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "cSVD, dünya genelinde iskemik inmelerin %25'inden sorumludur.",
+          "explanation": "cSVD is responsible for 25% of ischemic strokes worldwide.",
           "type": "single"
         },
         {
@@ -620,7 +620,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Domain randomisation, gerçek hasta verisine ihtiyaç duymadan sentetik eğitim verisi üretme tekniğidir. Rastgele varyasyonlar ekleyerek modelin genelleşmesini sağlar.",
+          "explanation": "Domain randomisation is a technique for generating synthetic training data without needing real patient data. Random variations are added to help the model generalize.",
           "type": "single"
         },
         {
@@ -635,7 +635,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Temel dezavantaj: veri üretim modeli gerçek dünyaya yeterince yakın olmayabilir. Eğer sentetik veri gerçekçi değilse model gerçek hasta verilerine transfer olmaz.",
+          "explanation": "The main disadvantage: the data generation model may not be close enough to reality. If synthetic data is not realistic, the model will not transfer to real patient data.",
           "type": "single"
         },
         {
@@ -650,7 +650,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "cSVD hasarı uzun süre sessizce (asemptomatik) birikir. Tipping point, bu tolere edilebilir hasarın inme veya demans gibi tolere edilemez bir hastalığa dönüştüğü andır.",
+          "explanation": "cSVD damage accumulates silently (asymptomatically) over a long time. The tipping point is when this tolerable damage transitions into an intolerable condition such as stroke or dementia.",
           "type": "single"
         },
         {
@@ -671,7 +671,7 @@ export const content: Content = {
             4,
             5
           ],
-          "explanation": "cSVD'nin 5 MRI belirteci: white matter hyperintensities, lacunes, microbleeds, perivascular spaces ve atrofi. Tümöre bağlı kortikal incelme (C) cSVD belirteci değildir.",
+          "explanation": "The 5 MRI markers of cSVD: white matter hyperintensities, lacunes, microbleeds, perivascular spaces, and atrophy. Tumor-related cortical thinning (C) is not a cSVD marker.",
           "type": "multiple"
         }
       ]
@@ -683,7 +683,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**What is a graph (network)?**"
+          "body": "**What is a graph (network)?**\n\n- Mathematical object G = (V, E): V = nodes, E ⊆ V×V = edges\n- Attributes can be stored at both nodes and edges\n- Excellent for data where **information is encoded in connections**\n\n**Biomedical graph examples:**\n\n- Protein-Protein Interaction (PPI) networks — nodes = proteins, edges = physical binding\n- Gene regulatory networks\n- Disease-disease networks\n\n**BIONETS Lab — 3 research areas:**\n\n1. **Algorithmic network medicine** — mine omics data for molecular disease mechanisms\n2. **Robust and reproducible AI** — algorithms/standards for robust biomedical AI\n3. **Privacy-preserving federated biomedical AI** — decentralized AI for cross-institutional studies on sensitive data\n\n**The core problem with PPI prediction benchmarks:**\n\n- Many published deep learning results are inflated due to **data leakage**\n- Naive random data splitting introduces 2 types of \"shortcuts\":\n  - **Shortcut 1 (topology-based):** model memorizes which proteins appear only in positive pairs in training → predicts \"interaction\" for all their test pairs regardless of partner\n  - **Shortcut 2 (sequence similarity):** proteins in training and test sets are too similar → model exploits similarity instead of learning true interaction rules\n\n**Data leakage (definition from Blumenthal):**\n\n> \"Performance scores for an ML-based predictor f are inflated due to data leakage if f uses illegitimate information to achieve the reported scores, that is, information in the training data that generalizes to the test data but not to the inference-time data.\"\n\n**Two intended use cases → different evaluation protocols needed:**\n| Use case | Appropriate split | Result |\n|----------|------------------|--------|\n| Proteins WITH well-characterized homologs (in-distribution) | Random splitting is fine | Deep learning works |\n| Proteins WITHOUT well-characterized homologs (out-of-distribution) | Hard split required | **No tested DL model outperforms random guessing** |\n\n**Key insight:** High accuracy scores in the literature were often due to shortcuts, not genuine learning. When hard splits are used, models drop to ~random (0.50) performance.\n\n**Solution (DataSAIL):** Algorithm for leakage-reduced data splitting + guidelines to avoid data leakage in biological ML."
         }
       ],
       "questions": [
@@ -699,7 +699,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Graf teorisinde G = (V, E): V düğümler (nodes), E ise iki düğümü birbirine bağlayan kenarlar (edges) kümesidir.",
+          "explanation": "In graph theory, G = (V, E): V is the set of nodes (vertices) and E is the set of edges connecting pairs of nodes.",
           "type": "single"
         },
         {
@@ -714,7 +714,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "PPI ağlarında düğümler proteinleri, kenarlar ise iki proteinin fiziksel olarak birbirine bağlandığını (interact ettiğini) temsil eder.",
+          "explanation": "In PPI networks, nodes represent proteins and edges represent physical interactions (binding) between two proteins.",
           "type": "single"
         },
         {
@@ -729,7 +729,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Data leakage: modelin eğitim verisinden, gerçek kullanım zamanındaki veriye genellenemeyen meşruiyetsiz bilgileri kullanarak abartılı performans göstermesidir.",
+          "explanation": "Data leakage: when a model uses illegitimate information from training data that it would not have access to at test time, resulting in inflated performance estimates.",
           "type": "single"
         },
         {
@@ -744,7 +744,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Sıkı veri bölme uygulandığında (sequence similarity shortcut'ı olmadan), test edilen hiçbir derin öğrenme modeli rastgele tahminden (~0.50) daha iyi performans gösteremedi.",
+          "explanation": "When strict data splitting was applied (without the sequence similarity shortcut), none of the tested deep learning models outperformed random prediction (~0.50).",
           "type": "single"
         },
         {
@@ -759,7 +759,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "BIONETS'in 3 araştırma alanı: algoritmik ağ tıbbı, sağlam ve tekrarlanabilir AI, gizlilik koruyan federatif AI. İlaç sentezi için güçlendirmeli öğrenme bu listede yoktur.",
+          "explanation": "BIONETS' 3 research areas: algorithmic network medicine, robust and reproducible AI, and privacy-preserving federated AI. Reinforcement learning for drug synthesis is not in this list.",
           "type": "single"
         },
         {
@@ -774,7 +774,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Rastgele bölme yalnızca iyi bilinen homologları olan proteinler için (dağılım içi veri) uygundur. Homologu olmayan proteinler için sıkı bölme gereklidir.",
+          "explanation": "Random splitting is only appropriate for proteins with well-known homologs (in-distribution data). Strict splitting is required for proteins without known homologs.",
           "type": "single"
         },
         {
@@ -790,7 +790,7 @@ export const content: Content = {
             0,
             1
           ],
-          "explanation": "İki data leakage kısayolu: (1) topoloji tabanlı (model pozitif çiftlerdeki proteinleri ezberler) ve (2) dizi benzerliği (eğitim ve test setindeki proteinler çok benzer). C ve D sunumda belirtilen kısayollar değildir.",
+          "explanation": "Two data leakage shortcuts: (1) topology-based (the model memorizes proteins in positive pairs) and (2) sequence similarity (training and test set proteins are too similar). C and D are not the shortcuts identified in the lecture.",
           "type": "multiple"
         }
       ]
@@ -802,7 +802,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Physiology of phonation:**"
+          "body": "**Physiology of phonation:**\n\n- **Vocal folds** = primary sound generator; ventricular folds are passive\n- Larynx serves two functions: (1) **swallowing** (3-step valve), (2) **speech/singing**\n- Fundamental frequency of voice: **f0 = 150–1500 Hz**\n- Physics of phonation = **Fluid-Structure-Acoustic Interaction (FSAI)**\n\n**Dysphonia = voice disorder:**\n\n- Symptoms: hoarseness, decreased load capacity, incomplete glottis closure, asymmetric oscillations\n- **Organic Dysphonia** (structural cause): malformation, trauma, inflammation, malignant/benign growth (e.g., polyp, squamous cell carcinoma)\n- **Functional Dysphonia** (no primary organ findings): over/incorrect loading, multiple combined causes\n\n**Clinical diagnostics of dysphonia (multimodal):**\n\n- 2D visualization: Laryngoscopy, Stroboscopy, Highspeed endoscopy\n- Acoustic signal analysis: Voice field measurement, irregularity parameters\n- Self + expert evaluation\n- ElectroGlottoGraphy (EGG)\n- **Key limitation:** in vivo examination of sound generation during phonation is NOT completely possible\n\n**Deep learning in laryngoscopy (3 tasks):**\n\n1. **Localization** of the glottis and vocal folds\n2. **Automatic segmentation** of the glottis area\n3. **Classification** of tissue type, organic disorder, etc.\n\n- BAGLES benchmark: 7 hospitals (EU + US), 640 records, 5 cameras, 59,250 images with segmentation\n\n**3 types of larynx models:**\n| Model Type | Degree of Reality | AI Support | Data Density |\n|-----------|-------------------|------------|--------------|\n| Ex vivo | Highest | Some | Medium |\n| Synthetic (silicone) | Medium | Medium | Medium |\n| Computational (CFD) | Lowest | Highest | Highest |\n\n**AI-supported CFD simulations:**\n\n- Classical CFD = extremely slow: 140 cores, 10h per cycle → 100h for 10 cycles\n- Solution: **SIREN** (Implicit Neural Representations with periodic activation functions)\n- SIREN enables: (1) increase spatial resolution, (2) increase temporal resolution, (3) future prediction of flow fields\n\n**Take-home message:** AI in biomedical science goes far beyond MRI/CT postprocessing."
         }
       ],
       "questions": [
@@ -818,7 +818,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "İnsan sesinin temel frekans aralığı f0 = 150–1500 Hz'dir.",
+          "explanation": "The fundamental frequency range of the human voice is f0 = 150–1500 Hz.",
           "type": "single"
         },
         {
@@ -833,7 +833,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Organik disfoni, yapısal bir nedene (malformasyon, travma, inflamasyon, malign/benign büyüme) dayanır. Fonksiyonel disfoni ise primer organ bulgusu olmaksızın gelişir.",
+          "explanation": "Organic dysphonia has a structural cause (malformation, trauma, inflammation, malignant/benign growth). Functional dysphonia develops without a primary organic finding.",
           "type": "single"
         },
         {
@@ -848,7 +848,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Sesin oluşum sürecinin (fonayon sırasında) canlıda (in vivo) tam incelenmesi mümkün değildir. Bu, multimodal bir yaklaşımı zorunlu kılar.",
+          "explanation": "It is not possible to fully study the sound production process (during phonation) in vivo. This necessitates a multimodal approach.",
           "type": "single"
         },
         {
@@ -863,7 +863,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "DL tabanlı laringoskopi üç görevi yerine getirir: glottis lokalizasyonu, glottis alanının otomatik segmentasyonu ve doku/bozukluk tipi sınıflandırması.",
+          "explanation": "DL-based laryngoscopy performs three tasks: glottis localization, automatic glottis area segmentation, and tissue/disorder type classification.",
           "type": "single"
         },
         {
@@ -878,7 +878,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "SIREN (Implicit Neural Representations with periodic activation function), CFD simülasyonlarını hızlandırmak ve uzamsal/zamansal çözünürlüğü artırmak için kullanılan bir sinir ağı yaklaşımıdır.",
+          "explanation": "SIREN (Implicit Neural Representations with periodic activation function) is a neural network approach used to accelerate CFD simulations and improve spatial/temporal resolution.",
           "type": "single"
         },
         {
@@ -893,7 +893,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Ex vivo modeller en yüksek gerçeklik derecesine sahipken, hesaplamalı (CFD) modeller en yüksek veri yoğunluğuna sahiptir.",
+          "explanation": "Ex vivo models have the highest degree of realism, while computational (CFD) models have the highest data density.",
           "type": "single"
         },
         {
@@ -914,7 +914,7 @@ export const content: Content = {
             3,
             5
           ],
-          "explanation": "Disfoni tanısında kullanılan klinik yöntemler: Laryngoscopy, Stroboscopy, Highspeed endoscopy, EGG (ElectroGlottoGraphy) ve akustik sinyal analizi. EEG (beyin dalgası ölçümü) bu listede yoktur; EGG ile karıştırılmamalıdır.",
+          "explanation": "Clinical methods used in dysphonia diagnosis: Laryngoscopy, Stroboscopy, Highspeed endoscopy, EGG (ElectroGlottoGraphy), and acoustic signal analysis. EEG (brainwave measurement) is not in this list; it should not be confused with EGG.",
           "type": "multiple"
         }
       ]
@@ -926,7 +926,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Central research question:** \"Pregnancy as a window into the future\""
+          "body": "**Central research question:** \"Pregnancy as a window into the future\"\n\n- Why do **8% of all pregnancies** end before the 37th week (preterm birth)?\n- Preterm birth = **single biggest cause** of neonatal mortality and morbidity; costs 3.4 billion £\n- Pre-eclampsia = **leading cause of maternal death** in the world; gives mother 8× increased cardiovascular risk\n- Preterm birth → high risk of lifelong neurodevelopmental & motoric disability\n\n**The placenta:**\n\n- Only connection between mother and baby\n- Least studied organ — also the **only transient organ** in the human body\n- Functions: O2/nutrient delivery (high O2 content via spiral arteries), waste clearance\n- In pre-eclampsia: damaged villous trees + non-remodelled spiral arteries\n\n**sMRT Lab — 4 research focuses:**\n\n1. Bespoke imaging guided by clinical questions\n2. Sensor control & real-time AI\n3. Dedicated analysis & individualized prediction\n4. Translation & prospective clinical studies\n\n**T2\\* mapping for placental oxygenation:**\n\n- Oxygenated vs. deoxygenated haemoglobin have different T2\\* relaxation times\n- Acquisition at multiple echo times (TE) → monoexponential fitting\n- Long T2* → high O2 content; Short T2* → low O2 content\n- Pre-eclamptic placentas show significantly lower T2\\* values\n\n**Key imaging challenges in pregnancy:**\n\n- Motion (fetal movement, contractions)\n- Size/distance\n- Safety limitations for in-utero imaging\n- Artifacts\n- Complex dynamic events\n\n**Motion correction in fetal MRI:**\n\n- \"Snapshot\" 2D sequences (<200 ms) freeze motion in individual slices\n- Multiple stacks acquired in several directions\n- **3D reconstruction using Super-Resolution + Deep Learning**\n\n**Preterm birth prediction model:**\n\n- Combines: placental T2*, brain T2*, US UtA PI value, previous preterm birth history\n- Processing time reduced from several hours to **10 minutes** (with AI)\n- Achieves R² > 0.7, RMSE < 2 weeks gestational age"
         }
       ],
       "questions": [
@@ -942,7 +942,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Tüm gebeliklerin %8'i 37. haftadan önce (preterm) sona erer. Bu, neonatal mortalite ve morbiditinin en büyük tek nedenidir.",
+          "explanation": "8% of all pregnancies end before 37 weeks (preterm). This is the single largest cause of neonatal mortality and morbidity.",
           "type": "single"
         },
         {
@@ -957,7 +957,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Plasenta insan vücudundaki tek geçici (transient) organdır ve anne ile bebek arasındaki tek bağlantıdır. Aynı zamanda en az çalışılan organdır.",
+          "explanation": "The placenta is the only transient organ in the human body and the only connection between mother and baby. It is also the least studied organ.",
           "type": "single"
         },
         {
@@ -972,7 +972,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Uzun T2* değeri yüksek oksijen içeriğini gösterir. Kısa T2* ise düşük oksijenasyona (pre-eklamptik plasentalarda görülen durum) işaret eder.",
+          "explanation": "A long T2* value indicates high oxygen content. A short T2* indicates low oxygenation (as seen in pre-eclamptic placentas).",
           "type": "single"
         },
         {
@@ -987,7 +987,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Fetal hareketi için çözüm: <200 ms'lik hızlı 2D \"snapshot\" sekanslar + birden fazla yönde yığın (stack) toplama + derin öğrenme destekli 3D süper-çözünürlük rekonstrüksiyon.",
+          "explanation": "Solution for fetal motion: fast 2D \"snapshot\" sequences of <200 ms + multi-directional stack acquisition + deep learning-based 3D super-resolution reconstruction.",
           "type": "single"
         },
         {
@@ -1002,7 +1002,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Preterm doğum tahmininde en önemli bulunan biyobelirteçler: plasental T2*, beyin T2*, US uterin arter pulsatilite indeksi (UtA PI) ve önceki preterm doğum öyküsü.",
+          "explanation": "The most important biomarkers for predicting preterm birth: placental T2*, brain T2*, US uterine artery pulsatility index (UtA PI), and previous preterm birth history.",
           "type": "single"
         },
         {
@@ -1023,7 +1023,7 @@ export const content: Content = {
             4,
             5
           ],
-          "explanation": "Fetal MRI'nın zorlukları: hareket (A), güvenlik sınırlamaları (B), boyut/mesafe (C), artefaktlar (E) ve karmaşık dinamik olaylar (F). Maliyet (D) Hutter'in sunumunda özellikle vurgulanan bir zorluk değildir.",
+          "explanation": "Fetal MRI challenges: motion (A), safety constraints (B), size/distance (C), artefacts (E), and complex dynamic events (F). Cost (D) is not specifically highlighted as a challenge in Hutter's lecture.",
           "type": "multiple"
         }
       ]
@@ -1035,7 +1035,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**2 main research topics:**"
+          "body": "**2 main research topics:**\n\n1. **Learning mathematical models for dynamics from data**\n2. **Mathematical analysis of Transformers**\n\n**Dynamical system (formal definition):**\n\n- A pair (X, f) where X is a **vector space** (state space) and f: X → X is a **function**\n- State space X = all possible states the system can be in\n- Function f = maps current state to **next state**\n- Problem: learning from noisy data alone → predictions must NOT escape to infinity\n\n**Absorbing sets / Trapping regions:**\n\n- A subset of the state space that every model simulation will **eventually enter and never leave**\n- Fantuzzi's lab learns polynomial velocity vectors with **guaranteed absorbing sets**\n- Ensures physical plausibility of learned dynamical models\n\n**Transformers — mathematical view:**\n\n- GPT = **G**enerative **P**re-trained **T**ransformer\n- A transformer is a **function** mapping finite subsets of ℝᵈ → finite subsets of ℝᵈ\n- Built by composing 3 types of layers:\n  1. **Feed-Forward layers** (multi-layer perceptrons)\n  2. **Self-Attention layers** — the key feature of transformers\n  3. **Normalization layers**\n- Parameters learned during **training process**\n\n**How transformers work geometrically:**\n\n- Transformer blocks \"**move points in space**\"\n- Tokens **cluster together** as they pass through layers\n- Clustering = \"**context**\" in language models (words with similar meaning cluster)"
         }
       ],
       "questions": [
@@ -1051,7 +1051,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Matematiksel olarak dinamik sistem, (X, f) çiftidir: X durum uzayı (state space), f ise mevcut durumu bir sonraki duruma eşleyen fonksiyondur.",
+          "explanation": "Mathematically, a dynamical system is the pair (X, f): X is the state space and f is the function mapping the current state to the next state.",
           "type": "single"
         },
         {
@@ -1066,7 +1066,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Absorbing set (trapping region), modelin tüm simülasyonlarının nihayetinde gireceği ve bir daha çıkmayacağı durum uzayının bir alt kümesidir. Modelin fiziksel tutarlılığını garanti eder.",
+          "explanation": "An absorbing set (trapping region) is a subset of state space that all simulations will eventually enter and never leave. It guarantees the physical plausibility of the model.",
           "type": "single"
         },
         {
@@ -1081,7 +1081,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "GPT: Generative Pre-trained Transformer. ChatGPT bu mimari üzerine inşa edilmiştir.",
+          "explanation": "GPT: Generative Pre-trained Transformer. ChatGPT is built on this architecture.",
           "type": "single"
         },
         {
@@ -1096,7 +1096,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Self-Attention katmanları transformerların ayırt edici özelliğidir. Feed-forward ve normalization katmanları da var, ancak self-attention transformerlara özgüdür.",
+          "explanation": "Self-Attention layers are the distinguishing feature of transformers. Feed-forward and normalization layers are also present, but self-attention is unique to transformers.",
           "type": "single"
         },
         {
@@ -1111,7 +1111,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Transformer blokları noktaları uzayda hareket ettirir ve bu noktaların kümelenmesine (clustering) yol açar. Bu kümeleme, dil modellerinde \"bağlam\" (context) kavramına karşılık gelir.",
+          "explanation": "Transformer blocks move points in space and cause them to cluster. This clustering corresponds to the concept of \"context\" in language models.",
           "type": "single"
         },
         {
@@ -1129,7 +1129,7 @@ export const content: Content = {
             2,
             3
           ],
-          "explanation": "Transformer mimarisi 3 katman tipinden oluşur: Feed-Forward katmanlar (MLP'ler), Self-Attention katmanları (transformerların ayırt edici özelliği) ve Normalization katmanları. Konvolüsyonel (B) ve recurrent (E) katmanlar transformer'a özgü değildir.",
+          "explanation": "A transformer architecture consists of 3 layer types: Feed-Forward layers (MLPs), Self-Attention layers (the distinguishing feature of transformers), and Normalization layers. Convolutional (B) and recurrent (E) layers are not specific to transformers.",
           "type": "multiple"
         }
       ]
@@ -1141,7 +1141,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Fraunhofer-Gesellschaft at a glance:**"
+          "body": "**Fraunhofer-Gesellschaft at a glance:**\n\n- Application-oriented research for economy and industry\n- **30,000+** employees, **76** institutes, **3.0 billion €** financial volume\n- Over 70% from industrial/public-funded research, ~30% basic federal funding\n\n**AI hierarchy at Fraunhofer IIS (from smallest to largest):**\n\n```\nTiny ML → Edge ML → Efficient ML → ML → AI\n```\n\n**Edge AI vs. Cloud AI comparison:**\n| | Cloud AI | Edge AI |\n|--|----------|---------|\n| Energy | High | Low |\n| Latency | High | Low (real-time) |\n| Privacy | Data sent to cloud | Local, maximum privacy |\n| Network | Required | Independent |\n| Size | Large, centralized | Small, retrofittable |\n\n**4 advantages of Edge AI (#fast, #energy-efficient, #private, #tiny):**\n\n1. Processing on energy-efficient sensor nodes\n2. Lowest latency = fast response\n3. Private data stays on device\n4. Fits microcontrollers, reuses existing hardware\n\n**Edge AI Fast Track — 4 steps (pipeline):**\n\n1. **Data** — annotation with VLM (Visual Language Models) + SAM (Segment Anything Model)\n2. **Choose model** — type selected by expert; architecture found by **NAS** (Neural Architecture Search); parameters by **AutoML**\n3. **Compress** — \"Deep Compression\": **Pruning** (remove less important weights) + **Quantization** (lower numerical precision)\n4. **Deploy** — integration + quality assurance in the field\n\n**Model compression techniques:**\n\n- **Pruning:** removes less important neurons/connections\n- **Quantization:** uses lower numerical precision (e.g., Float32 → UInt8)\n- Example: MicroYolo compressed from **8 MB → 0.8 MB** via pruning + quantization\n\n**Unsupervised Anomaly Detection:**\n\n- Defects are rare and appear in unforeseen ways → severe data imbalance → supervised approaches impractical\n- Training: learn a model of \"normality\" from **only non-defective samples**\n- Inference: any significant deviation from normality → flagged as anomalous\n\n**TinyML application clusters:**\n\n- Industrial IoT (condition monitoring, predictive maintenance)\n- Environment (earthquake detection)\n- Healthcare (fitness tracker, health monitor)\n- Agriculture (animal & plant monitoring)\n\n**Embedded system characteristics for Edge AI** (exam example question topic!):\n\n- **Small size** ✓\n- **Low weight** ✓\n- **Low energy requirement** ✓\n- **Real-time capability** ✓\n- **MHz range processor** ✓ (not GHz like desktop CPUs)\n- Does NOT require continuous internet connection ✓\n- Does NOT have high computing power (by design)"
         }
       ],
       "questions": [
@@ -1157,7 +1157,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Edge AI, verilerin buluta gönderilmesi yerine cihazın üzerinde (telefon, sensör, robot) yerel olarak çalışır. Düşük gecikme, düşük enerji, ağdan bağımsızlık ve gizlilik sağlar.",
+          "explanation": "Edge AI runs locally on the device (phone, sensor, robot) instead of sending data to the cloud. It provides low latency, low energy, network independence, and privacy.",
           "type": "single"
         },
         {
@@ -1172,7 +1172,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "NAS (Neural Architecture Search), belirli bir donanım ve görev için en uygun sinir ağı mimarisini otomatik olarak arar.",
+          "explanation": "NAS (Neural Architecture Search) automatically searches for the optimal neural network architecture for a specific hardware and task.",
           "type": "single"
         },
         {
@@ -1187,7 +1187,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Deep Compression iki teknikten oluşur: Pruning (daha az önemli bağlantıları kaldırma) ve Quantization (sayısal hassasiyeti düşürme, örn. Float32 → UInt8).",
+          "explanation": "Deep Compression consists of two techniques: Pruning (removing less important connections) and Quantization (reducing numerical precision, e.g., Float32 → UInt8).",
           "type": "single"
         },
         {
@@ -1202,7 +1202,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Defektler nadirdir ve öngörülemeyen şekillerde ortaya çıkar → ciddi veri dengesizliği → denetimli yaklaşımlar pratik değildir. Bunun yerine unsupervised anomaly detection kullanılır.",
+          "explanation": "Defects are rare and appear unpredictably → severe class imbalance → supervised approaches are impractical. Instead, unsupervised anomaly detection is used.",
           "type": "single"
         },
         {
@@ -1217,7 +1217,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "VLM'ler eğitim verisi annotasyonunu otomatikleştirir. Örneğin: manuel annotasyon 40 saat sürerken, sıfır-shot VLM ile 3–50 dakikaya iner.",
+          "explanation": "VLMs automate training data annotation. For example, manual annotation takes 40 hours, while zero-shot VLM reduces it to 3–50 minutes.",
           "type": "single"
         },
         {
@@ -1237,7 +1237,7 @@ export const content: Content = {
             4,
             5
           ],
-          "explanation": "Gömülü sistemler küçük boyutlu, hafif, düşük enerjili, gerçek zamanlı çalışabilen ve MHz aralığında işlemciye sahip cihazlardır. Yüksek hesaplama gücü (B) veya sürekli internet bağlantısı (D) gerekmez; bunlar Cloud AI özelliklerdir.",
+          "explanation": "Embedded systems are small, lightweight, low-power, capable of real-time operation, and have processors in the MHz range. High computational power (B) and constant internet connectivity (D) are Cloud AI properties, not embedded.",
           "type": "multiple"
         }
       ]
@@ -1249,7 +1249,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Core thesis:** ML \"often works\" in ideal lab conditions but \"often fails\" in medical reality"
+          "body": "**Core thesis:** ML \"often works\" in ideal lab conditions but \"often fails\" in medical reality\n\n- ML works best when: data is uniform, classes balanced, boundaries defined, labelling possible\n- ML fails when: data varies, classes imbalanced, boundaries undefined, labelling impossible\n- Example failure: 50% of congenital heart disease missed in antenatal ultrasound; 10% false positive rate after a single mammography\n\n**\"Unknown unknowns\" problem (Rumsfeld quote):**\n\n- Supervised ML only knows what it has seen\n- Key challenge: detecting things the model was never trained on (out-of-distribution / OOD)\n\n**Normative Representation Learning:**\n\n- A variant of **unsupervised single-class learning**\n- Focus on **density estimation** and **out-of-distribution (OOD) detection**\n- Learn what is \"normal\" → anything deviating significantly = anomaly\n- Useful when labelling is impossible or rare events need detection\n\n**Dense representation models:**\n\n- Encode data into **dense, continuous, low-dimensional vector spaces**\n- Allow interpolation between complex samples (→ counterfactual generation)\n- Allow detection of low-support areas (→ OOD detection)\n- Built with: GANs, VAEs, diffusion models, transformers\n\n**Counterfactual analysis:**\n\n> \"How would the scan of this patient look like if some clinical parameter would be different?\"\n\n**Safe data sharing:**\n\n- Synthetic data must NOT reproduce any training sample (privacy)\n- Synthetic data must faithfully represent 100% of training distribution (quality)\n- Metric: **IRS (Image Retrieval Score)** — measures diversity of generated images\n\n**Foundation models debate:**\n\n- One large foundation model that knows everything vs. many specialized expert models vs. both\n- Current challenge: hallucinations and factual inconsistencies in generative models\n- Solution explored: **Bayesian Decoding Game** (Generator + Verifier game to improve consistency)\n\n**Open challenges in Germany:**\n\n- Retrospective access to patient data almost impossible due to regulatory hurdles\n- State-of-the-art healthcare AI requires **hundreds of thousands** of patient cases\n- Most initiatives (NAKO, UK Biobank) involve healthy participants only\n- Positive: Bavarian Health Cloud will soon enable secure large-scale data use"
         }
       ],
       "questions": [
@@ -1265,7 +1265,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Normative Representation Learning, etiket gerektirmeyen tek sınıflı öğrenmenin bir çeşididir. \"Normal\" olanı öğrenir ve bundan sapanları tespit eder (OOD detection).",
+          "explanation": "Normative Representation Learning is a form of one-class learning without labels. It learns what is \"normal\" and detects deviations from it (OOD detection).",
           "type": "single"
         },
         {
@@ -1280,7 +1280,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Counterfactual analiz: \"Bu hastanın taraması belirli bir klinik parametre farklı olsaydı nasıl görünürdü?\" sorusunu yapay olarak cevaplayarak hastalık mekanizmaları hakkında fikir üretir.",
+          "explanation": "Counterfactual analysis answers: \"What would this patient's scan look like if a specific clinical parameter were different?\" — generating insights about disease mechanisms synthetically.",
           "type": "single"
         },
         {
@@ -1295,7 +1295,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Güvenli sentetik veri paylaşımı için iki zorunluluk: (1) sentetik veri gerçek eğitim verilerini yeniden üretmemeli (gizlilik), (2) eğitim dağılımının %100'ünü temsil etmeli (kalite).",
+          "explanation": "Two requirements for safe synthetic data sharing: (1) synthetic data must not reproduce real training data (privacy), (2) it must represent 100% of the training distribution (quality).",
           "type": "single"
         },
         {
@@ -1310,7 +1310,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "IRS (Image Retrieval Score), sentetik örnekler sorgu olarak kullanıldığında kaç farklı gerçek eğitim görüntüsüne ulaşılabildiğini ölçerek generatif modelin çeşitliliğini değerlendirir.",
+          "explanation": "IRS (Image Retrieval Score) evaluates the diversity of a generative model by measuring how many distinct real training images can be retrieved using synthetic samples as queries.",
           "type": "single"
         },
         {
@@ -1325,7 +1325,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "ML gerçek tıbbi verilerle başarısız olur çünkü: veri değişken, sınıflar dengesiz, sınır tanımları belirsiz ve manuel etiketleme çoğu zaman imkansızdır.",
+          "explanation": "ML fails with real medical data because: data is variable, classes are imbalanced, boundary definitions are ambiguous, and manual labeling is often impossible.",
           "type": "single"
         },
         {
@@ -1344,7 +1344,7 @@ export const content: Content = {
             2,
             4
           ],
-          "explanation": "Kainz'a göre denetimli ML şu koşullarda iyi çalışır: veri homojen (A), sınır tanımları net (B), sınıflar dengeli (C), etiketleme mümkün (E). Veri değişkenliği (D) ise ML'nin başarısız olduğu koşuldur.",
+          "explanation": "According to Kainz, supervised ML works well when: data is homogeneous (A), boundary definitions are clear (B), classes are balanced (C), and labeling is feasible (E). Data variability (D) is the condition under which ML fails.",
           "type": "multiple"
         }
       ]
@@ -1356,7 +1356,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**3 types of DNN opacity:**"
+          "body": "**3 types of DNN opacity:**\n\n1. **Intentional secrecy** — deliberate non-disclosure by companies (Burrell 2016)\n2. **Technical illiteracy** — users/stakeholders lack the expertise to understand (Burrell 2016)\n3. **Algorithmic-level opacity (ALO)** — the operations of DNNs are **inscrutable even to their own developers** due to sheer complexity\n\n**Algorithmic-level opacity (most important):**\n\n- Developers can inspect weights and bias parameters\n- But they CANNOT explain HOW the model maps inputs to outputs\n- They do not grasp \"which higher-level mathematical structures and processes these parameters implement\" (Zednik & Boelson 2022)\n\n**xAI (Explainable AI) — the controversy:**\n\n- Methods like LIME (surrogate models, saliency maps) are proposed as solutions to opacity\n- **Key criticism:** xAI provides **post-hoc explanations** — they may NOT faithfully represent the original black box model\n- Counter-argument: human experts also give post-hoc explanations of intuitive judgements (Zerilli et al. 2019) → \"biological double standard\"\n\n**Responsibility gaps:**\n\n- \"The highly autonomous behavior of AI systems, for which neither the programmer, the manufacturer, nor the operator seems to be responsible\" (Königs 2022)\n- AI decisions → unclear who is liable → \"problem of many hands\"\n\n**Instrumental Convergence Thesis:**\n\n- Agents (artificial or otherwise) will seek to fulfil **instrumental goals** (resource acquisition, power-seeking) to fulfil larger-scale goals\n- Even if an AI's top goal is benign, it may conflict with human interests through instrumental goals\n- Classic example: **Bostrom's paperclip maximizer** — a superintelligence manufacturing paperclips could convert all matter on Earth into paperclip manufacturing facilities\n\n**Trustworthy AI:**\n\n- EU AI Act and UNESCO advocate for \"trustworthy AI\"\n- Philosophical question: are AI systems appropriate **objects of trust**? Or just objects of **reliability**?\n- Trust (unlike reliability) can be **betrayed** — can AI systems enter such an interpersonal relation?\n\n**LLMs as cognitive agents? Two camps:**\n\n- **Observational support (Cappelen & Dever 2025):** We use intentional terms (believes, knows, acts) to describe LLMs → evidence they have minds\n- **Skeptical:** LLMs hallucinate in ways incompatible with genuine understanding (unlike human mistakes)\n\n**MIT AI Lab context:**\n\n- Co-founded in 1959 by **Marvin Minsky** and **John McCarthy** (originator of the term \"artificial intelligence\")"
         }
       ],
       "questions": [
@@ -1372,7 +1372,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Algoritmik düzeyde opaklık (ALO): DNN'lerin operasyonları, geliştiricileri tarafından bile anlaşılamayacak kadar karmaşıktır. Ağırlıklar bilinse de, bunların hangi üst düzey matematiksel yapıları uyguladığı anlaşılamaz.",
+          "explanation": "Algorithmic-Level Opacity (ALO): DNN operations are too complex to be understood even by their developers. Even if the weights are known, the high-level mathematical structures they implement cannot be understood.",
           "type": "single"
         },
         {
@@ -1387,7 +1387,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "xAI yöntemlerinin temel eleştirisi: orijinal kara kutu modelin gerçek operasyonlarını yansıtmayabilecek sonradan (post-hoc) açıklamalar üretirler.",
+          "explanation": "The main criticism of xAI methods: they produce post-hoc explanations that may not reflect the true operations of the original black-box model.",
           "type": "single"
         },
         {
@@ -1402,7 +1402,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Araçsal Yakınsama Tezi: yapay zeka ajanları, asıl hedeflerine ulaşmak için kaynak edinme gibi araçsal alt hedefleri takip edecek ve bu durum, asıl hedef zararsız olsa bile insan çıkarlarıyla çatışabilir.",
+          "explanation": "Instrumental Convergence Thesis: AI agents will pursue instrumental sub-goals (like resource acquisition) to achieve their primary goals, which may conflict with human interests even if the primary goal is harmless.",
           "type": "single"
         },
         {
@@ -1417,7 +1417,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "MIT Yapay Zeka Laboratuvarı 1959'da Marvin Minsky ve John McCarthy tarafından kurulmuştur. \"Yapay zeka\" terimini icat eden McCarthy'dir.",
+          "explanation": "MIT Artificial Intelligence Laboratory was founded in 1959 by Marvin Minsky and John McCarthy. McCarthy is credited with coining the term \"artificial intelligence.\"",
           "type": "single"
         },
         {
@@ -1432,7 +1432,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Sorumluluk boşluğu: AI sistemlerinin yüksek özerkliği, ne programcının ne üreticinin ne de operatörün bu sistemlerin davranışlarından açıkça sorumlu tutulabilmesini engeller.",
+          "explanation": "The accountability gap: the high autonomy of AI systems makes it impossible to clearly hold any single party — programmer, manufacturer, or operator — accountable for their behavior.",
           "type": "single"
         },
         {
@@ -1450,7 +1450,7 @@ export const content: Content = {
             1,
             2
           ],
-          "explanation": "Robertson'un sunumuna göre DNN'lerin 3 opaklık türü: kasıtlı gizlilik (A), teknik okur-yazarlık eksikliği (B) ve algoritmik düzeyde opaklık (C). D ve E sunumda yer almaz.",
+          "explanation": "Robertson's 3 types of DNN opacity: intentional concealment (A), technical illiteracy (B), and algorithmic-level opacity (C). D and E are not in the lecture.",
           "type": "multiple"
         }
       ]
@@ -1462,7 +1462,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Core argument:**"
+          "body": "**Core argument:**\n\n- \"No AI system is ever neutral\" (Floridi 2023; Wajcman 2010)\n- AI amplifies existing inequities (Toyama 2011)\n- AI is reinforcing oppression, negatively affecting marginalized people while the already privileged benefit most\n\n**3 research pillars (transformation potentials):**\n\n1. **Regulating AI** — e.g., EU AI Act implementation\n2. **Governing AI** — responsible AI governance strategies\n3. **Reimagining AI** — feminist-informed redesign\n\n**Gender Data Gap:**\n\n- Systematic gaps, distortion, or **invisibility of gender in data** — who is recorded, how data is recorded, what data is used for\n- Can have negative impacts on women (e.g., medical devices calibrated on male bodies)\n\n**The socio-technical entanglement:**\n\n- AI outcomes (predictions, recommendations, generations) reflect and reinforce societal bias\n- AI and societal systems are \"entangled\" — the world as it IS ≠ the world as it SHOULD be\n- Data reflects existing world → model inherits existing biases → perpetuates them\n\n**Power-over vs. Power-to:**\n\n- Current AI operates via **'power-over'** dynamics (interlocking systems of oppression: patriarchy, colonialism, capitalism)\n- Goal: transform AI toward **'power-to'** dynamics (equity, democracy, sovereignty)\n\n**Key concepts from intersectional feminism:**\n\n- **Intersectionality** (Crenshaw 1989): multiple identity dimensions (race, gender, class) interact to create overlapping discrimination\n- **Matrix of domination** (Collins 2000): structural, hegemonic, disciplinary, and interpersonal domains of power\n- LLMs reflect the ideology of their creators (Buyl et al. 2024)\n\n**Real-world examples of oppressive AI:**\n\n- Amazon's AI recruiting tool was **scrapped** because it showed bias against women (Dastin 2018)\n- Predictive policing algorithms remain racially biased regardless of input data\n- Facial recognition systems have wrongly caused arrests due to misidentification\n- Iran using drones and phone apps to monitor dress code for women\n\n**Practical implications (5 target groups):**\n\n1. Regulators: don't relinquish AI regulation; design mandatory diversity requirements\n2. Organizational leadership: practice responsible AI governance; aim beyond mere compliance\n3. Development teams: practice reflexivity; implement feminist reflexes\n4. Users/civil society: use AI for feminist purposes; adopt fair AI prompting strategies\n5. Researchers: make positionality explicit; recognize knowledge is produced from situated standpoints"
         }
       ],
       "questions": [
@@ -1478,7 +1478,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Gender Data Gap, veride cinsiyetin sistematik olarak eksik, çarpıtılmış veya görünmez olduğu durumu tanımlar. Kim kayıt edildiği, nasıl kayıt edildiği ve verinin ne için kullanıldığını kapsar.",
+          "explanation": "Gender Data Gap describes the situation where gender is systematically absent, distorted, or invisible in data. It covers who is recorded, how they are recorded, and what the data is used for.",
           "type": "single"
         },
         {
@@ -1493,7 +1493,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Kesişimsellik (intersectionality), ırk, cinsiyet, sınıf gibi birden fazla kimlik boyutunun birbirleriyle etkileşerek örtüşen ayrımcılık biçimleri oluşturduğunu açıklar.",
+          "explanation": "Intersectionality explains how multiple dimensions of identity (race, gender, class) interact with each other to create overlapping forms of discrimination.",
           "type": "single"
         },
         {
@@ -1508,7 +1508,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Amazon'un AI tabanlı işe alım aracı kadın adaylara karşı sistematik önyargı gösterdiği için 2018'de kullanımdan kaldırıldı (Dastin 2018).",
+          "explanation": "Amazon's AI-based recruitment tool was taken out of service in 2018 because it showed systematic bias against female candidates (Dastin 2018).",
           "type": "single"
         },
         {
@@ -1523,7 +1523,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Mevcut AI, ataerki/sömürgecilik/kapitalizm gibi baskı sistemlerini pekiştiren \"güç-üzerinde\" dinamikleriyle çalışır. Feminist hedef, AI'ı eşitlik ve güçlendirme sağlayan \"güç-için\" dinamiklerine dönüştürmektir.",
+          "explanation": "Current AI operates with \"power-over\" dynamics that reinforce oppressive systems like patriarchy/colonialism/capitalism. The feminist goal is to transform AI into \"power-for\" dynamics that provide equity and empowerment.",
           "type": "single"
         },
         {
@@ -1538,7 +1538,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Gengler'in temel argümanı: AI sistemleri yaratıcılarının ideolojisini yansıtır ve hiçbir AI tarafsız değildir. Ancak bu baskıcı dinamik kaçınılmaz değildir ve feminist bir yaklaşımla değiştirilebilir.",
+          "explanation": "Gengler's key argument: AI systems reflect the ideology of their creators and no AI is neutral. However, this oppressive dynamic is not inevitable and can be changed through a feminist approach.",
           "type": "single"
         },
         {
@@ -1557,7 +1557,7 @@ export const content: Content = {
             2,
             4
           ],
-          "explanation": "Gengler'in sunumunda özel olarak belirtilen örnekler: Amazon işe alım aracı (A), tahmine dayalı polislik algoritmaları (B), yüz tanıma ve yanlış tutuklamalar (C) ve İran'ın kıyafet denetimi için drone/uygulama kullanımı (E). D sunumda belirtilmemiştir.",
+          "explanation": "Examples specifically mentioned in Gengler's lecture: Amazon recruitment tool (A), predictive policing algorithms (B), facial recognition and wrongful arrests (C), and Iran's use of drones/apps for dress code enforcement (E). D is not mentioned in the lecture.",
           "type": "multiple"
         }
       ]
@@ -1569,7 +1569,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Neural interfaces — two main domains:**"
+          "body": "**Neural interfaces — two main domains:**\n\n1. **Medical applications:** neurorehabilitation, motor augmentation, neural control of movement\n2. **Movement neuroscience:** biosignal processing, neurophysiology, neural models + AI\n\n**Key signal: EMG (Electromyography)**\n\n- Records electrical activity produced by skeletal muscles\n- **HD-sEMG** (High-Density surface EMG) — array of many electrodes, provides fine-grained spatial resolution\n- Used via electrode sleeves on the forearm\n\n**What a neural interface enables:**\n\n- Neuroprosthetic control for tetraplegia (e.g., controlling a robotic arm via BCI)\n- Simultaneous control of multiple functions of a bionic hand prosthesis\n- Decoding attempted hand movements in paralyzed patients\n- Control of >20 degrees of freedom of the human hand in real time\n\n**Targeted Muscle Reinnervation (TMR):**\n\n- Surgical technique: amputated nerve endings are rerouted to remaining chest/forearm muscles\n- Enables amputees to control a prosthetic hand via EMG through habitual movements\n\n**Spinal Cord Injury (SCI) — key findings:**\n\n- Even in motor-complete paralysis, **spared motor neurons** can be detected and decoded\n- A **direct spinal cord–computer interface** enabled paralyzed patients to control a virtual hand with >10 degrees of freedom (Oliveira et al., Brain 2024)\n\n**Functional Electrical Stimulation (FES):**\n\n- Electrically stimulating forearm muscles to restore hand function\n- Controlled intuitively via remaining EMG signals (from contra- or ipsilateral side)\n- Restores hand function in tetraplegics\n\n**PlayAgain:** pediatric neuroorthosis to restore grasping in children with a paralyzed hand\n\n- Exploits the brain's high neuroplasticity during childhood\n\n**ML/AI role in neural interfaces:**\n\n- CNN maps HD-sEMG signals → high-dimensional latent space → hand kinematics (MLP)\n- Real-time decoding within neuromuscular delays (~10-15 ms)"
         }
       ],
       "questions": [
@@ -1585,7 +1585,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "HD-sEMG, kas elektriksel aktivitesini yüksek uzaysal çözünürlükle kaydetmek için çok sayıda yüzey elektrodu dizisi kullanan bir kayıt tekniğidir.",
+          "explanation": "HD-sEMG is a recording technique that uses an array of many surface electrodes to capture muscle electrical activity with high spatial resolution.",
           "type": "single"
         },
         {
@@ -1600,7 +1600,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "TMR, kesik sinir uçlarını kalan kaslara (örn. göğüs kasları) yeniden bağlayan cerrahi bir tekniktir. Bu sayede ampute bireyler, protezlerini doğal hareketlerle EMG aracılığıyla kontrol edebilir.",
+          "explanation": "TMR is a surgical technique that reattaches severed nerve ends to residual muscles (e.g., chest muscles), allowing amputees to control their prosthetics through natural movements via EMG.",
           "type": "single"
         },
         {
@@ -1615,7 +1615,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Motor-tam felçli bireylerde bile kısmen korunan motor nöronlar tespit edilebilir. Bu nöronlar decode edilerek 10'dan fazla serbestlik derecesiyle sanal el kontrolü sağlanabilir (Oliveira et al., Brain 2024).",
+          "explanation": "Even in motor-complete paralysis, partially preserved motor neurons can be detected. These can be decoded to provide virtual hand control with more than 10 degrees of freedom (Oliveira et al., Brain 2024).",
           "type": "single"
         },
         {
@@ -1630,7 +1630,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "FES, kol kaslarını elektriksel olarak uyararak el fonksiyonunu geri kazandırır. Sistem, kalan EMG sinyilleri aracılığıyla sezgisel olarak kontrol edilir ve tetraplejili bireylerde el fonksiyonunu restore eder.",
+          "explanation": "FES electrically stimulates arm muscles to restore hand function. The system is controlled intuitively via residual EMG signals and restores hand function in tetraplegic individuals.",
           "type": "single"
         },
         {
@@ -1649,7 +1649,7 @@ export const content: Content = {
             3,
             4
           ],
-          "explanation": "Del Vecchio'nun sunduğu nöral arayüz uygulamaları: BCI ile robotik kol kontrolü (A), omurilik arayüzü ile felçli hastalarda el hareketlerini decode etme (B), FES ile el fonksiyonu geri kazandırma (D) ve PlayAgain çocuk neuroortezi (E). DBS (C) sunumda yer almaz.",
+          "explanation": "Neural interface applications presented by Del Vecchio: robotic arm control via BCI (A), decoding hand movements in paralyzed patients via spinal cord interface (B), restoring hand function via FES (D), and PlayAgain pediatric neuroorthosis (E). DBS (C) is not in the lecture.",
           "type": "multiple"
         }
       ]
@@ -1661,7 +1661,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Breast cancer screening context:**"
+          "body": "**Breast cancer screening context:**\n\n- Most common cancer in women\n- X-ray mammography: screening every 2 years for women aged 50–75\n- Mammography screening → **-30% decrease** in breast cancer mortality (Swedish Two-County Trial)\n\n**3 main challenges in breast cancer screening:**\n\n1. **False-positive findings** → unnecessary biopsies\n2. **False-negative findings** → missed cancers (\"interval cancer\")\n3. **Over-diagnosis** → over-treatment\n\n**Why add MRI to screening?**\n\n- MRI has much higher cancer detection rate (CDR/1000: 16.5 with MRI vs. 5–6 with mammography alone)\n- But MRI limitations: high cost, long duration, requires contrast agents, limited availability\n\n**EUSOBI Recommendations 2024:**\n\n- Regular mammography remains the **mainstay** of breast cancer screening\n- High-risk women + extremely dense breast tissue → use MRI\n- Women should **actively participate** in personalized screening decisions\n\n**4 DL applications in breast MRI (Kapsner's 4 topics):**\n\n1. **Quality Assurance** — automated artifact detection in MRI-derived MIPs\n2. **Virtual Contrast Enhancement (vCE)** — generate contrast-enhanced appearance from contrast-free MRI\n3. **Lesion Detection** — AI-powered CAD system for breast DWI MRI\n4. **Additional/Incidental Findings** — detect pathologies outside region of interest (e.g., aortic aneurysm)\n\n**Maximum Intensity Projection (MIP):**\n\n- Step 1: subtract pre-contrast from post-contrast 3D image → only contrast-enriched areas remain\n- Step 2: project maximum intensities along one axis → 2D overview image\n- 66.9% of MIPs have artifacts → DL achieves ~86-94% AUROC in artifact detection\n\n**Virtual Contrast Enhancement (vCE):**\n\n- Goal: predict contrast enhancement from **contrast-free MRI** sequences (T1, T2, DWI)\n- Avoids risks of contrast agents: allergic reactions, kidney failure, environmental contamination\n- GAN produces more realistic-looking vCE images than U-Net (confirmed by Turing test)\n\n**Thoracic Aortic Aneurysm (incidental finding):**\n\n- \"Silent killer\": >95% asymptomatic; rupture → >90% mortality\n- AI detected aneurysms at **~3.5× higher rate** than routine clinical reporting\n- Women have +40% probability to die from thoracic aortic aneurysm vs. men"
         }
       ],
       "questions": [
@@ -1677,7 +1677,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "İsveç İki İlçe Çalışması: mamografi taramasına davet, meme kanseri ölümlerinde %30 anlamlı azalma sağladı.",
+          "explanation": "Swedish Two-County Study: invitation to mammography screening produced a significant 30% reduction in breast cancer mortality.",
           "type": "single"
         },
         {
@@ -1692,7 +1692,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "MIP: (1) post-kontrast 3D görüntüden pre-kontrast 3D görüntü çıkarılır (yalnızca kontrast tutan alanlar kalır), (2) maksimum yoğunluklar bir eksen boyunca 2D görüntüye yansıtılır.",
+          "explanation": "MIP: (1) subtract the pre-contrast 3D image from the post-contrast 3D image (only contrast-enhancing areas remain), (2) project maximum intensities onto a 2D image along one axis.",
           "type": "single"
         },
         {
@@ -1707,7 +1707,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "vCE, kontrast ajan enjeksiyonu gerektirmeden, kontrast-free MRI sekanslarından (T1, T2, DWI) derin öğrenme ile kontrast tutan görüntü görünümü üretir.",
+          "explanation": "vCE generates contrast-enhancing image appearance from contrast-free MRI sequences (T1, T2, DWI) using deep learning, without requiring contrast agent injection.",
           "type": "single"
         },
         {
@@ -1722,7 +1722,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Turing testi sonucu: GAN tarafından üretilen vCE görüntüleri, U-Net'e kıyasla daha gerçekçi bir görüntü izlenimi verdi.",
+          "explanation": "Turing test result: GAN-generated vCE images gave a more realistic impression compared to U-Net images.",
           "type": "single"
         },
         {
@@ -1737,7 +1737,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "TAA neredeyse tamamen asemptomatiktir (>%95); rüptür %90'dan fazla mortaliteye yol açar. AI, rutin klinik raporlamaya kıyasla TAA'yı ~3.5 kat daha yüksek oranda tespit etti.",
+          "explanation": "TAA is almost entirely asymptomatic (>95%); rupture leads to >90% mortality. AI detected TAA approximately 3.5 times more frequently than routine clinical reporting.",
           "type": "single"
         },
         {
@@ -1755,7 +1755,7 @@ export const content: Content = {
             2,
             3
           ],
-          "explanation": "Meme kanseri taramasının 3 ana zorluğu: yanlış pozitif bulgular (A), yanlış negatif bulgular (C) ve aşırı tanı (D). MRI maliyeti (B) ve radyolog eksikliği (E) sunumda bu kategoride sayılmamıştır.",
+          "explanation": "The 3 main challenges of breast cancer screening: false positives (A), false negatives (C), and overdiagnosis (D). MRI cost (B) and radiologist shortage (E) are not listed in this category in the lecture.",
           "type": "multiple"
         }
       ]
@@ -1767,7 +1767,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Water system components (4 stages):**"
+          "body": "**Water system components (4 stages):**\n\n1. Collection\n2. Purification\n3. Transmission\n4. Distribution\n\n**Network topology types:**\n\n- **Branching network** — tree structure, dead ends (no redundancy)\n- **Gridiron network** — looped/ring structure (redundancy, more resilient)\n\n**Monitoring devices in WDN:**\n\n- Flow and pressure sensors\n- Water quality sensors\n- Noise loggers (for leak detection)\n- Smart meters (consumption measurement)\n\n**Pure AI models — limitations:**\n\n- Can produce **non-physically correct** results (violate conservation laws)\n- Sensitive to noise\n- \"Black box\" — hard to debug\n- Cannot guarantee physical plausibility\n\n**Pure Physical models — limitations:**\n\n- Equations are approximations\n- Sensitive to **missing or wrong GIS data**\n- Assume constant material properties\n- Difficult to update in real time\n\n**Hybrid approach — 2 strategies:**\n\n1. **Physics for AI (PINN/PIGNN):** embed physics equations into the neural network's **loss function** → model is constrained to follow physical laws during training\n2. **AI for Physics:** use AI to discover missing GIS data, predict discrepancies between model and measurement, or estimate physical properties (e.g., temperature)\n\n**Physics Informed Graph Neural Networks (PIGNN):**\n\n- Water networks modelled as **graphs**: pipes = edges, junctions/nodes = nodes\n- **Message Passing (2 steps):**\n  - **Aggregate:** each node collects information from neighbouring nodes\n  - **Combine:** each node updates its own representation using aggregated info\n- **Architecture:** Encoder → Processor → Decoder\n- Physics constraints (PDE loss) embedded in training loss → ensures physical consistency"
         }
       ],
       "questions": [
@@ -1783,7 +1783,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Su sistemleri dört ana aşamadan oluşur: Toplama (Collection), Arıtma (Purification), İletim (Transmission), Dağıtım (Distribution). Kentsel ısıtma bu listede yer almaz.",
+          "explanation": "Water systems consist of four main phases: Collection, Purification, Transmission, and Distribution. Urban heating is not in this list.",
           "type": "single"
         },
         {
@@ -1798,7 +1798,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Saf AI modelleri fizik kurallarını bilmediğinden fiziksel olarak imkansız sonuçlar üretebilir (ör. kütle korunumunu ihlal eden akış tahminleri).",
+          "explanation": "Pure AI models do not know physical laws and can produce physically impossible results (e.g., flow predictions that violate mass conservation).",
           "type": "single"
         },
         {
@@ -1813,7 +1813,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "PIGNN, fizik kurallarını (kısmi diferansiyel denklemler) kayıp fonksiyonuna (loss function) gömer. Bu sayede model eğitim sırasında fiziksel tutarlılığı zorunlu kılar.",
+          "explanation": "PIGNN embeds physical laws (partial differential equations) into the loss function. This forces the model to comply with physical consistency during training.",
           "type": "single"
         },
         {
@@ -1828,7 +1828,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Mesaj geçişi iki adımdan oluşur: Aggregate (her düğüm komşularından bilgi toplar) ve Combine (her düğüm kendi temsilini günceller).",
+          "explanation": "Message passing consists of two steps: Aggregate (each node gathers information from its neighbors) and Combine (each node updates its own representation).",
           "type": "single"
         },
         {
@@ -1843,7 +1843,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "AI, fiziksel modellerdeki eksik veya yanlış coğrafi bilgi sistemi (GIS) verilerini keşfetmek için kullanılabilir; bu da fiziksel modelin doğruluğunu artırır.",
+          "explanation": "AI can be used to detect missing or incorrect GIS data in physical models, thereby improving the accuracy of the physical model.",
           "type": "single"
         },
         {
@@ -1858,7 +1858,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Branching (ağaç yapısı): ölü uçlar, yedeklilik yok. Gridiron (ızgara/halka yapısı): döngüsel, yedekli, arıza durumunda alternatif yollar mevcut.",
+          "explanation": "Branching (tree structure): dead ends, no redundancy. Gridiron (grid/ring structure): cyclic, redundant, with alternative paths available in case of failure.",
           "type": "single"
         },
         {
@@ -1876,7 +1876,7 @@ export const content: Content = {
             1,
             3
           ],
-          "explanation": "PIGNN: su şebekesini çizge yapısıyla temsil eder (A), fiziksel yasaları kayıp fonksiyonuna gömer (B) ve modelin fiziksel tutarlılığını garantiler (D). Tamamen veri odaklı değildir (C yanlış) ve her iki şebeke tipiyle çalışabilir (E yanlış).",
+          "explanation": "PIGNN: represents the water network as a graph structure (A), embeds physical laws into the loss function (B), and guarantees the model's physical consistency (D). It is not purely data-driven (C is wrong) and can work with both network types (E is wrong).",
           "type": "multiple"
         }
       ]
@@ -1888,7 +1888,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**Definition of Research:**"
+          "body": "**Definition of Research:**\n\n> \"Answering questions in a systematic way to increase knowledge\"\n\n**7-Step Research Process:**\n\n1. Define the research question\n2. Background research (literature review)\n3. Formulate hypothesis\n4. Design the study (methods)\n5. Collect data\n6. Analyze data\n7. Draw conclusions → communicate results\n\n**Peer Review Process:**\n\n```\nSubmission → Peer Review (2–3 experts) → Revision → Acceptance → Publication\n```\n\n- Reviewers are independent experts in the field\n- Authors revise based on feedback\n- Goal: quality control, validation, credibility\n\n**Academic Paper Structure:**\n\n| Section | Purpose |\n|---------|---------|\n| Abstract | Summary of the whole paper |\n| Introduction | Background, motivation, research gap |\n| Methods | How the study was conducted |\n| Results | What was found |\n| Discussion | What it means, limitations |\n| Conclusion | Main takeaways |\n| References | Cited sources |\n\n**Literature Databases:**\n\n- **Google Scholar** — broad, general search across all fields\n- **Scopus** — citation tracking, metrics\n- **Web of Science** — impact factors, journal rankings\n- **PubMed** — medical and biomedical literature\n\n**Evidence Hierarchy Pyramid (bottom = weakest → top = strongest):**\n\n```\n        Metaanalyses        ← strongest\n      Systematic Reviews\n     Traditional Reviews\n    Individual Studies\n  Expert Opinions           ← weakest\n```\n\n**LLMs in Research — Limitations:**\n\n- LLMs cannot generate genuinely new knowledge (they recombine existing text)\n- **Hallucinations = plagiarism** — fabricated citations/facts are unacceptable in research\n- **ArXiv:** preprint server — NO peer review, only minimal screening for completeness\n  - Fast dissemination but no quality guarantee"
         }
       ],
       "questions": [
@@ -1904,7 +1904,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Araştırma tanımı: \"soruları sistematik bir şekilde yanıtlayarak bilgiyi artırmak.\" Sadece literatür okumak veya veri toplamak yeterli değildir; sistematik bir süreç gereklidir.",
+          "explanation": "Research definition: \"increasing knowledge by systematically answering questions.\" Simply reading literature or collecting data is not enough; a systematic process is required.",
           "type": "single"
         },
         {
@@ -1919,7 +1919,7 @@ export const content: Content = {
           "correct": [
             3
           ],
-          "explanation": "Kanıt hiyerarşisinde en güçlü kanıt Meta-analizlerdir. Bunlar birden fazla çalışmanın sonuçlarını istatistiksel olarak birleştirir. En zayıf kanıt ise uzman görüşleridir.",
+          "explanation": "At the top of the evidence hierarchy are Meta-analyses. They statistically combine the results of multiple studies. The weakest evidence is expert opinion.",
           "type": "single"
         },
         {
@@ -1934,7 +1934,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Hakem değerlendirme süreci: Gönderim → Hakem İncelemesi (2-3 bağımsız uzman) → Revizyon → Kabul → Yayın.",
+          "explanation": "Peer review process: Submission → Peer Review (2-3 independent experts) → Revision → Acceptance → Publication.",
           "type": "single"
         },
         {
@@ -1949,7 +1949,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "PubMed tıbbi ve biyomedikal literatür için özelleşmiş bir veritabanıdır (National Library of Medicine tarafından sağlanır).",
+          "explanation": "PubMed is a specialized database for medical and biomedical literature (provided by the National Library of Medicine).",
           "type": "single"
         },
         {
@@ -1964,7 +1964,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "LLM'ler mevcut metinleri yeniden birleştirir; gerçekten yeni bilgi üretemezler. \"Hallucination\" (uydurma atıflar ve bilgiler) akademik intihal sayılır.",
+          "explanation": "LLMs recombine existing text; they cannot generate truly new knowledge. \"Hallucination\" (fabricated citations and information) counts as academic plagiarism.",
           "type": "single"
         },
         {
@@ -1979,7 +1979,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "ArXiv bir \"preprint\" sunucusudur. Makaleler sadece temel bütünlük kontrolünden geçer, uzman hakem incelemesine tabi değildir. Bu nedenle ArXiv'daki sonuçlar henüz doğrulanmamıştır.",
+          "explanation": "ArXiv is a \"preprint\" server. Papers only undergo basic integrity checks, not expert peer review. Therefore, results on ArXiv have not yet been validated.",
           "type": "single"
         }
       ]
@@ -1991,7 +1991,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**5 Elements of a Good Presentation:**"
+          "body": "**5 Elements of a Good Presentation:**\n\n1. **Key message** — one clear takeaway\n2. **Comprehensive structure/storyline** — logical flow\n3. **Good preparation & technical setup** — be ready\n4. **Consistent and appealing slide design** — visual coherence\n5. **Appealing presentation style** — loud, positioned well, engaging\n\n**First Step — Before building slides, answer:**\n\n- What information do you want to communicate?\n- What do you want to achieve?\n- Who is your audience?\n- What is the frame?\n\n**3 Types of Presentations:**\n\n| Type | Purpose |\n|------|---------|\n| Scientific Presentation | Report research findings (paper structure) |\n| Pitch | Sell an idea/product (USP, appeal to investors) |\n| Lecture Slides | Knowledge transfer (dense, for looking things up) |\n\n**Presentation Structure — Time Proportions:**\n\n- Introduction: **10%**\n- Methods + Results + Discussion: **80%**\n- Conclusion: **10%**\n\n**How to Start a Presentation:**\n\n- Start with **content** (NOT an outline slide)\n- **First 60 seconds are the most important**\n- Do NOT repeat what the person who introduced you said\n- No outline at the beginning!\n\n**Introduction — Inverted Triangle (Problem → Gap → Hook):**\n\n```\n    Problem (broad context)\n       ↓\n    Gap (what is missing in the literature)\n       ↓\n    Hook (your hypothesis/solution)\n```\n\n**Structure Templates by Goal:**\n\n| Goal | Structure |\n|------|-----------|\n| Pitch an idea | Big change → Chances & risks → Solution |\n| Describe a problem | Problem → Implications → Solution approaches |\n| Present a solution | Problem → Solution → Implementation |\n\n**5 Steps to Build a Presentation:**\n\n1. Write down cornerstones (e.g., research questions)\n2. Add required elements (literature, methods, results…)\n3. Think of a story / red thread to connect\n4. Sketch slides\n5. Make them pretty / fine touch\n\n**Slide Design Principles (3 rules):**\n\n| Principle | Meaning |\n|-----------|---------|\n| **Form follows Content** | Design supports the key message |\n| **Think Inside the Box** | Group connected messages in boxes for clarity |\n| **Expect the DAU\\*** | \\*Dumbest Assumable User — structure must be obvious, must \"leap out\" |\n\n**Reading direction:** Information perceived from **top left → bottom right**\n\n**Layout Rules:**\n\n- Max **20 words per slide** (exceptions: 30)\n- **NO full sentences** → keywords only\n- Line breaks reduce readability\n- Max **2 minutes per slide**\n- Practice and speak free (not read from slides)\n- Be consistent: background, colors, fonts, margins, icon style\n\n**Typography:**\n\n- Simple font: Arial or FAUSans\n- Min size: **16pt**, preferred: **18pt**, headers: **24pt**\n- **Bold** preferred for highlighting (over italic or underline)\n- Avoid all-caps words\n\n**Colors:**\n\n- Max **3 colors per slide** (excluding black, grey, white)\n- Must work in black & white / greyscale\n- Color blind friendly (vary lightness and saturation)\n- Consistent meaning for colors across all slides\n\n**Transitions & Animations:**\n\n- Transitions (between slides): keep simple → **None, Morph, or Fade**\n- Animations (within slides): use to guide audience, **use carefully**\n\n**AI-generated images — risks:**\n\n- May look realistic but contain weird/wrongly spelled details\n- Always check carefully before using"
         }
       ],
       "questions": [
@@ -2007,7 +2007,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "İlk adım her zaman şunları netleştirmektir: ne iletmek istiyorsun, ne elde etmek istiyorsun, hedef kitlen kim, çerçeve nedir. Slayt tasarımı bundan sonra gelir.",
+          "explanation": "The first step is always to clarify: what you want to communicate, what you want to achieve, who your target audience is, and what the framing is. Slide design comes after.",
           "type": "single"
         },
         {
@@ -2022,7 +2022,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Bilimsel sunumda zaman dağılımı: Giriş %10, Yöntemler/Sonuçlar/Tartışma %80, Sonuç %10. Asıl içerik (bulgular) sunumun büyük bölümünü oluşturmalıdır.",
+          "explanation": "Time distribution in a scientific talk: Introduction 10%, Methods/Results/Discussion 80%, Conclusion 10%. The core content (findings) should occupy the majority of the talk.",
           "type": "single"
         },
         {
@@ -2037,7 +2037,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Ters üçgen (Inverted Triangle): Genel bağlam (Problem) → Literatürdeki boşluk (Gap) → Spesifik hipotez/kanca (Hook). Genelden özele doğru gider.",
+          "explanation": "Inverted Triangle: General context (Problem) → Gap in literature (Gap) → Specific hypothesis/hook (Hook). Goes from general to specific.",
           "type": "single"
         },
         {
@@ -2052,7 +2052,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "DAU = \"Dumbest Assumable User\" (en basit varsayılabilir kullanıcı). Slayttaki yapı, izleyicinin aktif olarak araması gerekmeden kendiliğinden anlaşılır olmalıdır — yapı \"üzerine atlamalıdır.\"",
+          "explanation": "DAU = \"Dumbest Assumable User.\" The structure on a slide should be self-evident without requiring the audience to actively search for it — the structure should \"jump out.\"",
           "type": "single"
         },
         {
@@ -2072,7 +2072,7 @@ export const content: Content = {
             3,
             5
           ],
-          "explanation": "İyi bir slayt: tek bir anahtar mesaj taşır (A), maksimum 20 kelime içerir (C), soldan sağa/yukarıdan aşağıya okuma yönünü takip eder (D) ve yapı hemen anlaşılır olur (F). Tam cümleler (B) ve başlangıçta ana hat (E) önerilmez.",
+          "explanation": "A good slide: carries a single key message (A), contains a maximum of 20 words (C), follows left-to-right/top-to-bottom reading order (D), and its structure is immediately understandable (F). Full sentences (B) and an outline at the start (E) are not recommended.",
           "type": "multiple"
         },
         {
@@ -2087,7 +2087,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Sunumun başında ana hat/içindekiler slaydı göstermemelisiniz. Doğrudan içerikle başlayın. İlk 60 saniye en kritik zamandır ve izleyiciyi yakalamak için kullanılmalıdır.",
+          "explanation": "You should NOT show an outline/table of contents slide at the start. Start directly with content. The first 60 seconds are the most critical and should be used to capture the audience.",
           "type": "single"
         }
       ]
@@ -2099,7 +2099,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**What is a Spin-Off?**"
+          "body": "**What is a Spin-Off?**\n\n- A company founded by members (students, researchers, professors) of a university or research institution\n- Commercializes scientific results or technology developed at the institution\n\n**FAU Spin-Off Facts:**\n\n- **500+** spin-offs since 2000\n- **~75%** still active → high success rate compared to general start-up statistics\n- FAU supports spin-offs through the **Spin-Off Service** office\n\n**DTA — Digital Tech Academy:**\n\n- FAU's **#1 Entrepreneurship Excellence Program**\n- Duration: **12 weeks** (Business Design Process)\n- Participants: **20 students** in **4–6 teams**\n- Focus: **AI start-ups** and digital technology ventures\n- Students go through the full cycle: idea → validation → business model → pitch\n\n**AI Start-Up Examples from FAU:**\n\n- **Evolonic** — deep learning for communication/language technology\n- **Oculai** — AI-based construction site monitoring\n\n**Why Start-Ups Fail (common reasons):**\n\n- Wrong team / founder conflict\n- No market need (building something nobody wants)\n- Ran out of cash\n- Outcompeted\n- Pricing / cost issues\n\n**Business Model Canvas (key entrepreneurship tool):**\n\n9 building blocks: Customer Segments, Value Proposition, Channels, Customer Relationships, Revenue Streams, Key Resources, Key Activities, Key Partnerships, Cost Structure\n\n**MVP — Minimum Viable Product:**\n\n- Simplest version of a product to test with real customers\n- Validate assumptions before building the full product\n- Lean Start-Up approach: Build → Measure → Learn loop"
         }
       ],
       "questions": [
@@ -2115,7 +2115,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Spin-off: üniversite üyelerinin (öğrenci, araştırmacı, profesör) kurumda geliştirilen bilimsel/teknolojik sonuçları ticarileştirmek amacıyla kurduğu şirkettir.",
+          "explanation": "Spin-off: a company founded by university members (students, researchers, professors) to commercialize scientific/technological results developed at the institution.",
           "type": "single"
         },
         {
@@ -2130,7 +2130,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "FAU 2000'den bu yana 500'den fazla spin-off üretmiştir ve bunların yaklaşık %75'i hâlâ aktiftir. Bu, genel girişim istatistiklerine kıyasla yüksek bir başarı oranıdır.",
+          "explanation": "FAU has produced over 500 spin-offs since 2000, approximately 75% of which are still active. This is a high success rate compared to general entrepreneurship statistics.",
           "type": "single"
         },
         {
@@ -2145,7 +2145,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "DTA (Digital Tech Academy): FAU'nun #1 girişimcilik mükemmeliyet programıdır. 12 hafta, 20 öğrenci, 4-6 takım, AI girişimlerine odaklanır.",
+          "explanation": "DTA (Digital Tech Academy): FAU's #1 entrepreneurship excellence program. 12 weeks, 20 students, 4-6 teams, focused on AI ventures.",
           "type": "single"
         },
         {
@@ -2160,7 +2160,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "MVP = Minimum Viable Product (Minimum Geçerli Ürün). Gerçek müşterilerle test etmek için üretilecek en basit ürün versiyonudur. Lean Start-Up döngüsü: Yap → Ölç → Öğren.",
+          "explanation": "MVP = Minimum Viable Product. The simplest product version to test with real customers. Lean Start-Up cycle: Build → Measure → Learn.",
           "type": "single"
         },
         {
@@ -2175,7 +2175,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Girişimlerin en yaygın başarısızlık nedenlerinden biri pazar ihtiyacı olmamasıdır — kimsenin gerçekten istemediği bir şeyi inşa etmek. Diğer yaygın nedenler: yanlış ekip, nakit tükenmesi, rekabet.",
+          "explanation": "One of the most common startup failure reasons is the absence of market need — building something nobody actually wants. Other common reasons: wrong team, cash depletion, competition.",
           "type": "single"
         }
       ]
@@ -2187,7 +2187,7 @@ export const content: Content = {
       "concepts": [
         {
           "heading": "Key Concepts to Memorize",
-          "body": "**ANKI Lab = Artificial Intelligence in Communication Disorders**"
+          "body": "**ANKI Lab = Artificial Intelligence in Communication Disorders**\n\n- Applies AI to disorders affecting communication (speech, swallowing)\n\n**Central Dogma of Neuroscience / Kist's Framework:**\n\n```\nSensory Input → Brain (Processing) → Behavior (Output)\n```\n\n- AI can intervene at any stage: sensing, processing, or behavior analysis\n\n**Dysphagia (Swallowing Disorder):**\n\n- **Dysphagia** = difficulty swallowing (Greek: dys = difficult, phagein = to eat)\n- Can lead to **aspiration** (food/liquid enters lungs) → pneumonia, malnutrition\n- Analyzed using **fluoroscopy** (X-ray video) — the clinical gold standard\n- AI challenge: automatic, objective analysis of swallowing from video\n\n**Key AI Technique — Semantic Segmentation:**\n\n- **Semantic segmentation** = pixel-by-pixel classification of an image\n- Every pixel is assigned a class label (e.g., \"tongue\", \"food bolus\", \"airway\")\n- More detailed than object detection (which only gives bounding boxes)\n\n**Markerless Tracking:**\n\n- Track structures (e.g., tongue, hyoid bone) in video WITHOUT physical markers\n- Method: compute **velocity fields** → integrate over time → **displacement fields**\n- Enables tracking anatomical movement without surgical markers or radiation markers\n\n**Diffeomorphic Image Registration:**\n\n- A method to align (register) two images\n- **Diffeomorphic** = smooth, invertible transformation (no tearing or folding of tissue)\n- Preserves anatomical topology\n\n**Developmental Speech Disorders:**\n\n- Affect **10–20% of children**\n- Two main types:\n  - **Sensory type:** Cannot hear/perceive their own speech correctly (auditory feedback problem)\n  - **Motor type:** Knows what to say but has difficulty with execution (motor coordination problem)\n\n**Phoneme — Definition:**\n\n- **Phoneme** = the smallest unit of sound in a language that distinguishes meaning\n- Example: /p/ vs /b/ in \"pat\" vs \"bat\"\n\n**TTS — Text-to-Speech:**\n\n```\nText → AI Model → Audio output\n```\n\n- AI generates natural-sounding speech from written text\n- Application: assistive technology for people who cannot speak\n\n**Embedded AI (Resource-Efficient AI):**\n\n- Running AI models directly on the device (not sending data to the cloud)\n- **Constraints:** limited memory, limited compute, limited energy (battery-powered devices)\n- Same concept as Edge AI / TinyML\n- Key trade-off: model accuracy vs. model size/energy cost"
         }
       ],
       "questions": [
@@ -2203,7 +2203,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Disfaji (dysphagia) yutma güçlüğüdür. Aspirasyona (besin/sıvının akciğerlere kaçması) yol açabilir ve bunun sonucunda pnömoni veya malnütrisyon gelişebilir.",
+          "explanation": "Dysphagia is difficulty swallowing. It can lead to aspiration (food/liquid entering the lungs) and consequently pneumonia or malnutrition.",
           "type": "single"
         },
         {
@@ -2218,7 +2218,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Fluoroskopi (X-ışını videosu) yutma bozukluklarını analiz etmek için kullanılan klinik altın standarttır. Gerçek zamanlı video görüntüsü sağlar.",
+          "explanation": "Fluoroscopy (X-ray video) is the clinical gold standard for analyzing swallowing disorders. It provides real-time video imaging.",
           "type": "single"
         },
         {
@@ -2233,7 +2233,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Semantik segmentasyon, görüntüdeki her pikseli bir sınıf etiketiyle ilişkilendirir (örn. \"dil\", \"besin bolusu\", \"hava yolu\"). Nesne tespitinden çok daha ayrıntılıdır.",
+          "explanation": "Semantic segmentation assigns a class label to every pixel in an image (e.g., \"tongue,\" \"food bolus,\" \"airway\"). It is much more detailed than object detection.",
           "type": "single"
         },
         {
@@ -2248,7 +2248,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "Kist'in çerçevesi nörobilimin temel dogmasına dayanır: Duyusal Girdi → Beyin (İşleme) → Davranış (Çıktı). AI bu döngünün herhangi bir noktasında devreye girebilir.",
+          "explanation": "Kist's framework is based on the fundamental dogma of neuroscience: Sensory Input → Brain (Processing) → Behavior (Output). AI can intervene at any point in this loop.",
           "type": "single"
         },
         {
@@ -2263,7 +2263,7 @@ export const content: Content = {
           "correct": [
             2
           ],
-          "explanation": "Gelişimsel konuşma bozuklukları çocukların yaklaşık %10–20'sini etkiler. İki ana tipi: duyusal tip (kendi sesini doğru algılayamama) ve motor tip (koordinasyon sorunu).",
+          "explanation": "Developmental speech disorders affect approximately 10–20% of children. The two main types: sensory type (inability to correctly perceive one's own speech) and motor type (coordination problem).",
           "type": "single"
         },
         {
@@ -2281,7 +2281,7 @@ export const content: Content = {
             2,
             4
           ],
-          "explanation": "Gelişimsel konuşma bozukluklarının iki ana tipi: Duyusal tip (kendi konuşmasını doğru algılayamama) ve Motor tip (ne söyleyeceğini bilir ama motorik yürütmede güçlük çeker). Her iki tip genellikle farklı terapötik yaklaşımlar gerektirir.",
+          "explanation": "The two main types of developmental speech disorders: Sensory type (difficulty accurately perceiving one's own speech) and Motor type (knows what to say but has difficulty with motor execution). Both types typically require different therapeutic approaches.",
           "type": "multiple"
         },
         {
@@ -2296,7 +2296,7 @@ export const content: Content = {
           "correct": [
             1
           ],
-          "explanation": "TTS = Text-to-Speech. Yazılı metni yapay zeka kullanarak doğal ses çıktısına dönüştürür. Özellikle konuşamayan bireyler için yardımcı teknoloji olarak kullanılır.",
+          "explanation": "TTS = Text-to-Speech. Converts written text to natural speech output using AI. Used particularly as assistive technology for individuals who cannot speak.",
           "type": "single"
         }
       ]

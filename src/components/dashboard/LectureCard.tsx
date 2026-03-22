@@ -58,7 +58,7 @@ export function LectureCard({ lecture, progress }: Props) {
         </div>
 
         <p style={{ fontSize: '0.7rem', color: done ? 'var(--success)' : progress ? 'var(--accent)' : 'var(--text-muted)', marginTop: 8 }}>
-          {done ? 'Tamamlandı ✓' : progress ? 'Devam Et →' : 'Başla →'}
+          {done ? 'Completed ✓' : progress ? 'Continue →' : 'Start →'}
         </p>
       </article>
     </Link>
