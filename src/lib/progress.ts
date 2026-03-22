@@ -1,4 +1,4 @@
-import { withUserContext } from './db'
+import sql from './db'
 
 export type QuizResult = {
   answers: number[][]
@@ -15,10 +15,10 @@ export type ProgressRow = {
 }
 
 export async function getProgress(userId: number): Promise<ProgressRow[]> {
-  return withUserContext(userId, (tx) => tx`
+  return sql`
     SELECT lecture_id, concept_index, mini_quiz_results, final_quiz_result, completed_at
     FROM progress WHERE user_id = ${userId}
-  ` as unknown as Promise<ProgressRow[]>)
+  ` as unknown as Promise<ProgressRow[]>
 }
 
 export async function upsertProgress(
@@ -26,7 +26,7 @@ export async function upsertProgress(
   lectureId: number,
   patch: Partial<Omit<ProgressRow, 'lecture_id'>>
 ): Promise<void> {
-  await withUserContext(userId, (tx) => tx`
+  await sql`
     INSERT INTO progress (user_id, lecture_id, concept_index, mini_quiz_results, final_quiz_result, completed_at)
     VALUES (
       ${userId}, ${lectureId},
@@ -41,5 +41,5 @@ export async function upsertProgress(
       final_quiz_result = COALESCE(EXCLUDED.final_quiz_result, progress.final_quiz_result),
       completed_at      = COALESCE(EXCLUDED.completed_at, progress.completed_at),
       updated_at        = NOW()
-  `)
+  `
 }

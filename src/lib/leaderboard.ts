@@ -1,4 +1,4 @@
-import { withLeaderboardContext } from './db'
+import sql from './db'
 
 export type LeaderboardRow = {
   username: string
@@ -8,7 +8,7 @@ export type LeaderboardRow = {
 }
 
 export async function getLeaderboard(): Promise<LeaderboardRow[]> {
-  const rows = await withLeaderboardContext((tx) => tx`
+  const rows = await sql`
     SELECT
       u.username,
       COUNT(p.completed_at)::int AS completed_count,
@@ -27,7 +27,7 @@ export async function getLeaderboard(): Promise<LeaderboardRow[]> {
       ) * 100
     ) DESC
     LIMIT 50
-  ` as unknown as Promise<{ username: string; completed_count: number; avg_score: number | null }[]>)
+  ` as Array<{ username: string; completed_count: number; avg_score: number | null }>
 
   return rows.map(r => {
     const completed = Number(r.completed_count)
