@@ -1,9 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import type { Question } from '@/lib/types'
 import { QuizOption } from './QuizOption'
 import { ExplanationBox } from './ExplanationBox'
 import { scoreSingleQuestion } from '@/lib/scoring'
+import { shuffleIndices } from '@/lib/shuffle'
 
 const LABELS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
@@ -12,33 +13,42 @@ type Props = {
   onAnswer: (selected: number[], score: number) => void
   questionIndex?: number
   totalQuestions?: number
-  flagged?: boolean
-  onFlag?: () => void
 }
 
-export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions, flagged, onFlag }: Props) {
-  const [selected, setSelected] = useState<number[]>([])
+export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions }: Props) {
+  // shuffleMap[displayIdx] = originalIdx — recomputed only when question changes
+  const shuffleMap = useMemo(() => shuffleIndices(question.options.length), [question.id, question.options.length])
+
+  const displayOptions = shuffleMap.map(orig => question.options[orig])
+  // display indices that are correct answers
+  const displayCorrect = new Set(question.correct.map(orig => shuffleMap.indexOf(orig)))
+
+  const [selected, setSelected] = useState<Set<number>>(new Set())
   const [submitted, setSubmitted] = useState(false)
 
   function toggle(i: number) {
     if (submitted) return
-    setSelected(prev =>
-      question.type === 'single' ? [i] :
-      prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]
-    )
+    setSelected(prev => {
+      if (question.type === 'single') return new Set([i])
+      const next = new Set(prev)
+      if (next.has(i)) { next.delete(i) } else { next.add(i) }
+      return next
+    })
   }
 
   function submit() {
-    if (selected.length === 0 || submitted) return
-    const score = scoreSingleQuestion(question.correct, selected, question.type, question.options.length)
+    if (selected.size === 0 || submitted) return
+    // remap display indices → original indices for scoring
+    const originalSelected = [...selected].map(displayIdx => shuffleMap[displayIdx])
+    const score = scoreSingleQuestion(question.correct, originalSelected, question.type, question.options.length)
     setSubmitted(true)
-    onAnswer(selected, score)
+    onAnswer(originalSelected, score)
   }
 
   function stateFor(i: number): 'default' | 'selected' | 'correct' | 'wrong' | 'missed' {
-    if (!submitted) return selected.includes(i) ? 'selected' : 'default'
-    const isCorrect = question.correct.includes(i)
-    const picked = selected.includes(i)
+    if (!submitted) return selected.has(i) ? 'selected' : 'default'
+    const isCorrect = displayCorrect.has(i)
+    const picked = selected.has(i)
     if (isCorrect && picked) return 'correct'
     if (!isCorrect && picked) return 'wrong'
     if (isCorrect && !picked) return 'missed'
@@ -57,19 +67,6 @@ export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions
               </span>
             )}
           </p>
-          {onFlag && (
-            <button
-              onClick={onFlag}
-              title={flagged ? 'İşareti kaldır' : 'İşaretle'}
-              style={{
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: '1.1rem', opacity: flagged ? 1 : 0.35,
-                transition: 'opacity 150ms ease', padding: '2px 6px',
-              }}
-            >
-              🚩
-            </button>
-          )}
         </div>
       )}
 
@@ -78,17 +75,17 @@ export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-        {question.options.map((opt, i) => (
+        {displayOptions.map((opt, i) => (
           <QuizOption key={i} label={LABELS[i]} text={opt} state={stateFor(i)} onClick={() => toggle(i)} disabled={submitted} />
         ))}
       </div>
 
       {!submitted && (
-        <button onClick={submit} disabled={selected.length === 0} style={{
+        <button onClick={submit} disabled={selected.size === 0} style={{
           marginTop: '1.125rem', padding: '10px 22px',
-          background: selected.length > 0 ? 'var(--accent)' : 'var(--bg-elevated)',
-          color: selected.length > 0 ? '#0C0C10' : 'var(--text-muted)',
-          border: 'none', borderRadius: 8, fontWeight: 600, cursor: selected.length > 0 ? 'pointer' : 'default',
+          background: selected.size > 0 ? 'var(--accent)' : 'var(--bg-elevated)',
+          color: selected.size > 0 ? '#0C0C10' : 'var(--text-muted)',
+          border: 'none', borderRadius: 8, fontWeight: 600, cursor: selected.size > 0 ? 'pointer' : 'default',
           transition: 'all 150ms ease', fontFamily: 'var(--font-body)',
         }}>
           Submit
