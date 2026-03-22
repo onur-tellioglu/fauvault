@@ -166,7 +166,7 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress, nextLect
             display: 'inline-flex', alignItems: 'center', padding: '10px 24px', minHeight: 44,
             background: 'var(--accent)', color: '#0C0C10', borderRadius: 8, textDecoration: 'none', fontWeight: 600,
             fontFamily: 'var(--font-body)',
-          }}>Sonraki Ders →</a>
+          }}>Next Lecture →</a>
         )}
         <a href="/dashboard" style={{
           display: 'inline-flex', alignItems: 'center', padding: '10px 24px', minHeight: 44,

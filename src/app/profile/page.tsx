@@ -41,9 +41,7 @@ export default async function ProfilePage() {
             const score = p?.final_quiz_result?.score
             return (
               <a key={l.id} href={`/lecture/${l.id}`} style={{ textDecoration: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 14px', background: 'var(--bg-surface)', borderRadius: 8, border: '1px solid var(--border-subtle)', transition: 'border-color 150ms ease' }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-default)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
+                <div className="profile-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 14px', background: 'var(--bg-surface)', borderRadius: 8, border: '1px solid var(--border-subtle)', transition: 'border-color 150ms ease' }}
                 >
                   <span style={{ fontSize: '0.85rem', color: p?.completed_at ? 'var(--text-primary)' : 'var(--text-muted)' }}>
                     {l.id}. {l.title}

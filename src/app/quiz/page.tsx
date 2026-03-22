@@ -75,7 +75,7 @@ export default function QuizPage() {
             onChange={e => { setLectureId(e.target.value === 'all' ? 'all' : Number(e.target.value)); reset() }}
             style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', color: 'var(--text-primary)', padding: '6px 10px', borderRadius: 6, fontSize: '0.8rem' }}
           >
-            <option value="all">Tüm Dersler (Pratik)</option>
+            <option value="all">All Lectures (Practice)</option>
             {content.lectures.map(l => <option key={l.id} value={l.id}>L{l.id} — {l.title}</option>)}
           </select>
         </div>
