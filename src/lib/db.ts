@@ -24,7 +24,7 @@ export default sql
 // All queries inside fn must use the tx parameter, not the global sql.
 export async function withUserContext<T>(
   userId: number,
-  fn: (tx: any) => Promise<T>
+  fn: (tx: NeonQueryFunctionInTransaction<boolean, boolean>) => Promise<T>
 ): Promise<T> {
   const results = await getSql().transaction(
     (async (tx: NeonQueryFunctionInTransaction<boolean, boolean>) => {
@@ -38,7 +38,7 @@ export async function withUserContext<T>(
 // Runs fn inside a transaction with app.leaderboard_mode set (LOCAL scope).
 // Use only for read-only aggregate queries (leaderboard).
 export async function withLeaderboardContext<T>(
-  fn: (tx: any) => Promise<T>
+  fn: (tx: NeonQueryFunctionInTransaction<boolean, boolean>) => Promise<T>
 ): Promise<T> {
   const results = await getSql().transaction(
     (async (tx: NeonQueryFunctionInTransaction<boolean, boolean>) => {
