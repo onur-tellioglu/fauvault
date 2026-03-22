@@ -27,12 +27,17 @@ export function parseStudyGuide(markdown: string): Content {
 }
 
 function parseConcepts(block: string): Concept[] {
-  // Extract ### Key Concepts/Facts to Memorize section (before ### Practice Questions or ---)
-  const sectionMatch = block.match(/^(### Key [^\n]+)\n([\s\S]+?)(?=\n---\n|\n### Practice Questions|$)/m)
-  if (!sectionMatch) return []
+  // Find the "### Key ..." heading line
+  const headingMatch = block.match(/\n(### Key [^\n]+)\n/)
+  if (!headingMatch) return []
 
-  const heading = sectionMatch[1].replace(/^### /, '').trim()
-  const body = sectionMatch[2].trim()
+  const heading = headingMatch[1].replace(/^### /, '').trim()
+  const contentStart = headingMatch.index! + headingMatch[0].length
+  const rest = block.slice(contentStart)
+
+  // Grab everything until the next separator or Practice Questions heading
+  const endIdx = rest.search(/\n---\n|\n### Practice Questions/)
+  const body = (endIdx >= 0 ? rest.slice(0, endIdx) : rest).trim()
 
   return [{ heading, body }]
 }

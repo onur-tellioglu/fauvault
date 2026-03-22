@@ -2,26 +2,32 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import sql from '@/lib/db'
 import { createSession, setSessionCookie } from '@/lib/auth'
+import { checkAuthLimit } from '@/lib/ratelimit'
 
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json()
 
-  if (!username || username.length < 2)
-    return NextResponse.json({ error: 'Username too short (min 2 chars)' }, { status: 400 })
-  if (!password || password.length < 6)
-    return NextResponse.json({ error: 'Password too short (min 6 chars)' }, { status: 400 })
+  if (!username || typeof username !== 'string' || username.length < 3 || username.length > 50)
+    return NextResponse.json({ error: 'Username must be 3–50 characters' }, { status: 400 })
 
-  const existing = await sql`SELECT id FROM users WHERE username = ${username}`
+  const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? 'unknown'
+  if (!await checkAuthLimit(`register:${ip}`))
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  if (!password || typeof password !== 'string' || password.length < 8 || password.length > 72)
+    return NextResponse.json({ error: 'Password must be 8–72 characters' }, { status: 400 })
+
+  const existing = await sql`SELECT id FROM users WHERE username = ${username}` as unknown as unknown[]
   if (existing.length > 0)
     return NextResponse.json({ error: 'Username already taken' }, { status: 409 })
 
   const hash = await bcrypt.hash(password, 10)
-  const [user] = await sql`
+  const rows = await sql`
     INSERT INTO users (username, password_hash) VALUES (${username}, ${hash})
     RETURNING id, username
-  `
+  ` as unknown as { id: number; username: string }[]
+  const user = rows[0]
 
-  const token = await createSession({ userId: user.id, username: user.username })
+  const token = await createSession({ userId: user.id, username: user.username, tokenVersion: 0 })
   await setSessionCookie(token)
   return NextResponse.json({ username: user.username })
 }

@@ -1,0 +1,22 @@
+export default function ProfileLoading() {
+  return (
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto' }}>
+        <div style={{ width: 80, height: 14, borderRadius: 4, background: 'var(--bg-elevated)', animation: 'pulse 1.5s ease-in-out infinite', marginBottom: 12 }} />
+        <div style={{ width: 200, height: 32, borderRadius: 6, background: 'var(--bg-elevated)', animation: 'pulse 1.5s ease-in-out infinite', margin: '0.75rem 0 1.5rem' }} />
+        {/* Stats grid skeleton */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem', marginBottom: '2rem' }}>
+          {[0, 1].map(i => (
+            <div key={i} style={{ height: 80, borderRadius: 10, background: 'var(--bg-elevated)', animation: 'pulse 1.5s ease-in-out infinite' }} />
+          ))}
+        </div>
+        {/* Lecture list skeleton */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} style={{ height: 40, borderRadius: 8, background: 'var(--bg-elevated)', animation: 'pulse 1.5s ease-in-out infinite' }} />
+          ))}
+        </div>
+      </div>
+    </main>
+  )
+}

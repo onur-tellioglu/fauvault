@@ -1,10 +1,13 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
+import sql from './db'
 
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!)
-const COOKIE_NAME = 'aip_session'
+const raw = process.env.JWT_SECRET
+if (!raw) throw new Error('JWT_SECRET environment variable is not set')
+const SECRET = new TextEncoder().encode(raw)
+export const COOKIE_NAME = 'aip_session'
 
-export type SessionPayload = { userId: number; username: string }
+export type SessionPayload = { userId: number; username: string; tokenVersion: number; exp?: number }
 
 export async function createSession(payload: SessionPayload): Promise<string> {
   return new SignJWT({ ...payload })
@@ -13,10 +16,16 @@ export async function createSession(payload: SessionPayload): Promise<string> {
     .sign(SECRET)
 }
 
+/** Increments token_version, invalidating all existing sessions for this user. */
+export async function invalidateAllSessions(userId: number): Promise<void> {
+  await sql`UPDATE users SET token_version = token_version + 1 WHERE id = ${userId}`
+}
+
 export async function verifySession(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET)
-    return payload as unknown as SessionPayload
+    const { userId, username, tokenVersion } = payload as unknown as SessionPayload
+    return { userId, username, tokenVersion, exp: payload.exp }
   } catch {
     return null
   }
