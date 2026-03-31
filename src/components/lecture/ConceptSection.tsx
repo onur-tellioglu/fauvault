@@ -34,18 +34,65 @@ function renderBody(body: string): ReactNode[] {
     }
   }
 
+  let tableRows: string[][] = []
+
+  const flushTable = () => {
+    if (tableRows.length === 0) return
+    const [head, ...body] = tableRows
+    result.push(
+      <div key={key++} style={{ overflowX: 'auto', margin: '0.75rem 0' }}>
+        <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.9rem' }}>
+          <thead>
+            <tr>
+              {head.map((cell, i) => (
+                <th key={i} style={{ border: '1px solid var(--border)', padding: '6px 12px', textAlign: 'left', background: 'var(--bg-elevated)', color: 'var(--text-primary)', fontWeight: 600 }}>
+                  {renderInline(cell.trim())}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {body.map((row, ri) => (
+              <tr key={ri}>
+                {row.map((cell, ci) => (
+                  <td key={ci} style={{ border: '1px solid var(--border)', padding: '6px 12px', color: 'var(--text-secondary)' }}>
+                    {renderInline(cell.trim())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+    tableRows = []
+  }
+
   for (const line of lines) {
-    const bullet = line.match(/^[-*]\s+(.*)/)
-    if (bullet) {
-      bullets.push(<li key={key++} style={{ marginBottom: '0.2rem' }}>{renderInline(bullet[1])}</li>)
-    } else if (line.trim() === '') {
+    const isTableRow = line.trim().startsWith('|') && line.trim().endsWith('|')
+    const isSeparator = isTableRow && /^\|[-| :]+\|$/.test(line.trim())
+
+    if (isSeparator) {
+      // skip separator rows
+    } else if (isTableRow) {
       flushBullets()
-      result.push(<br key={key++} />)
+      const cells = line.trim().slice(1, -1).split('|')
+      tableRows.push(cells)
     } else {
-      flushBullets()
-      result.push(<p key={key++} style={{ margin: '0 0 0.5rem' }}>{renderInline(line)}</p>)
+      flushTable()
+      const bullet = line.match(/^[-*]\s+(.*)/)
+      if (bullet) {
+        bullets.push(<li key={key++} style={{ marginBottom: '0.2rem' }}>{renderInline(bullet[1])}</li>)
+      } else if (line.trim() === '') {
+        flushBullets()
+        result.push(<br key={key++} />)
+      } else {
+        flushBullets()
+        result.push(<p key={key++} style={{ margin: '0 0 0.5rem' }}>{renderInline(line)}</p>)
+      }
     }
   }
+  flushTable()
   flushBullets()
   return result
 }
