@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
-import { getLeaderboard } from '@/lib/leaderboard'
-import { content } from '@/lib/content'
+import { getLeaderboard, totalLectures } from '@/lib/leaderboard'
 import Link from 'next/link'
 
 export default async function LeaderboardPage() {
@@ -9,7 +8,6 @@ export default async function LeaderboardPage() {
   if (!session) redirect('/')
 
   const rows = await getLeaderboard()
-  const totalLectures = content.lectures.length
 
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
@@ -21,15 +19,15 @@ export default async function LeaderboardPage() {
               Leaderboard
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              {rows.length} participant{rows.length !== 1 ? 's' : ''} · completed at least 1 lecture
+              {rows.length} participant{rows.length !== 1 ? 's' : ''} · all courses
             </p>
           </div>
-          <Link href="/dashboard" style={{
+          <Link href="/" style={{
             fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none',
             padding: '9px 18px', border: '1px solid var(--border-default)',
             borderRadius: 7, background: 'var(--bg-surface)',
           }}>
-            ← Dashboard
+            ← Home
           </Link>
         </header>
 
