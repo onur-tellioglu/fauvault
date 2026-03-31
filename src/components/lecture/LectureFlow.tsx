@@ -1,6 +1,7 @@
 'use client'
 import { useState, useMemo } from 'react'
 import type { Lecture } from '@/lib/types'
+import type { Course } from '@/lib/courses'
 import { ConceptSection } from './ConceptSection'
 import { QuizQuestion } from '@/components/quiz/QuizQuestion'
 
@@ -23,12 +24,13 @@ export function split(lecture: Lecture) {
 
 type Props = {
   lecture: Lecture
+  course: Course
   initialConceptIndex: number
   onProgress: (patch: object) => void
   nextLectureId: number | null
 }
 
-export function LectureFlow({ lecture, initialConceptIndex, onProgress, nextLectureId }: Props) {
+export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, nextLectureId }: Props) {
   const { miniMap, finalQs } = useMemo(() => split(lecture), [lecture])
   const miniQuestionCount = useMemo(
     () => Object.values(miniMap).reduce((sum, qs) => sum + qs.length, 0),
@@ -162,13 +164,13 @@ export function LectureFlow({ lecture, initialConceptIndex, onProgress, nextLect
       </p>
       <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', marginTop: '2rem', flexWrap: 'wrap' }}>
         {nextLectureId !== null && (
-          <a href={`/lecture/${nextLectureId}`} style={{
+          <a href={`/${course}/lecture/${nextLectureId}`} style={{
             display: 'inline-flex', alignItems: 'center', padding: '10px 24px', minHeight: 44,
             background: 'var(--accent)', color: '#0C0C10', borderRadius: 8, textDecoration: 'none', fontWeight: 600,
             fontFamily: 'var(--font-body)',
           }}>Next Lecture →</a>
         )}
-        <a href="/dashboard" style={{
+        <a href={`/${course}/dashboard`} style={{
           display: 'inline-flex', alignItems: 'center', padding: '10px 24px', minHeight: 44,
           border: '1px solid var(--border-default)', color: 'var(--text-secondary)',
           borderRadius: 8, textDecoration: 'none', fontSize: '0.9rem',

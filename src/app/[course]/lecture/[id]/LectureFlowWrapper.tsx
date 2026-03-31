@@ -4,34 +4,39 @@ import type { Lecture } from '@/lib/types'
 import type { Course } from '@/lib/courses'
 import { LectureFlow } from '@/components/lecture/LectureFlow'
 
-type Props = { lecture: Lecture; initialConceptIndex: number; nextLectureId: number | null }
+type Props = {
+  lecture: Lecture
+  course: Course
+  initialConceptIndex: number
+  nextLectureId: number | null
+}
 
 const MAX_RETRIES = 3
 
-async function saveWithRetry(lectureId: number, patch: object): Promise<void> {
+async function saveWithRetry(course: Course, lectureId: number, patch: object): Promise<void> {
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       const res = await fetch('/api/progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lectureId, patch }),
+        body: JSON.stringify({ course, lectureId, patch }),
       })
       if (res.ok) return
-      if (res.status === 401) return // Session expired — middleware will redirect
+      if (res.status === 401) return
       throw new Error(`HTTP ${res.status}`)
     } catch (err) {
       if (attempt === MAX_RETRIES - 1) throw err
-      await new Promise(r => setTimeout(r, 300 * 2 ** attempt)) // 300ms, 600ms, 1200ms
+      await new Promise(r => setTimeout(r, 300 * 2 ** attempt))
     }
   }
 }
 
-export function LectureFlowWrapper({ lecture, initialConceptIndex, nextLectureId }: Props) {
+export function LectureFlowWrapper({ lecture, course, initialConceptIndex, nextLectureId }: Props) {
   const [saveError, setSaveError] = useState(false)
 
   async function save(patch: object) {
     try {
-      await saveWithRetry(lecture.id, patch)
+      await saveWithRetry(course, lecture.id, patch)
       if (saveError) setSaveError(false)
     } catch {
       setSaveError(true)
@@ -49,7 +54,13 @@ export function LectureFlowWrapper({ lecture, initialConceptIndex, nextLectureId
           Progress could not be saved. Check your connection and try again.
         </div>
       )}
-      <LectureFlow lecture={lecture} course={'re' as Course} initialConceptIndex={initialConceptIndex} onProgress={save} nextLectureId={nextLectureId} />
+      <LectureFlow
+        lecture={lecture}
+        initialConceptIndex={initialConceptIndex}
+        onProgress={save}
+        nextLectureId={nextLectureId}
+        course={course}
+      />
     </>
   )
 }
