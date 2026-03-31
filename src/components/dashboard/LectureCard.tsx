@@ -2,16 +2,17 @@
 import Link from 'next/link'
 import type { Lecture } from '@/lib/types'
 import type { ProgressRow } from '@/lib/progress'
+import type { Course } from '@/lib/courses'
 
-type Props = { lecture: Lecture; progress?: ProgressRow }
+type Props = { lecture: Lecture; progress?: ProgressRow; course: Course }
 
-export function LectureCard({ lecture, progress }: Props) {
+export function LectureCard({ lecture, progress, course }: Props) {
   const done = !!progress?.completed_at
   const score = progress?.final_quiz_result?.score
   const conceptPct = progress ? Math.min(progress.concept_index / Math.max(lecture.concepts.length, 1), 1) : 0
 
   return (
-    <Link href={`/lecture/${lecture.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+    <Link href={`/${course}/lecture/${lecture.id}`} style={{ textDecoration: 'none', display: 'block' }}>
       <article style={{
         position: 'relative', background: 'var(--bg-surface)', border: '1px solid var(--border-default)',
         borderRadius: 12, padding: '1.25rem 1.25rem 1rem', cursor: 'pointer', overflow: 'hidden',
