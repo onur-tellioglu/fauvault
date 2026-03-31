@@ -1,4 +1,10 @@
 import sql from './db'
+import { COURSES } from './courses'
+
+export const totalLectures = Object.values(COURSES).reduce(
+  (sum, c) => sum + c.content.lectures.length,
+  0
+)
 
 export type LeaderboardRow = {
   username: string
