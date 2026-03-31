@@ -49,7 +49,7 @@ export function LectureFlowWrapper({ lecture, initialConceptIndex, nextLectureId
           Progress could not be saved. Check your connection and try again.
         </div>
       )}
-      <LectureFlow lecture={lecture} course={'re' as Course} initialConceptIndex={initialConceptIndex} onProgress={save} nextLectureId={nextLectureId} />
+      <LectureFlow lecture={lecture} course={'aip' as Course} initialConceptIndex={initialConceptIndex} onProgress={save} nextLectureId={nextLectureId} />
     </>
   )
 }
