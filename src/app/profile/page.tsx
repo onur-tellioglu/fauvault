@@ -1,8 +1,11 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
 import { COURSES, COURSE_SLUGS } from '@/lib/courses'
 import Link from 'next/link'
+
+export const metadata: Metadata = { title: 'Profile' }
 
 export default async function ProfilePage() {
   const session = await getSession()
