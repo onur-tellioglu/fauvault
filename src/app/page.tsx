@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import { getSession } from '@/lib/auth'
-
-export const metadata: Metadata = { title: 'Sign In' }
 import { AuthForm } from '@/components/layout/AuthForm'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const session = await getSession()
+  return { title: session ? 'Choose a Course' : 'Sign In' }
+}
 import { COURSES, COURSE_SLUGS, type Course } from '@/lib/courses'
 import { getProgress } from '@/lib/progress'
 import { getRankForUser } from '@/lib/leaderboard'
