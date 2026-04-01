@@ -45,11 +45,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
-    '/:course/dashboard/:path*',
-    '/:course/lecture/:path*',
-    '/:course/quiz/:path*',
-    '/:course/study/:path*',
+    '/:course(aip|re)/:path*',
     '/profile/:path*',
-    '/leaderboard/:path*',
   ],
 }
