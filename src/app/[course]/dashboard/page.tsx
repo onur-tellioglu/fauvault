@@ -53,6 +53,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
             { label: '← All Courses', href: '/' },
             { label: 'Practice Mode', href: `/${course}/quiz` },
             { label: 'Study Mode', href: `/${course}/study` },
+            ...(course === 're' ? [{ label: 'Exam Prep', href: `/${course}/exam-prep` }] : []),
             { label: 'Leaderboard', href: `/${course}/leaderboard` },
             { label: 'Profile', href: '/profile' },
           ].map(({ label, href }) => (
