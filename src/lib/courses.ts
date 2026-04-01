@@ -2,6 +2,7 @@
 import type { Content } from './types'
 import { content as aipContent } from './content-aip'
 import { content as reContent } from './content-re'
+import './exam-prep-re'
 
 export type Course = 'aip' | 're'
 
