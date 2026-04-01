@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
     const mcCorrect = mcChoice === task.answer
     const numericCorrect =
       numericValue !== null &&
+      task.answer !== 0 &&
       Math.abs(numericValue - task.answer) / task.answer <= task.tolerance
 
     let points = 0
