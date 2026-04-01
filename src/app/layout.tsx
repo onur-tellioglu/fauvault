@@ -10,8 +10,11 @@ const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono'
 const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', axes: ['opsz', 'SOFT', 'WONK'] })
 
 export const metadata: Metadata = {
-  title: 'AIP Study — AI Perspectives',
-  description: 'FAU AI Perspectives exam prep · 21 lectures',
+  title: {
+    template: '%s · Study',
+    default: 'Study',
+  },
+  description: 'FAU exam prep — AI Perspectives & Renewable Energies',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

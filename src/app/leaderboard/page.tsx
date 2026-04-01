@@ -1,7 +1,10 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getLeaderboard, totalLectures } from '@/lib/leaderboard'
 import Link from 'next/link'
+
+export const metadata: Metadata = { title: 'Global Leaderboard' }
 
 export default async function LeaderboardPage() {
   const session = await getSession()
