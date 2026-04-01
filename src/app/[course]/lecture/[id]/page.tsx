@@ -1,8 +1,16 @@
+import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
 import { isValidCourse, getCourseContent, type Course } from '@/lib/courses'
 import { LectureFlowWrapper } from './LectureFlowWrapper'
+
+export async function generateMetadata({ params }: { params: Promise<{ course: string; id: string }> }): Promise<Metadata> {
+  const { course, id } = await params
+  if (!isValidCourse(course)) return { title: 'Lecture' }
+  const lecture = getCourseContent(course as Course).lectures.find(l => l.id === parseInt(id))
+  return { title: lecture?.title ?? 'Lecture' }
+}
 
 export default async function LecturePage({
   params,

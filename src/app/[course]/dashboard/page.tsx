@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect, notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
@@ -6,6 +7,12 @@ import { LectureCard } from '@/components/dashboard/LectureCard'
 import { ProgressRing } from '@/components/dashboard/ProgressRing'
 import { ExamCountdown } from '@/components/layout/ExamCountdown'
 import Link from 'next/link'
+
+export async function generateMetadata({ params }: { params: Promise<{ course: string }> }): Promise<Metadata> {
+  const { course } = await params
+  const label = isValidCourse(course) ? COURSES[course as Course].label : 'Dashboard'
+  return { title: label }
+}
 
 export default async function DashboardPage({ params }: { params: Promise<{ course: string }> }) {
   const { course } = await params

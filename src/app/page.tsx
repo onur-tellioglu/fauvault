@@ -1,4 +1,7 @@
+import type { Metadata } from 'next'
 import { getSession } from '@/lib/auth'
+
+export const metadata: Metadata = { title: 'Sign In' }
 import { AuthForm } from '@/components/layout/AuthForm'
 import { COURSES, COURSE_SLUGS, type Course } from '@/lib/courses'
 import { getProgress } from '@/lib/progress'

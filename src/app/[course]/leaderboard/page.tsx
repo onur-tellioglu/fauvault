@@ -1,8 +1,15 @@
+import type { Metadata } from 'next'
 import { redirect, notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getLeaderboardByCourse } from '@/lib/leaderboard'
 import { isValidCourse, COURSES, type Course } from '@/lib/courses'
 import Link from 'next/link'
+
+export async function generateMetadata({ params }: { params: Promise<{ course: string }> }): Promise<Metadata> {
+  const { course } = await params
+  const shortLabel = isValidCourse(course) ? COURSES[course as Course].shortLabel : course.toUpperCase()
+  return { title: `Leaderboard · ${shortLabel}` }
+}
 
 export default async function CourseLeaderboardPage({ params }: { params: Promise<{ course: string }> }) {
   const { course } = await params
