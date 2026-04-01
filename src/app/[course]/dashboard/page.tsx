@@ -50,9 +50,10 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
 
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.75rem', flexWrap: 'wrap' }}>
           {[
+            { label: '← All Courses', href: '/' },
             { label: 'Practice Mode', href: `/${course}/quiz` },
             { label: 'Study Mode', href: `/${course}/study` },
-            { label: 'Leaderboard', href: '/leaderboard' },
+            { label: 'Leaderboard', href: `/${course}/leaderboard` },
             { label: 'Profile', href: '/profile' },
           ].map(({ label, href }) => (
             <Link key={href} href={href} style={{
