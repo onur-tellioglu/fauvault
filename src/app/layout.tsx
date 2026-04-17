@@ -10,10 +10,22 @@ const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', axe
 
 export const metadata: Metadata = {
   title: {
-    template: '%s · Study',
-    default: 'Study',
+    template: '%s · FAUVault',
+    default: 'FAUVault',
   },
-  description: 'FAU exam prep — AI Perspectives & Renewable Energies',
+  description: 'FAU exam prep platform prepared by students — AI Perspectives, Renewable Energies & Data Engineering 1',
+  openGraph: {
+    title: 'FAUVault',
+    description: 'FAU exam prep platform prepared by students — AI Perspectives, Renewable Energies & Data Engineering 1',
+    url: 'https://fauvault.space',
+    siteName: 'FAUVault',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FAUVault',
+    description: 'FAU exam prep platform prepared by students — AI Perspectives, Renewable Energies & Data Engineering 1',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
