@@ -33,6 +33,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${geist.variable} ${geistMono.variable} ${fraunces.variable}`}>
       <body>
         {children}
+        <footer style={{ textAlign: 'center', padding: '2rem 1rem 1.5rem', marginTop: 'auto' }}>
+          <a
+            href="https://github.com/onurtellioglu"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', textDecoration: 'none', opacity: 0.6 }}
+          >
+            made by onur
+          </a>
+        </footer>
         <Analytics />
         <SpeedInsights />
       </body>
