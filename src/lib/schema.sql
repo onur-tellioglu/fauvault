@@ -18,3 +18,28 @@ CREATE TABLE IF NOT EXISTS progress (
   updated_at         TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, course, lecture_id)
 );
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS role TEXT NOT NULL DEFAULT 'user';
+
+CREATE TABLE IF NOT EXISTS tips (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  course      VARCHAR(10) NOT NULL,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body        TEXT NOT NULL CHECK (char_length(body) <= 1000),
+  verified    BOOLEAN NOT NULL DEFAULT false,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tip_comments (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tip_id      UUID NOT NULL REFERENCES tips(id) ON DELETE CASCADE,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body        TEXT NOT NULL CHECK (char_length(body) <= 500),
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tip_upvotes (
+  tip_id      UUID NOT NULL REFERENCES tips(id) ON DELETE CASCADE,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  PRIMARY KEY (tip_id, user_id)
+);
