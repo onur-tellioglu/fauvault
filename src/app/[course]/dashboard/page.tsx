@@ -47,7 +47,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
                 {completed}/{content.lectures.length}
               </p>
             </div>
-            <Link href={`/${course}/tips`} style={{
+            <Link href={`/${course}/forum`} style={{
               fontSize: '0.8rem', color: 'var(--accent)', textDecoration: 'none',
               border: '1px solid var(--accent)', borderRadius: 6,
               padding: '5px 12px', fontWeight: 500,
