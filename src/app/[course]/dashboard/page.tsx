@@ -2,16 +2,29 @@ import type { Metadata } from 'next'
 import { redirect, notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
+import { getLeaderboardByCourse } from '@/lib/leaderboard'
 import { isValidCourse, getCourseContent, COURSES, type Course } from '@/lib/courses'
-import { LectureCard } from '@/components/dashboard/LectureCard'
-import { ProgressRing } from '@/components/dashboard/ProgressRing'
-import { ExamCountdown } from '@/components/layout/ExamCountdown'
-import Link from 'next/link'
+import { NewspaperDashboard } from '@/components/dashboard/NewspaperDashboard'
 
 export async function generateMetadata({ params }: { params: Promise<{ course: string }> }): Promise<Metadata> {
   const { course } = await params
   const label = isValidCourse(course) ? COURSES[course as Course].label : 'Dashboard'
   return { title: label }
+}
+
+function getDaysUntilExam(examDate: string): number | null {
+  if (!examDate) return null
+  const diff = new Date(examDate).getTime() - Date.now()
+  if (diff <= 0) return null
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+}
+
+function getIssueAndVolume(course: Course): { issue: number; volume: number } {
+  const seeds: Record<Course, number> = { aip: 1200, re: 980, de1: 760 }
+  const weeksSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7))
+  const issue = seeds[course] + (weeksSinceEpoch % 52)
+  const volume = 10 + Math.floor(weeksSinceEpoch / 52)
+  return { issue, volume }
 }
 
 export default async function DashboardPage({ params }: { params: Promise<{ course: string }> }) {
@@ -22,74 +35,63 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
   if (!session) redirect('/')
 
   const content = getCourseContent(course as Course)
-  const rows = await getProgress(session.userId, course as Course)
-  const byLecture = Object.fromEntries(rows.map(r => [r.lecture_id, r]))
-  const completed = rows.filter(r => r.completed_at).length
+  const [progressRows, leaderboard] = await Promise.all([
+    getProgress(session.userId, course as Course),
+    getLeaderboardByCourse(course as Course),
+  ])
+
+  const byLecture = Object.fromEntries(progressRows.map(r => [r.lecture_id, r]))
+  const completed = progressRows.filter(r => r.completed_at).length
+
+  // Find the current lecture: first in-progress (not completed), or first not started
+  const currentLectureRaw =
+    content.lectures.find(l => byLecture[l.id] && !byLecture[l.id].completed_at) ??
+    content.lectures.find(l => !byLecture[l.id]) ??
+    content.lectures[content.lectures.length - 1]
+
+  const currentProgress = currentLectureRaw ? byLecture[currentLectureRaw.id] : undefined
+
+  const currentLecture = currentLectureRaw
+    ? {
+        id: currentLectureRaw.id,
+        title: currentLectureRaw.title,
+        speaker: currentLectureRaw.speaker,
+        conceptCount: currentLectureRaw.concepts.length,
+        questionCount: currentLectureRaw.questions.length,
+        conceptIndex: currentProgress?.concept_index ?? 0,
+        readPct: currentProgress
+          ? currentProgress.completed_at
+            ? 1
+            : Math.min(
+                (currentProgress.concept_index ?? 0) / Math.max(currentLectureRaw.concepts.length, 1),
+                1,
+              )
+          : 0,
+      }
+    : null
+
+  const topUsers = leaderboard
+    .filter(u => u.username !== session.username)
+    .slice(0, 6)
+    .map(u => ({ username: u.username, completedCount: u.completed_count }))
+
+  const hasFlashcards = content.lectures.some(l => l.flashcards?.length)
+  const { issue, volume } = getIssueAndVolume(course as Course)
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: 0 }}>
-      <ExamCountdown />
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '2.5rem 1.5rem' }}>
-
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
-          <div>
-            <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
-              {COURSES[course as Course].label}
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              {session.username}
-            </p>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            <div style={{ textAlign: 'center' }}>
-              <ProgressRing value={completed / content.lectures.length} size={60} />
-              <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                {completed}/{content.lectures.length}
-              </p>
-            </div>
-            <Link href={`/${course}/forum`} style={{
-              fontSize: '0.8rem', color: 'var(--accent)', textDecoration: 'none',
-              border: '1px solid var(--accent)', borderRadius: 6,
-              padding: '5px 12px', fontWeight: 500,
-            }}>
-              Forum
-            </Link>
-            <form action="/api/auth/logout" method="POST">
-              <button type="submit" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>
-                Sign out
-              </button>
-            </form>
-          </div>
-        </header>
-
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.75rem', flexWrap: 'wrap' }}>
-          {[
-            { label: '← All Courses', href: '/' },
-            { label: 'Practice Mode', href: `/${course}/quiz` },
-            { label: 'Study Mode', href: `/${course}/study` },
-            ...(content.lectures.some(l => l.flashcards?.length) ? [{ label: 'Flashcards', href: `/${course}/flashcard` }] : []),
-            ...(course === 're' ? [{ label: 'Exam Prep', href: `/${course}/exam-prep` }] : []),
-            { label: 'Leaderboard', href: `/${course}/leaderboard` },
-            { label: 'Profile', href: '/profile' },
-          ].map(({ label, href }) => (
-            <Link key={href} href={href} style={{
-              padding: '9px 18px', border: '1px solid var(--border-default)', borderRadius: 7,
-              color: 'var(--text-secondary)', fontSize: '0.82rem', textDecoration: 'none',
-              background: 'var(--bg-surface)', transition: 'border-color 150ms ease',
-              minHeight: 44, display: 'inline-flex', alignItems: 'center',
-            }}>{label}</Link>
-          ))}
-        </div>
-
-        <div className="lecture-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.875rem' }}>
-          {content.lectures.map((lecture, i) => (
-            <div key={lecture.id} style={{ animation: `fadeSlideUp 300ms ease ${i * 30}ms both` }}>
-              <LectureCard lecture={lecture} progress={byLecture[lecture.id]} course={course as Course} />
-            </div>
-          ))}
-        </div>
-
-      </div>
-    </main>
+    <NewspaperDashboard
+      username={session.username}
+      courseSlug={course}
+      courseLabel={COURSES[course as Course].label}
+      examDate={COURSES[course as Course].examDate}
+      currentLecture={currentLecture}
+      completedCount={completed}
+      totalLectures={content.lectures.length}
+      hasFlashcards={hasFlashcards}
+      topUsers={topUsers}
+      daysUntilExam={getDaysUntilExam(COURSES[course as Course].examDate)}
+      issueNumber={issue}
+      volumeNumber={volume}
+    />
   )
 }
