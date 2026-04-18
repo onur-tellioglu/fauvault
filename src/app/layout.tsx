@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <footer style={{ textAlign: 'center', padding: '2rem 1rem 1.5rem', marginTop: 'auto' }}>
           <a
-            href="https://github.com/onurtellioglu"
+            href="https://github.com/onur-tellioglu"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', textDecoration: 'none', opacity: 0.6 }}
