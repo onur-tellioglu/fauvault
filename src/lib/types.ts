@@ -12,12 +12,18 @@ export type Question = {
   type: 'single' | 'multiple'
 }
 
+export type Flashcard = {
+  front: string
+  back: string
+}
+
 export type Lecture = {
   id: number
   title: string
   speaker: string
   concepts: Concept[]
   questions: Question[]
+  flashcards?: Flashcard[]
 }
 
 export type Content = {
