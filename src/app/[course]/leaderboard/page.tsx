@@ -52,9 +52,10 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
-                  {['#', 'User', 'Completed', 'Score'].map(h => (
+                  {['#', 'User', 'Completed', 'Semester', 'Score'].map(h => (
                     <th key={h} style={{
-                      padding: '0.75rem 1rem', textAlign: h === '#' || h === 'Score' || h === 'Completed' ? 'center' : 'left',
+                      padding: '0.75rem 1rem',
+                      textAlign: h === '#' || h === 'Score' || h === 'Completed' ? 'center' : 'left',
                       fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)',
                       color: 'var(--text-muted)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em',
                     }}>{h}</th>
@@ -81,6 +82,9 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
                       </td>
                       <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontFamily: 'var(--font-geist-mono)', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                         {row.completed_count}/{totalLectures}
+                      </td>
+                      <td style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-geist-mono)', whiteSpace: 'nowrap' }}>
+                        {row.first_semester ?? '—'}
                       </td>
                       <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontFamily: 'var(--font-geist-mono)', fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 500 }}>
                         {row.score}
