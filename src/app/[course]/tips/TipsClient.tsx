@@ -56,7 +56,8 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
     setExpandedTip(tipId)
     if (!comments[tipId]) {
       const res = await fetch(`/api/tips/${tipId}/comments`)
-      setComments(prev => ({ ...prev, [tipId]: await res.json() }))
+      const data = await res.json()
+      setComments(prev => ({ ...prev, [tipId]: data }))
     }
   }
 
@@ -70,7 +71,8 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
     })
     setCommentBody(prev => ({ ...prev, [tipId]: '' }))
     const res = await fetch(`/api/tips/${tipId}/comments`)
-    setComments(prev => ({ ...prev, [tipId]: await res.json() }))
+    const data = await res.json()
+    setComments(prev => ({ ...prev, [tipId]: data }))
     setTips(prev => prev.map(t => t.id === tipId ? { ...t, comment_count: t.comment_count + 1 } : t))
   }
 

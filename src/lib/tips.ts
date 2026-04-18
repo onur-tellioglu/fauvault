@@ -95,7 +95,7 @@ export async function deleteComment(commentId: string, userId: number, isAdmin: 
 export async function toggleUpvote(tipId: string, userId: number): Promise<void> {
   const existing = await sql`
     SELECT 1 FROM tip_upvotes WHERE tip_id = ${tipId}::uuid AND user_id = ${userId}
-  `
+  ` as unknown[]
   if (existing.length > 0) {
     await sql`DELETE FROM tip_upvotes WHERE tip_id = ${tipId}::uuid AND user_id = ${userId}`
   } else {
