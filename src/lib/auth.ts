@@ -2,9 +2,11 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import sql from './db'
 
-const raw = process.env.JWT_SECRET
-if (!raw) throw new Error('JWT_SECRET environment variable is not set')
-const SECRET = new TextEncoder().encode(raw)
+function getSecret(): Uint8Array {
+  const raw = process.env.JWT_SECRET
+  if (!raw) throw new Error('JWT_SECRET environment variable is not set')
+  return new TextEncoder().encode(raw)
+}
 export const COOKIE_NAME = 'aip_session'
 
 export type SessionPayload = { userId: number; username: string; tokenVersion: number; exp?: number }
@@ -13,7 +15,7 @@ export async function createSession(payload: SessionPayload): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime('7d')
-    .sign(SECRET)
+    .sign(getSecret())
 }
 
 /** Increments token_version, invalidating all existing sessions for this user. */
@@ -23,7 +25,7 @@ export async function invalidateAllSessions(userId: number): Promise<void> {
 
 export async function verifySession(token: string): Promise<SessionPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET)
+    const { payload } = await jwtVerify(token, getSecret())
     const { userId, username, tokenVersion } = payload as unknown as SessionPayload
     return { userId, username, tokenVersion, exp: payload.exp }
   } catch {

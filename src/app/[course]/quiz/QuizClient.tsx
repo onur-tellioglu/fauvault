@@ -46,7 +46,7 @@ export function QuizClient({ course }: { course: Course }) {
   if (done) {
     const avg = scores.reduce((a, b) => a + b, 0) / scores.length
     return (
-      <main style={{ minHeight: '100vh', background: 'var(--bg-base)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem 1.5rem' }}>
         <div style={{ textAlign: 'center', animation: 'fadeSlideUp 300ms ease forwards' }}>
           <div style={{ fontFamily: 'var(--font-fraunces)', fontSize: '7rem', fontWeight: 300, color: 'var(--accent)', lineHeight: 1 }}>
             {Math.round(avg * 100)}%
@@ -56,48 +56,42 @@ export function QuizClient({ course }: { course: Course }) {
             <button onClick={reset} style={{ padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', minHeight: 44 }}>
               Try Again
             </button>
-            <a href={`/${course}/dashboard`} style={{ padding: '10px 22px', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem', display: 'flex', alignItems: 'center', minHeight: 44 }}>
-              ← Dashboard
-            </a>
           </div>
         </div>
-      </main>
+      </div>
     )
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
-      <div style={{ maxWidth: 640, margin: '0 auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
-          <a href={`/${course}/dashboard`} style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>← Dashboard</a>
-          <select
-            value={lectureId}
-            onChange={e => { setLectureId(e.target.value === 'all' ? 'all' : Number(e.target.value)); reset() }}
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', color: 'var(--text-primary)', padding: '6px 10px', borderRadius: 6, fontSize: '0.8rem' }}
-          >
-            <option value="all">All Lectures (Practice)</option>
-            {content.lectures.map(l => <option key={l.id} value={l.id}>L{l.id} — {l.title}</option>)}
-          </select>
-        </div>
-        {questions.length > 0 ? (
-          <>
-            <QuizQuestion
-              key={questions[qi].id}
-              question={questions[qi]}
-              onAnswer={handleAnswer}
-              questionIndex={qi}
-              totalQuestions={questions.length}
-            />
-            {answered && (
-              <button onClick={next} style={{ marginTop: '1.5rem', padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', minHeight: 44 }}>
-                {qi + 1 < questions.length ? 'Next →' : 'Results →'}
-              </button>
-            )}
-          </>
-        ) : (
-          <p style={{ color: 'var(--text-muted)' }}>No questions available.</p>
-        )}
+    <div style={{ maxWidth: 640, margin: '0 auto', padding: 'var(--density-pad)' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '2rem' }}>
+        <select
+          value={lectureId}
+          onChange={e => { setLectureId(e.target.value === 'all' ? 'all' : Number(e.target.value)); reset() }}
+          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', color: 'var(--text-primary)', padding: '6px 10px', borderRadius: 6, fontSize: '0.8rem' }}
+        >
+          <option value="all">All Lectures (Practice)</option>
+          {content.lectures.map(l => <option key={l.id} value={l.id}>L{l.id} — {l.title}</option>)}
+        </select>
       </div>
-    </main>
+      {questions.length > 0 ? (
+        <>
+          <QuizQuestion
+            key={questions[qi].id}
+            question={questions[qi]}
+            onAnswer={handleAnswer}
+            questionIndex={qi}
+            totalQuestions={questions.length}
+          />
+          {answered && (
+            <button onClick={next} style={{ marginTop: '1.5rem', padding: '10px 22px', background: 'var(--accent)', color: '#0C0C10', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', minHeight: 44 }}>
+              {qi + 1 < questions.length ? 'Next →' : 'Results →'}
+            </button>
+          )}
+        </>
+      ) : (
+        <p style={{ color: 'var(--text-muted)' }}>No questions available.</p>
+      )}
+    </div>
   )
 }
