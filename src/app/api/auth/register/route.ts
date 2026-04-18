@@ -10,6 +10,10 @@ export async function POST(req: NextRequest) {
   if (!username || typeof username !== 'string' || username.length < 3 || username.length > 50)
     return NextResponse.json({ error: 'Username must be 3–50 characters' }, { status: 400 })
 
+  const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/
+  if (!USERNAME_REGEX.test(username))
+    return NextResponse.json({ error: 'Username may only contain letters, numbers, and underscores' }, { status: 400 })
+
   const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? 'unknown'
   if (!await checkAuthLimit(`register:${ip}`))
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 })

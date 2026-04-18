@@ -16,6 +16,13 @@ export function AuthForm() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    if (mode === 'register' && !/^[a-zA-Z0-9_]+$/.test(username)) {
+      setError('Username may only contain letters, numbers, and underscores')
+      setLoading(false)
+      return
+    }
+
     const res = await fetch(`/api/auth/${mode}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
