@@ -82,7 +82,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
   return (
     <>
       <style>{css}</style>
-      <div style={{ minHeight: '100vh', background: 'var(--bg-base)', fontFamily: 'var(--font-geist)', position: 'relative' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg-base)', fontFamily: 'var(--font-geist)', position: 'relative', overflowX: 'hidden' }}>
 
         {/* Masthead */}
         <header style={{ borderBottom: '1px solid var(--border-default)', padding: 'var(--density-pad)' }}>
