@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import Link from 'next/link'
 import type { Course } from '@/lib/courses'
 import type { Tip, TipComment } from '@/lib/tips'
 
@@ -93,26 +92,16 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
-      <div style={{ maxWidth: 640, margin: '0 auto' }}>
+    <div style={{ maxWidth: 640, margin: '0 auto', padding: 'var(--density-pad)' }}>
 
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
-          <div>
-            <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
-              Tips
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              {tips.length} tip{tips.length !== 1 ? 's' : ''} · {courseLabel}
-            </p>
-          </div>
-          <Link href={`/${course}/dashboard`} style={{
-            fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none',
-            padding: '9px 18px', border: '1px solid var(--border-default)',
-            borderRadius: 7, background: 'var(--bg-surface)',
-          }}>
-            ← Dashboard
-          </Link>
-        </header>
+      <header style={{ marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
+        <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
+          Forum
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          {tips.length} tip{tips.length !== 1 ? 's' : ''} · {courseLabel}
+        </p>
+      </header>
 
         <div style={{ ...cardStyle, marginBottom: '1.5rem' }}>
           <textarea
@@ -237,7 +226,6 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
             )}
           </div>
         ))}
-      </div>
-    </main>
+    </div>
   )
 }

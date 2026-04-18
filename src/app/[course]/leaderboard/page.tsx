@@ -3,7 +3,6 @@ import { redirect, notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getLeaderboardByCourse } from '@/lib/leaderboard'
 import { isValidCourse, COURSES, type Course } from '@/lib/courses'
-import Link from 'next/link'
 
 export async function generateMetadata({ params }: { params: Promise<{ course: string }> }): Promise<Metadata> {
   const { course } = await params
@@ -22,26 +21,16 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
   const totalLectures = COURSES[course as Course].content.lectures.length
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
-      <div style={{ maxWidth: 640, margin: '0 auto' }}>
+    <div style={{ maxWidth: 640, margin: '0 auto', padding: 'var(--density-pad)' }}>
 
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
-          <div>
-            <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
-              Leaderboard
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              {rows.length} participant{rows.length !== 1 ? 's' : ''} · {COURSES[course as Course].label}
-            </p>
-          </div>
-          <Link href={`/${course}/dashboard`} style={{
-            fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none',
-            padding: '9px 18px', border: '1px solid var(--border-default)',
-            borderRadius: 7, background: 'var(--bg-surface)',
-          }}>
-            ← Dashboard
-          </Link>
-        </header>
+      <header style={{ marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
+        <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
+          Leaderboard
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          {rows.length} participant{rows.length !== 1 ? 's' : ''} · {COURSES[course as Course].label}
+        </p>
+      </header>
 
         {rows.length === 0 ? (
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', marginTop: '4rem' }}>
@@ -97,7 +86,6 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
           </div>
         )}
 
-      </div>
-    </main>
+    </div>
   )
 }
