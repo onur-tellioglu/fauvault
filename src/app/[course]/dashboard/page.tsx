@@ -47,6 +47,9 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
                 {completed}/{content.lectures.length}
               </p>
             </div>
+            <Link href={`/${course}/tips`} style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>
+              Forum
+            </Link>
             <form action="/api/auth/logout" method="POST">
               <button type="submit" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>
                 Sign out
@@ -63,7 +66,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
             ...(content.lectures.some(l => l.flashcards?.length) ? [{ label: 'Flashcards', href: `/${course}/flashcard` }] : []),
             ...(course === 're' ? [{ label: 'Exam Prep', href: `/${course}/exam-prep` }] : []),
             { label: 'Leaderboard', href: `/${course}/leaderboard` },
-            { label: 'Tips', href: `/${course}/tips` },
             { label: 'Profile', href: '/profile' },
           ].map(({ label, href }) => (
             <Link key={href} href={href} style={{
