@@ -19,13 +19,6 @@ function getDaysUntilExam(examDate: string): number | null {
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
-function getIssueAndVolume(course: Course): { issue: number; volume: number } {
-  const seeds: Record<Course, number> = { aip: 1200, re: 980, de1: 760 }
-  const weeksSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7))
-  const issue = seeds[course] + (weeksSinceEpoch % 52)
-  const volume = 10 + Math.floor(weeksSinceEpoch / 52)
-  return { issue, volume }
-}
 
 export default async function DashboardPage({ params }: { params: Promise<{ course: string }> }) {
   const { course } = await params
@@ -76,13 +69,10 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
     .map(u => ({ username: u.username, completedCount: u.completed_count }))
 
   const hasFlashcards = content.lectures.some(l => l.flashcards?.length)
-  const { issue, volume } = getIssueAndVolume(course as Course)
 
   return (
     <NewspaperDashboard
-      username={session.username}
       courseSlug={course}
-      courseLabel={COURSES[course as Course].label}
       examDate={COURSES[course as Course].examDate}
       currentLecture={currentLecture}
       completedCount={completed}
@@ -90,8 +80,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
       hasFlashcards={hasFlashcards}
       topUsers={topUsers}
       daysUntilExam={getDaysUntilExam(COURSES[course as Course].examDate)}
-      issueNumber={issue}
-      volumeNumber={volume}
     />
   )
 }
