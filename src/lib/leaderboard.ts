@@ -2,6 +2,7 @@ import sql from './db'
 import { COURSES } from './courses'
 import type { Course } from './courses'
 import { getExamPrepBonusForAll } from './exam-prep-db'
+import { getSemesterForDate } from './semesters'
 
 export const totalLectures = Object.values(COURSES).reduce(
   (sum, c) => sum + c.content.lectures.length,
@@ -13,6 +14,7 @@ export type LeaderboardRow = {
   completed_count: number
   avg_score: number
   score: number
+  first_semester: string | null
 }
 
 export async function getLeaderboard(): Promise<LeaderboardRow[]> {
@@ -21,7 +23,8 @@ export async function getLeaderboard(): Promise<LeaderboardRow[]> {
       u.username,
       COUNT(p.completed_at)::int AS completed_count,
       AVG((p.final_quiz_result->>'score')::float)
-        FILTER (WHERE p.final_quiz_result IS NOT NULL) AS avg_score
+        FILTER (WHERE p.final_quiz_result IS NOT NULL) AS avg_score,
+      MIN(p.completed_at) AS first_completed_at
     FROM users u
     LEFT JOIN progress p ON p.user_id = u.id
     GROUP BY u.id, u.username
@@ -35,16 +38,20 @@ export async function getLeaderboard(): Promise<LeaderboardRow[]> {
       ) * 100
     ) DESC
     LIMIT 50
-  ` as Array<{ username: string; completed_count: number; avg_score: number | null }>
+  ` as Array<{ username: string; completed_count: number; avg_score: number | null; first_completed_at: string | null }>
 
   return rows.map(r => {
     const completed = Number(r.completed_count)
     const avg = r.avg_score != null ? Number(r.avg_score) : 0
+    const firstSemester = r.first_completed_at
+      ? getSemesterForDate(new Date(r.first_completed_at))?.label ?? null
+      : null
     return {
       username: r.username,
       completed_count: completed,
       avg_score: avg,
       score: completed * 100 + Math.round(avg * 100),
+      first_semester: firstSemester,
     }
   })
 }
@@ -57,7 +64,8 @@ export async function getLeaderboardByCourse(course: Course): Promise<Leaderboar
         u.username,
         COUNT(p.completed_at)::int AS completed_count,
         AVG((p.final_quiz_result->>'score')::float)
-          FILTER (WHERE p.final_quiz_result IS NOT NULL) AS avg_score
+          FILTER (WHERE p.final_quiz_result IS NOT NULL) AS avg_score,
+        MIN(p.completed_at) AS first_completed_at
       FROM users u
       LEFT JOIN progress p ON p.user_id = u.id AND p.course = ${course}
       GROUP BY u.id, u.username
@@ -71,7 +79,7 @@ export async function getLeaderboardByCourse(course: Course): Promise<Leaderboar
         ) * 100
       ) DESC
       LIMIT 50
-    ` as unknown as Array<{ id: number; username: string; completed_count: number; avg_score: number | null }>,
+    ` as unknown as Array<{ id: number; username: string; completed_count: number; avg_score: number | null; first_completed_at: string | null }>,
     getExamPrepBonusForAll(course),
   ])
 
@@ -80,11 +88,15 @@ export async function getLeaderboardByCourse(course: Course): Promise<Leaderboar
       const completed = Number(r.completed_count)
       const avg = r.avg_score != null ? Number(r.avg_score) : 0
       const examBonus = bonuses[r.id] ?? 0
+      const firstSemester = r.first_completed_at
+        ? getSemesterForDate(new Date(r.first_completed_at))?.label ?? null
+        : null
       return {
         username: r.username,
         completed_count: completed,
         avg_score: avg,
         score: completed * 100 + Math.round(avg * 100) + examBonus,
+        first_semester: firstSemester,
       }
     })
     .sort((a, b) => b.score - a.score)
