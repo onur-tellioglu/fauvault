@@ -8,7 +8,7 @@ const ACCENT_COLORS = [
   '#4B7AE8', '#4BC8E8', '#4BE8C8', '#4BE87A', '#A0E84B', '#E8D84B',
 ]
 
-const SHELL_SEGMENTS = ['/dashboard', '/lectures', '/quiz', '/flashcard', '/forum', '/leaderboard']
+const SHELL_SEGMENTS = ['/dashboard', '/lectures', '/quiz', '/flashcard', '/forum', '/leaderboard', '/exam-prep']
 
 function splitTitle(label: string) {
   const i = label.lastIndexOf(' ')
@@ -74,6 +74,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
     { label: 'Today', href: `/${courseSlug}/dashboard` },
     { label: 'Lectures', href: `/${courseSlug}/lectures` },
     { label: 'Practice', href: `/${courseSlug}/quiz` },
+    { label: 'Exam Prep', href: `/${courseSlug}/exam-prep` },
     ...(hasFlashcards ? [{ label: 'Flashcards', href: `/${courseSlug}/flashcard` }] : []),
     { label: 'Forum', href: `/${courseSlug}/forum` },
     { label: 'Leaderboard', href: `/${courseSlug}/leaderboard` },
@@ -88,14 +89,22 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
         <header style={{ borderBottom: '1px solid var(--border-default)', padding: 'var(--density-pad)' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-              <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                The FAUVault Daily · v{appVersion}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <Link
+                  href="/"
+                  style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.08em', textDecoration: 'none', transition: 'color 150ms ease' }}
+                >
+                  ← Courses
+                </Link>
+                <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                  The FAUVault Daily · v{appVersion}
+                </span>
+              </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <div style={{ textAlign: 'right' }}>
+                <Link href="/profile" style={{ textAlign: 'right', textDecoration: 'none' }}>
                   <div style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Reader</div>
                   <div style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.82rem', color: 'var(--text-primary)' }}>@{username}</div>
-                </div>
+                </Link>
                 <button
                   onClick={() => setShowTweaks(p => !p)}
                   style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}
@@ -138,12 +147,6 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
                 </Link>
               )
             })}
-            <Link
-              href="/profile"
-              style={{ display: 'inline-block', padding: '0.85rem 1.1rem', fontSize: '0.82rem', color: 'var(--text-secondary)', textDecoration: 'none', borderBottom: '2px solid transparent', fontWeight: 400, whiteSpace: 'nowrap', transition: 'color 150ms ease', marginBottom: '-1px' }}
-            >
-              Profile
-            </Link>
           </div>
         </nav>
 
