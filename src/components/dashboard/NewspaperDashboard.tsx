@@ -63,7 +63,7 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'var(--density-pad)' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 'var(--density-gap)', alignItems: 'start' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 'var(--density-gap)', alignItems: 'start' }}>
 
         {/* Left — hero */}
         <section>
