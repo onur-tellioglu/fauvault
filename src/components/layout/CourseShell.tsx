@@ -113,7 +113,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
 
         {/* Nav */}
         <nav style={{ borderBottom: '1px solid var(--border-default)', padding: '0 2.5rem', background: 'var(--bg-base)', position: 'sticky', top: 0, zIndex: 30 }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0, flexWrap: 'wrap' }}>
             {navItems.map(item => {
               const segment = item.href.split('/').pop()!
               const active = pathname.endsWith('/' + segment)
