@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
@@ -30,6 +30,9 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
   const [showTweaks, setShowTweaks] = useState(false)
   const [accentColor, setAccentColor] = useState('#E8B84B')
   const [density, setDensity] = useState<'Compact' | 'Normal' | 'Roomy'>('Roomy')
+  const [pendingHref, setPendingHref] = useState<string | null>(null)
+  const tabRefs = useRef<Map<string, HTMLAnchorElement>>(new Map())
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null)
 
   useEffect(() => {
     try {
@@ -53,6 +56,28 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
   }, [])
 
   const isShellRoute = SHELL_SEGMENTS.some(s => pathname.endsWith(s))
+
+  const navItems = [
+    { label: 'Today', href: `/${courseSlug}/dashboard` },
+    { label: 'Lectures', href: `/${courseSlug}/lectures` },
+    { label: 'Practice', href: `/${courseSlug}/quiz` },
+    ...(hasExamPrep ? [{ label: 'Exam Prep', href: `/${courseSlug}/exam-prep` }] : []),
+    ...(hasFlashcards ? [{ label: 'Flashcards', href: `/${courseSlug}/flashcard` }] : []),
+    { label: 'Forum', href: `/${courseSlug}/forum` },
+    { label: 'Leaderboard', href: `/${courseSlug}/leaderboard` },
+  ]
+
+  const activeHref = pendingHref ?? navItems.find(item => pathname.endsWith('/' + item.href.split('/').pop()!))?.href ?? ''
+
+  useEffect(() => {
+    setPendingHref(null)
+  }, [pathname])
+
+  useEffect(() => {
+    const el = tabRefs.current.get(activeHref)
+    if (el) setIndicator({ left: el.offsetLeft, width: el.offsetWidth })
+  }, [activeHref])
+
   if (!isShellRoute) return <>{children}</>
 
   const gapMap = { Compact: '1.25rem', Normal: '1.75rem', Roomy: '2.5rem' }
@@ -70,16 +95,6 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
   `
 
   const [titleFirst, titleLast] = splitTitle(courseLabel)
-
-  const navItems = [
-    { label: 'Today', href: `/${courseSlug}/dashboard` },
-    { label: 'Lectures', href: `/${courseSlug}/lectures` },
-    { label: 'Practice', href: `/${courseSlug}/quiz` },
-    ...(hasExamPrep ? [{ label: 'Exam Prep', href: `/${courseSlug}/exam-prep` }] : []),
-    ...(hasFlashcards ? [{ label: 'Flashcards', href: `/${courseSlug}/flashcard` }] : []),
-    { label: 'Forum', href: `/${courseSlug}/forum` },
-    { label: 'Leaderboard', href: `/${courseSlug}/leaderboard` },
-  ]
 
   return (
     <>
@@ -123,7 +138,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
 
         {/* Nav */}
         <nav style={{ borderBottom: '1px solid var(--border-default)', padding: '0 2.5rem', background: 'var(--bg-base)', position: 'sticky', top: 0, zIndex: 30 }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0, flexWrap: 'wrap' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0, flexWrap: 'wrap', position: 'relative' }}>
             {navItems.map(item => {
               const segment = item.href.split('/').pop()!
               const active = pathname.endsWith('/' + segment)
@@ -131,13 +146,18 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
                 <Link
                   key={item.href}
                   href={item.href}
+                  ref={(el) => {
+                    if (el) tabRefs.current.set(item.href, el)
+                    else tabRefs.current.delete(item.href)
+                  }}
+                  onClick={() => setPendingHref(item.href)}
                   style={{
                     display: 'inline-block',
                     padding: '0.85rem 1.1rem',
                     fontSize: '0.82rem',
                     color: active ? 'var(--accent)' : 'var(--text-secondary)',
                     textDecoration: 'none',
-                    borderBottom: active ? '2px solid var(--accent)' : '2px solid transparent',
+                    borderBottom: '2px solid transparent',
                     fontWeight: active ? 500 : 400,
                     whiteSpace: 'nowrap',
                     transition: 'color 150ms ease',
@@ -148,6 +168,18 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
                 </Link>
               )
             })}
+            {indicator && (
+              <div style={{
+                position: 'absolute',
+                bottom: -1,
+                left: indicator.left,
+                width: indicator.width,
+                height: 2,
+                background: 'var(--accent)',
+                transition: 'left 150ms ease, width 150ms ease',
+                pointerEvents: 'none',
+              }} />
+            )}
           </div>
         </nav>
 
