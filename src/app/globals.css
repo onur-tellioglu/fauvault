@@ -140,3 +140,81 @@ body { font-family: var(--font-sans, sans-serif); }
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ── Mobile Responsiveness ── */
+
+/* 768px: tablets + phones */
+@media (max-width: 768px) {
+  /* Masthead padding */
+  .course-shell-masthead {
+    padding: 0 0.5rem !important;
+  }
+
+  /* Tweaks panel: keep within viewport */
+  .tweaks-panel {
+    right: 0.5rem !important;
+    min-width: unset !important;
+    max-width: calc(100vw - 1rem) !important;
+  }
+
+  /* Dashboard: stack sidebar below main content */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 480px: phones only */
+@media (max-width: 480px) {
+  /* Leaderboard table: compact font + padding */
+  .leaderboard-table td,
+  .leaderboard-table th {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.5rem !important;
+  }
+}
+
+/* Study mode drawer — mobile only */
+@media (max-width: 768px) {
+  /* Show the toggle button */
+  .study-toggle-btn {
+    display: flex !important;
+  }
+
+  /* Show the backdrop when sidebar is open */
+  .study-backdrop {
+    display: block !important;
+  }
+
+  /* Hide sidebar in normal grid flow */
+  .study-sidebar {
+    display: none !important;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 260px;
+    z-index: 50;
+    overflow-y: auto;
+    background: var(--bg-elevated);
+    border-right: 1px solid var(--border-default);
+    padding: 1.5rem 1.25rem;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+  }
+
+  /* Show as drawer when open */
+  .study-sidebar--open {
+    display: block !important;
+  }
+
+  /* Full-width drawer on small phones */
+  @media (max-width: 480px) {
+    .study-sidebar {
+      width: 100vw;
+    }
+  }
+
+  /* Grid becomes single column (sidebar removed from flow) */
+  .study-sidebar ~ div {
+    min-width: 0;
+  }
+}
