@@ -20,11 +20,12 @@ export interface CourseShellProps {
   courseLabel: string
   username: string
   hasFlashcards: boolean
+  hasExamPrep: boolean
   appVersion: string
   children: React.ReactNode
 }
 
-export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, appVersion, children }: CourseShellProps) {
+export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, hasExamPrep, appVersion, children }: CourseShellProps) {
   const pathname = usePathname()
   const [showTweaks, setShowTweaks] = useState(false)
   const [accentColor, setAccentColor] = useState('#E8B84B')
@@ -74,7 +75,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
     { label: 'Today', href: `/${courseSlug}/dashboard` },
     { label: 'Lectures', href: `/${courseSlug}/lectures` },
     { label: 'Practice', href: `/${courseSlug}/quiz` },
-    { label: 'Exam Prep', href: `/${courseSlug}/exam-prep` },
+    ...(hasExamPrep ? [{ label: 'Exam Prep', href: `/${courseSlug}/exam-prep` }] : []),
     ...(hasFlashcards ? [{ label: 'Flashcards', href: `/${courseSlug}/flashcard` }] : []),
     { label: 'Forum', href: `/${courseSlug}/forum` },
     { label: 'Leaderboard', href: `/${courseSlug}/leaderboard` },
