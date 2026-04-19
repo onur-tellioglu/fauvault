@@ -135,7 +135,7 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
                 }}>
                   {readPct > 0 && readPct < 1 ? 'Continue reading' : readPct === 0 ? 'Start reading' : 'Review'} →
                 </Link>
-                <Link href={`/${courseSlug}/study`} style={{
+                <Link href={`/${courseSlug}/lectures`} style={{
                   display: 'inline-flex', alignItems: 'center',
                   background: 'transparent', color: 'var(--text-primary)',
                   padding: '0.7rem 1.5rem', borderRadius: 8,
@@ -279,7 +279,7 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {[
                 { label: 'Practice Mode', href: `/${courseSlug}/quiz` },
-                { label: 'Study Mode', href: `/${courseSlug}/study` },
+                { label: 'Browse Lectures', href: `/${courseSlug}/lectures` },
                 ...(hasFlashcards ? [{ label: 'Flashcards', href: `/${courseSlug}/flashcard` }] : []),
                 { label: '← All Courses', href: '/' },
               ].map(({ label, href }) => (
