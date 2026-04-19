@@ -103,7 +103,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
 
         {/* Masthead */}
         <header style={{ borderBottom: '1px solid var(--border-default)', padding: 'var(--density-pad)' }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div className="course-shell-masthead" style={{ maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <Link
@@ -190,7 +190,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
         {showTweaks && (
           <>
             <div onClick={() => setShowTweaks(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }} />
-            <div style={{ position: 'fixed', top: '4.5rem', right: '1.5rem', zIndex: 50, background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', borderRadius: 12, padding: '1.25rem', minWidth: 220, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+            <div className="tweaks-panel" style={{ position: 'fixed', top: '4.5rem', right: '1.5rem', zIndex: 50, background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', borderRadius: 12, padding: '1.25rem', minWidth: 220, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                 <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Tweaks · FAUVault</span>
                 <button onClick={() => setShowTweaks(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '0 2px' }}>×</button>
