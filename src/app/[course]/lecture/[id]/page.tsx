@@ -38,8 +38,8 @@ export default async function LecturePage({
       <div style={{ maxWidth: 680, margin: '0 auto' }}>
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-            <a href={`/${course}/dashboard`} style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>
-              ← Dashboard
+            <a href={`/${course}/lectures`} style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>
+              ← Lectures
             </a>
             <span style={{ fontSize: '0.8rem', color: 'var(--border-strong)', margin: '0 6px' }}>·</span>
             <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
