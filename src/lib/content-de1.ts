@@ -110,6 +110,7 @@ export const content: Content = {
           ],
           "correct": [3],
           "explanation": "The formula is x = cos(2π(i−1)/K), y = sin(2π(i−1)/K). For i=3, K=12: x = cos(2π·2/12) = cos(π/3) ≈ 0.5, y = sin(2π·2/12) = sin(π/3) ≈ 0.866. Options B and C are the same expression — 2π·2/12 simplifies to π/3. Option A incorrectly uses i instead of (i−1), giving the wrong position on the circle.",
+          "shuffle": false,
           "type": "single"
         },
         {
