@@ -137,8 +137,8 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
         </header>
 
         {/* Nav */}
-        <nav style={{ borderBottom: '1px solid var(--border-default)', padding: '0 2.5rem', background: 'var(--bg-base)', position: 'sticky', top: 0, zIndex: 30 }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0, flexWrap: 'wrap', position: 'relative' }}>
+        <nav className="course-shell-nav" style={{ borderBottom: '1px solid var(--border-default)', padding: '0 2.5rem', background: 'var(--bg-base)', position: 'sticky', top: 0, zIndex: 30, overflowX: 'auto' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0, flexWrap: 'nowrap', position: 'relative' }}>
             {navItems.map(item => {
               const segment = item.href.split('/').pop()!
               const active = pathname.endsWith('/' + segment)
