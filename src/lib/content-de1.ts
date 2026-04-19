@@ -182,88 +182,88 @@ export const content: Content = {
       ],
       "flashcards": [
         {
-          "front": "ZIP kodu quantitative mi categorical mi?",
-          "back": "Categorical — 90210 + 10115 hiçbir şey ifade etmez, ortalama anlamsız."
+          "front": "Is a ZIP code quantitative or categorical?",
+          "back": "Categorical — 90210 + 10115 means nothing; averaging ZIP codes is meaningless."
         },
         {
-          "front": "Nominal ile ordinal arasındaki fark nedir?",
-          "back": "Nominal'de sıra yok (rainy/sunny/cloudy), ordinal'de sıra var ama adımlar eşit değil (bad < neutral < good)."
+          "front": "What is the difference between nominal and ordinal variables?",
+          "back": "Nominal has no order (rainy/sunny/cloudy); ordinal has order but unequal steps (bad < neutral < good)."
         },
         {
           "front": "Categorical ⊆ ?",
-          "back": "Finite — ama her finite categorical değil (yaş tam yıl = finite ama quantitative)."
+          "back": "Finite — but not every finite variable is categorical (age in integer years is finite but quantitative)."
         },
         {
-          "front": "Continuous ile discrete arasındaki fark?",
-          "back": "Continuous'ta iki değer arasında her zaman başka değer var (BMI: 22.4). Discrete'te her değerin successor'ı var, aralarında geçerli değer yok (yaş tam yıl: 23→24)."
+          "front": "What is the difference between continuous and discrete variables?",
+          "back": "Continuous: there is always another value between any two values (BMI: 22.4). Discrete: each value has a direct successor, no valid values in between (age in years: 23→24)."
         },
         {
-          "front": "Temporal veri neden ayrı kategori?",
-          "back": "Döngüsel — Aralık ile Ocak label encoding'de çok uzak (|12-1|=11) ama gerçekte komşu. Cyclic encoding gerektirir."
+          "front": "Why is temporal data a separate category?",
+          "back": "It is cyclic — December and January are far apart under label encoding (|12-1|=11) but are actually neighbors. Cyclic encoding is required."
         },
         {
-          "front": "Encoding'deki < operatörü ne anlamda doğal sırayı korumalı?",
-          "back": "Ordinal veriyi encode ederken küçük integer = küçük kategori olmalı. bad=0, neutral=1, good=2 ✓ — good=0, bad=2 yanlış."
+          "front": "In what sense must the < operator in an encoding preserve natural order?",
+          "back": "When encoding ordinal data, smaller integer must mean smaller category. bad=0, neutral=1, good=2 ✓ — good=0, bad=2 is wrong."
         },
         {
-          "front": "Nominal veri için neden label encoding yanlış?",
-          "back": "Implicit ordinal sıra yaratır. Sun=6, Mon=0 → model \"Sunday, Monday'dan 6 kat büyük\" sanır, (Mon+Sun)/2=Perşembe gibi anlamsız sonuçlar çıkarır."
+          "front": "Why is label encoding wrong for nominal data?",
+          "back": "It creates an implicit ordinal order. Sun=6, Mon=0 → the model thinks Sunday is '6× larger' than Monday; (Mon+Sun)/2=Thursday — meaningless."
         },
         {
-          "front": "One-hot encoding'in problemi nedir?",
-          "back": "Yüksek cardinality'de sütun patlaması — 195 ülke → 195 sütun, sparse matrix, bellek sorunu."
+          "front": "What is the problem with one-hot encoding?",
+          "back": "High cardinality causes column explosion — 195 countries → 195 columns, sparse matrix, memory issues."
         },
         {
-          "front": "Cyclic encoding formülü nedir?",
+          "front": "What is the cyclic encoding formula?",
           "back": "x_i = cos(2π(i−1)/K)\ny_i = sin(2π(i−1)/K)"
         },
         {
-          "front": "Cyclic encoding'de Ocak↔Aralık mesafesi neden küçük?",
-          "back": "İkisi çember üzerinde komşu nokta. Label'da |1-12|=11, cyclic'te Euclidean mesafe ≈ 0.27 — Ocak↔Şubat ile aynı."
+          "front": "Why is the January↔December distance small under cyclic encoding?",
+          "back": "They map to neighboring points on the unit circle. Under label encoding |1-12|=11; under cyclic encoding Euclidean distance ≈ 0.27 — the same as January↔February."
         },
         {
-          "front": "1D cyclic mesafe formülü nedir?",
-          "back": "d(c_i, c_j) = min{|i−j|, K−|i−j|} — iki yönden kısa olanı al. Ocak↔Aralık: min{11,1} = 1."
+          "front": "What is the 1D cyclic distance formula?",
+          "back": "d(c_i, c_j) = min{|i−j|, K−|i−j|} — take the shorter arc. January↔December: min{11,1} = 1."
         },
         {
-          "front": "\"Good encoding\" tanımı nedir?",
-          "back": "Orijinal domain'deki mesafe ilişkilerini encoding space'de de korumak."
+          "front": "What is the definition of a \"good encoding\"?",
+          "back": "Preserving the distance relationships of the original domain in the encoding space."
         },
         {
-          "front": "Tabular veri ile non-tabular verinin temel farkı?",
-          "back": "Tabular'da satırlar bağımsız ve order-invariant (permutation uygulasan da aynı dataset). Non-tabular'da sıra ve bağımlılık var."
+          "front": "What is the key difference between tabular and non-tabular data?",
+          "back": "In tabular data, rows are independent and order-invariant (permuting rows gives the same dataset). Non-tabular data has order and dependencies between samples."
         },
         {
-          "front": "Spatial data neden non-tabular?",
-          "back": "Komşu konumlar birbirine bağımlı — \"Locations yield adjacency dependencies between samples.\""
+          "front": "Why is spatial data non-tabular?",
+          "back": "Adjacent locations are dependent — \"locations yield adjacency dependencies between samples.\""
         },
         {
-          "front": "Image veri yapısı olarak ne?",
+          "front": "What is the tensor structure of image data?",
           "back": "RGB image = 3D tensor [H × W × 3], Grayscale = 2D matrix [H × W], Video = 4D tensor [T × H × W × 3]."
         },
         {
-          "front": "Time series neden non-tabular?",
-          "back": "\"time stamps yield temporal dependencies between samples\" — t=3'teki değer t=2'ye bağlı, satırları karıştırsan temporal dependence kaybolur."
+          "front": "Why is time series data non-tabular?",
+          "back": "\"Time stamps yield temporal dependencies between samples\" — the value at t=3 depends on t=2; shuffling rows destroys the temporal dependence."
         },
         {
-          "front": "String encoding'in 2 adımı nedir?",
-          "back": "1. Tokenization — string'i token'lara böl, her token bir ID'ye map et (BPE algoritması)\n2. Token Embedding — her token ID'yi D-boyutlu vektöre map et (Word2Vec)"
+          "front": "What are the 2 steps of string encoding?",
+          "back": "1. Tokenization — split string into tokens, map each to an integer ID (BPE algorithm)\n2. Token Embedding — map each token ID to a D-dimensional dense vector (Word2Vec)"
         },
         {
-          "front": "Graf G = (V, E) tanımı ve edge tipleri nedir?",
-          "back": "V = node'lar, E = edge'ler.\nUndirected: e = {u,v} — {1,3} = {3,1}\nDirected: e = (u,v) — (1,3) ≠ (3,1)\nSelf-loop: e = (u,u)"
+          "front": "What is the definition of graph G = (V, E) and what are the edge types?",
+          "back": "V = set of nodes, E = set of edges.\nUndirected: e = {u,v} — {1,3} = {3,1}\nDirected: e = (u,v) — (1,3) ≠ (3,1)\nSelf-loop: e = (u,u)"
         },
         {
-          "front": "Adjacency matrix vs adjacency list — ne zaman hangisi?",
-          "back": "Dense graf (|E| ≈ |V|²): Matrix — O(1) erişim kazanç\nSparse graf (|E| << |V|²): List — O(|V|+|E|) space tasarrufu\nBiyomedikal graflar genellikle sparse → adjacency list."
+          "front": "Adjacency matrix vs adjacency list — when to use which?",
+          "back": "Dense graph (|E| ≈ |V|²): Matrix — O(1) lookup wins\nSparse graph (|E| << |V|²): List — O(|V|+|E|) space saves memory\nBiomedical graphs are almost always sparse → adjacency list."
         },
         {
-          "front": "Equal-width binning formülü?",
-          "back": "bin_genişliği = (MAX − MIN) / K"
+          "front": "What is the equal-width binning formula?",
+          "back": "bin_width = (MAX − MIN) / K"
         },
         {
-          "front": "Protein etkileşim ağında adjacency matrix mi list mi kullanılır? Neden?",
-          "back": "Adjacency list — binlerce protein ama her biri sadece birkaç etkileşim → sparse graf."
+          "front": "Should a protein interaction network use an adjacency matrix or list? Why?",
+          "back": "Adjacency list — thousands of proteins but each interacts with only a few others → sparse graph."
         }
       ]
     }
