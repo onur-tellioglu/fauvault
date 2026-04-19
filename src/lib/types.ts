@@ -10,6 +10,7 @@ export type Question = {
   correct: number[]    // 0-indexed, array supports multiple-correct
   explanation: string  // Turkish explanation
   type: 'single' | 'multiple'
+  shuffle?: false      // when false, options are displayed in original order
 }
 
 export type Flashcard = {
