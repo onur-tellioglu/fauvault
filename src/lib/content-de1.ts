@@ -179,6 +179,92 @@ export const content: Content = {
           "explanation": "(B) EMG signal = multivariate time series — temporal dependencies between timesteps, order critical. (C) Road network = attributed graph — edges create dependencies between nodes. (D) DNA sequence = string treated as time series — 'ATCG' ≠ 'CATG', character order is critical. Patient demographics (A) and survey responses (E) are tabular — each row is an independent observation, shuffling rows doesn't change the dataset.",
           "type": "multiple"
         }
+      ],
+      "flashcards": [
+        {
+          "front": "ZIP kodu quantitative mi categorical mi?",
+          "back": "Categorical — 90210 + 10115 hiçbir şey ifade etmez, ortalama anlamsız."
+        },
+        {
+          "front": "Nominal ile ordinal arasındaki fark nedir?",
+          "back": "Nominal'de sıra yok (rainy/sunny/cloudy), ordinal'de sıra var ama adımlar eşit değil (bad < neutral < good)."
+        },
+        {
+          "front": "Categorical ⊆ ?",
+          "back": "Finite — ama her finite categorical değil (yaş tam yıl = finite ama quantitative)."
+        },
+        {
+          "front": "Continuous ile discrete arasındaki fark?",
+          "back": "Continuous'ta iki değer arasında her zaman başka değer var (BMI: 22.4). Discrete'te her değerin successor'ı var, aralarında geçerli değer yok (yaş tam yıl: 23→24)."
+        },
+        {
+          "front": "Temporal veri neden ayrı kategori?",
+          "back": "Döngüsel — Aralık ile Ocak label encoding'de çok uzak (|12-1|=11) ama gerçekte komşu. Cyclic encoding gerektirir."
+        },
+        {
+          "front": "Encoding'deki < operatörü ne anlamda doğal sırayı korumalı?",
+          "back": "Ordinal veriyi encode ederken küçük integer = küçük kategori olmalı. bad=0, neutral=1, good=2 ✓ — good=0, bad=2 yanlış."
+        },
+        {
+          "front": "Nominal veri için neden label encoding yanlış?",
+          "back": "Implicit ordinal sıra yaratır. Sun=6, Mon=0 → model \"Sunday, Monday'dan 6 kat büyük\" sanır, (Mon+Sun)/2=Perşembe gibi anlamsız sonuçlar çıkarır."
+        },
+        {
+          "front": "One-hot encoding'in problemi nedir?",
+          "back": "Yüksek cardinality'de sütun patlaması — 195 ülke → 195 sütun, sparse matrix, bellek sorunu."
+        },
+        {
+          "front": "Cyclic encoding formülü nedir?",
+          "back": "x_i = cos(2π(i−1)/K)\ny_i = sin(2π(i−1)/K)"
+        },
+        {
+          "front": "Cyclic encoding'de Ocak↔Aralık mesafesi neden küçük?",
+          "back": "İkisi çember üzerinde komşu nokta. Label'da |1-12|=11, cyclic'te Euclidean mesafe ≈ 0.27 — Ocak↔Şubat ile aynı."
+        },
+        {
+          "front": "1D cyclic mesafe formülü nedir?",
+          "back": "d(c_i, c_j) = min{|i−j|, K−|i−j|} — iki yönden kısa olanı al. Ocak↔Aralık: min{11,1} = 1."
+        },
+        {
+          "front": "\"Good encoding\" tanımı nedir?",
+          "back": "Orijinal domain'deki mesafe ilişkilerini encoding space'de de korumak."
+        },
+        {
+          "front": "Tabular veri ile non-tabular verinin temel farkı?",
+          "back": "Tabular'da satırlar bağımsız ve order-invariant (permutation uygulasan da aynı dataset). Non-tabular'da sıra ve bağımlılık var."
+        },
+        {
+          "front": "Spatial data neden non-tabular?",
+          "back": "Komşu konumlar birbirine bağımlı — \"Locations yield adjacency dependencies between samples.\""
+        },
+        {
+          "front": "Image veri yapısı olarak ne?",
+          "back": "RGB image = 3D tensor [H × W × 3], Grayscale = 2D matrix [H × W], Video = 4D tensor [T × H × W × 3]."
+        },
+        {
+          "front": "Time series neden non-tabular?",
+          "back": "\"time stamps yield temporal dependencies between samples\" — t=3'teki değer t=2'ye bağlı, satırları karıştırsan temporal dependence kaybolur."
+        },
+        {
+          "front": "String encoding'in 2 adımı nedir?",
+          "back": "1. Tokenization — string'i token'lara böl, her token bir ID'ye map et (BPE algoritması)\n2. Token Embedding — her token ID'yi D-boyutlu vektöre map et (Word2Vec)"
+        },
+        {
+          "front": "Graf G = (V, E) tanımı ve edge tipleri nedir?",
+          "back": "V = node'lar, E = edge'ler.\nUndirected: e = {u,v} — {1,3} = {3,1}\nDirected: e = (u,v) — (1,3) ≠ (3,1)\nSelf-loop: e = (u,u)"
+        },
+        {
+          "front": "Adjacency matrix vs adjacency list — ne zaman hangisi?",
+          "back": "Dense graf (|E| ≈ |V|²): Matrix — O(1) erişim kazanç\nSparse graf (|E| << |V|²): List — O(|V|+|E|) space tasarrufu\nBiyomedikal graflar genellikle sparse → adjacency list."
+        },
+        {
+          "front": "Equal-width binning formülü?",
+          "back": "bin_genişliği = (MAX − MIN) / K"
+        },
+        {
+          "front": "Protein etkileşim ağında adjacency matrix mi list mi kullanılır? Neden?",
+          "back": "Adjacency list — binlerce protein ama her biri sadece birkaç etkileşim → sparse graf."
+        }
       ]
     }
   ]
