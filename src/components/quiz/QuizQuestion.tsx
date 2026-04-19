@@ -17,7 +17,12 @@ type Props = {
 
 export function QuizQuestion({ question, onAnswer, questionIndex, totalQuestions }: Props) {
   // shuffleMap[displayIdx] = originalIdx — recomputed only when question changes
-  const shuffleMap = useMemo(() => shuffleIndices(question.options.length), [question.id, question.options.length])
+  const shuffleMap = useMemo(
+    () => question.shuffle === false
+      ? question.options.map((_, i) => i)   // identity — no shuffle
+      : shuffleIndices(question.options.length),
+    [question.id, question.options.length, question.shuffle]
+  )
 
   const displayOptions = shuffleMap.map(orig => question.options[orig])
   // display indices that are correct answers
