@@ -29,22 +29,13 @@ export default async function ExamPrepListPage({ params }: { params: Promise<{ c
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
 
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
-          <div>
-            <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
-              Exam Prep
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Past exam papers — calculate and submit answers
-            </p>
-          </div>
-          <Link href={`/${course}/dashboard`} style={{
-            fontSize: '0.82rem', color: 'var(--text-muted)', textDecoration: 'none',
-            padding: '9px 18px', border: '1px solid var(--border-default)',
-            borderRadius: 7, background: 'var(--bg-surface)',
-          }}>
-            ← Dashboard
-          </Link>
+        <header style={{ marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease forwards' }}>
+          <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.8rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 2 }}>
+            Exam Prep
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+            Past exam papers — calculate and submit answers
+          </p>
         </header>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>

@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { isValidCourse, COURSES, type Course } from '@/lib/courses'
 import { CourseShell } from '@/components/layout/CourseShell'
+import { getExamPrepExams } from '@/lib/exam-prep'
 import { version } from '../../../package.json'
 
 export default async function CourseLayout({
@@ -21,6 +22,7 @@ export default async function CourseLayout({
   const hasFlashcards = courseData.content.lectures.some(
     (l: { flashcards?: unknown[] }) => l.flashcards?.length
   )
+  const hasExamPrep = getExamPrepExams(course as Course).length > 0
 
   return (
     <CourseShell
@@ -28,6 +30,7 @@ export default async function CourseLayout({
       courseLabel={courseData.label}
       username={session.username}
       hasFlashcards={hasFlashcards}
+      hasExamPrep={hasExamPrep}
       appVersion={version}
     >
       {children}
