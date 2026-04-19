@@ -69,7 +69,7 @@ export function FlashcardClient({ flashcards, course, initialIndex, initialKnown
           borderColor: isKnown ? 'var(--success)' : flipped ? 'var(--accent)' : 'var(--border-default)',
           borderRadius: 14, padding: '2rem', cursor: 'pointer',
           transition: 'border-color 150ms ease', display: 'flex', flexDirection: 'column',
-          justifyContent: 'center',
+          justifyContent: 'center', userSelect: 'none',
         }}
       >
         {!flipped ? (
