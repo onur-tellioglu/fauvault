@@ -38,7 +38,7 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
           </p>
         ) : (
           <div style={{ border: '1px solid var(--border-default)', borderRadius: 10, overflow: 'hidden', background: 'var(--bg-surface)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table className="leaderboard-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
                   {['#', 'User', 'Completed', 'Semester', 'Score'].map(h => (
