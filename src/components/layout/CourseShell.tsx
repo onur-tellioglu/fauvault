@@ -92,6 +92,9 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
       --density-gap: ${gapMap[density]};
       --density-pad: ${padMap[density]};
     }
+    @media (max-width: 600px) {
+      .masthead-app-name { display: none; }
+    }
   `
 
   const [titleFirst, titleLast] = splitTitle(courseLabel)
@@ -112,20 +115,19 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
                 >
                   ← Courses
                 </Link>
-                <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                <span className="masthead-app-name" style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   The FAUVault Daily · v{appVersion}
                 </span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <Link href="/profile" style={{ textAlign: 'right', textDecoration: 'none' }}>
-                  <div style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Reader</div>
-                  <div style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.82rem', color: 'var(--text-primary)' }}>@{username}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <Link href="/profile" style={{ textDecoration: 'none' }}>
+                  <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.82rem', color: 'var(--text-primary)' }}>@{username}</span>
                 </Link>
                 <button
                   onClick={() => setShowTweaks(p => !p)}
-                  style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                  style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.82rem', color: 'var(--text-muted)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', lineHeight: 1 }}
                 >
-                  Tweaks
+                  ⚙
                 </button>
               </div>
             </div>
