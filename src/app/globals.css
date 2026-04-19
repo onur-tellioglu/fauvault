@@ -143,10 +143,23 @@ body { font-family: var(--font-sans, sans-serif); }
 
 /* ── Mobile Responsiveness ── */
 
+/* Nav scrollbar hidden on all browsers */
+.course-shell-nav {
+  scrollbar-width: none;
+}
+.course-shell-nav::-webkit-scrollbar {
+  display: none;
+}
+
 /* 768px: tablets + phones */
 @media (max-width: 768px) {
   /* Masthead padding */
   .course-shell-masthead {
+    padding: 0 0.5rem !important;
+  }
+
+  /* Nav padding */
+  .course-shell-nav {
     padding: 0 0.5rem !important;
   }
 
