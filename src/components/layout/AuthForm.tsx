@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 type Mode = 'login' | 'register'
 
-export function AuthForm() {
+export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
   const [mode, setMode] = useState<Mode>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -31,8 +31,12 @@ export function AuthForm() {
     const data = await res.json()
     setLoading(false)
     if (!res.ok) { setError(data.error); return }
-    router.push('/dashboard')
     router.refresh()
+    if (onSuccess) {
+      onSuccess()
+    } else {
+      router.push('/dashboard')
+    }
   }
 
   const inputStyle: React.CSSProperties = {
