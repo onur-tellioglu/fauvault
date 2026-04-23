@@ -1,7 +1,5 @@
-// src/app/[course]/exam-prep/[id]/page.tsx
 import type { Metadata } from 'next'
-import { redirect, notFound } from 'next/navigation'
-import { getSession } from '@/lib/auth'
+import { notFound } from 'next/navigation'
 import { isValidCourse, type Course } from '@/lib/courses'
 import { getExamPrepExam } from '@/lib/exam-prep'
 import { ExamClient } from './ExamClient'
@@ -19,9 +17,6 @@ export default async function ExamPage({
 }) {
   const { course, id } = await params
   if (!isValidCourse(course)) notFound()
-
-  const session = await getSession()
-  if (!session) redirect('/')
 
   const exam = getExamPrepExam(course as Course, id)
   if (!exam) notFound()
