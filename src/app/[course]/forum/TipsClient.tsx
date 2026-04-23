@@ -2,16 +2,18 @@
 import { useState } from 'react'
 import type { Course } from '@/lib/courses'
 import type { Tip, TipComment } from '@/lib/tips'
+import { useAuthModal } from '@/components/layout/AuthModalContext'
 
 type Props = {
   course: Course
   initialTips: Tip[]
-  username: string
+  username: string | null
   isAdmin: boolean
   courseLabel: string
 }
 
 export function TipsClient({ course, initialTips, username, isAdmin, courseLabel }: Props) {
+  const { triggerAuthModal } = useAuthModal()
   const [tips, setTips] = useState(initialTips)
   const [newBody, setNewBody] = useState('')
   const [posting, setPosting] = useState(false)
@@ -103,36 +105,48 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
         </p>
       </header>
 
-        <div style={{ ...cardStyle, marginBottom: '1.5rem' }}>
-          <textarea
-            value={newBody}
-            onChange={e => setNewBody(e.target.value)}
-            placeholder="Share something useful — exam format, prof tip, exercise class insight…"
-            maxLength={1000}
-            rows={3}
-            style={{
-              width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)',
-              borderRadius: 7, padding: '10px 12px', color: 'var(--text-primary)',
-              fontFamily: 'var(--font-body)', fontSize: '0.9rem', resize: 'vertical', outline: 'none',
-              boxSizing: 'border-box',
-            }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-            <span style={mutedText}>{newBody.length}/1000</span>
-            <button
-              onClick={submitTip}
-              disabled={posting || !newBody.trim()}
+        {username ? (
+          <div style={{ ...cardStyle, marginBottom: '1.5rem' }}>
+            <textarea
+              value={newBody}
+              onChange={e => setNewBody(e.target.value)}
+              placeholder="Share something useful — exam format, prof tip, exercise class insight…"
+              maxLength={1000}
+              rows={3}
               style={{
-                padding: '8px 18px', background: 'var(--accent)', color: '#0C0C10',
-                border: 'none', borderRadius: 7, fontWeight: 600, fontSize: '0.85rem',
-                cursor: posting || !newBody.trim() ? 'not-allowed' : 'pointer',
-                opacity: posting || !newBody.trim() ? 0.5 : 1,
+                width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)',
+                borderRadius: 7, padding: '10px 12px', color: 'var(--text-primary)',
+                fontFamily: 'var(--font-body)', fontSize: '0.9rem', resize: 'vertical', outline: 'none',
+                boxSizing: 'border-box',
               }}
-            >
-              {posting ? '…' : 'Post'}
-            </button>
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+              <span style={mutedText}>{newBody.length}/1000</span>
+              <button
+                onClick={submitTip}
+                disabled={posting || !newBody.trim()}
+                style={{
+                  padding: '8px 18px', background: 'var(--accent)', color: '#0C0C10',
+                  border: 'none', borderRadius: 7, fontWeight: 600, fontSize: '0.85rem',
+                  cursor: posting || !newBody.trim() ? 'not-allowed' : 'pointer',
+                  opacity: posting || !newBody.trim() ? 0.5 : 1,
+                }}
+              >
+                {posting ? '…' : 'Post'}
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+            <button
+              onClick={() => triggerAuthModal({ reason: 'post_forum' })}
+              style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', padding: 0 }}
+            >
+              Sign in
+            </button>
+            {' '}to post tips and upvote.
+          </p>
+        )}
 
         {tips.length === 0 && (
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', marginTop: '4rem' }}>
@@ -157,9 +171,13 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
               <span style={mutedText}>{tip.username} · {new Date(tip.created_at).toLocaleDateString()}</span>
               <span style={{ ...mutedText, marginLeft: 'auto' }} />
 
-              <button onClick={() => toggleUpvote(tip.id)} style={{ ...btnBase, color: tip.upvoted_by_me ? 'var(--accent)' : 'var(--text-muted)' }}>
-                ↑ {tip.upvote_count}
-              </button>
+              {username ? (
+                <button onClick={() => toggleUpvote(tip.id)} style={{ ...btnBase, color: tip.upvoted_by_me ? 'var(--accent)' : 'var(--text-muted)' }}>
+                  ↑ {tip.upvote_count}
+                </button>
+              ) : (
+                <span style={{ ...mutedText, marginLeft: 4 }}>↑ {tip.upvote_count}</span>
+              )}
 
               <button onClick={() => expandComments(tip.id)} style={btnBase}>
                 💬 {tip.comment_count}
@@ -176,7 +194,7 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
                 </>
               )}
 
-              {!isAdmin && tip.username === username && (
+              {!isAdmin && username && tip.username === username && (
                 <button onClick={() => deleteTip(tip.id)} style={{ ...btnBase, color: 'var(--error, #f87171)' }}>
                   Delete
                 </button>
@@ -191,37 +209,39 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
                       <span style={{ ...mutedText, marginRight: 6 }}>{c.username}</span>
                       <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{c.body}</span>
                     </div>
-                    {(isAdmin || c.username === username) && (
+                    {username && (isAdmin || c.username === username) && (
                       <button onClick={() => deleteComment(tip.id, c.id)} style={{ ...btnBase, fontSize: '0.7rem', color: 'var(--error, #f87171)' }}>×</button>
                     )}
                   </div>
                 ))}
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                  <input
-                    value={commentBody[tip.id] ?? ''}
-                    onChange={e => setCommentBody(prev => ({ ...prev, [tip.id]: e.target.value }))}
-                    placeholder="Add a comment…"
-                    maxLength={500}
-                    style={{
-                      flex: 1, background: 'var(--bg-elevated)', border: '1px solid var(--border-default)',
-                      borderRadius: 6, padding: '7px 10px', color: 'var(--text-primary)',
-                      fontFamily: 'var(--font-body)', fontSize: '0.85rem', outline: 'none',
-                    }}
-                    onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment(tip.id) } }}
-                  />
-                  <button
-                    onClick={() => submitComment(tip.id)}
-                    disabled={!(commentBody[tip.id]?.trim())}
-                    style={{
-                      padding: '7px 14px', background: 'var(--accent)', color: '#0C0C10',
-                      border: 'none', borderRadius: 6, fontWeight: 600, fontSize: '0.82rem',
-                      cursor: commentBody[tip.id]?.trim() ? 'pointer' : 'not-allowed',
-                      opacity: commentBody[tip.id]?.trim() ? 1 : 0.5,
-                    }}
-                  >
-                    Send
-                  </button>
-                </div>
+                {username && (
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <input
+                      value={commentBody[tip.id] ?? ''}
+                      onChange={e => setCommentBody(prev => ({ ...prev, [tip.id]: e.target.value }))}
+                      placeholder="Add a comment…"
+                      maxLength={500}
+                      style={{
+                        flex: 1, background: 'var(--bg-elevated)', border: '1px solid var(--border-default)',
+                        borderRadius: 6, padding: '7px 10px', color: 'var(--text-primary)',
+                        fontFamily: 'var(--font-body)', fontSize: '0.85rem', outline: 'none',
+                      }}
+                      onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment(tip.id) } }}
+                    />
+                    <button
+                      onClick={() => submitComment(tip.id)}
+                      disabled={!(commentBody[tip.id]?.trim())}
+                      style={{
+                        padding: '7px 14px', background: 'var(--accent)', color: '#0C0C10',
+                        border: 'none', borderRadius: 6, fontWeight: 600, fontSize: '0.82rem',
+                        cursor: commentBody[tip.id]?.trim() ? 'pointer' : 'not-allowed',
+                        opacity: commentBody[tip.id]?.trim() ? 1 : 0.5,
+                      }}
+                    >
+                      Send
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

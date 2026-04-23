@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { isValidCourse, COURSES, type Course } from '@/lib/courses'
 import { getTips, getUserRole } from '@/lib/tips'
@@ -16,18 +16,14 @@ export default async function TipsPage({ params }: { params: Promise<{ course: s
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
-  if (!session) redirect('/')
-
-  const [tips, role] = await Promise.all([
-    getTips(course as Course, session.userId),
-    getUserRole(session.userId),
-  ])
+  const tips = await getTips(course as Course, session?.userId ?? null)
+  const role = session ? await getUserRole(session.userId) : null
 
   return (
     <TipsClient
       course={course as Course}
       initialTips={tips}
-      username={session.username}
+      username={session?.username ?? null}
       isAdmin={role === 'admin'}
       courseLabel={COURSES[course as Course].label}
     />

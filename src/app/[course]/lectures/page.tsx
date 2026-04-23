@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { isValidCourse, getCourseContent, COURSES, type Course } from '@/lib/courses'
 import { getProgress } from '@/lib/progress'
@@ -15,12 +15,14 @@ export default async function LecturesPage({ params }: { params: Promise<{ cours
   const { course } = await params
   if (!isValidCourse(course)) notFound()
 
-  const session = await getSession()
-  if (!session) redirect('/')
-
   const content = getCourseContent(course as Course)
-  const progressRows = await getProgress(session.userId, course as Course)
-  const byLecture = Object.fromEntries(progressRows.map(r => [r.lecture_id, r]))
+  const session = await getSession()
+
+  let byLecture: Record<number, { lecture_id: number; concept_index?: number | null; completed_at?: string | null; final_quiz_result?: unknown }> = {}
+  if (session) {
+    const rows = await getProgress(session.userId, course as Course)
+    byLecture = Object.fromEntries(rows.map(r => [r.lecture_id, r]))
+  }
 
   return (
     <LecturesClient

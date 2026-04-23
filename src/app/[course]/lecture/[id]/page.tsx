@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
 import { isValidCourse, getCourseContent, type Course } from '@/lib/courses'
@@ -20,9 +20,6 @@ export default async function LecturePage({
   const { course, id } = await params
   if (!isValidCourse(course)) notFound()
 
-  const session = await getSession()
-  if (!session) redirect('/')
-
   const content = getCourseContent(course as Course)
   const lecture = content.lectures.find(l => l.id === parseInt(id))
   if (!lecture) notFound()
@@ -30,8 +27,13 @@ export default async function LecturePage({
   const currentIndex = content.lectures.findIndex(l => l.id === lecture.id)
   const nextLecture = content.lectures[currentIndex + 1] ?? null
 
-  const rows = await getProgress(session.userId, course as Course)
-  const progress = rows.find(r => r.lecture_id === lecture.id)
+  const session = await getSession()
+  let initialConceptIndex = 0
+  if (session) {
+    const rows = await getProgress(session.userId, course as Course)
+    const progress = rows.find(r => r.lecture_id === lecture.id)
+    initialConceptIndex = progress?.concept_index ?? 0
+  }
 
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)', padding: '2.5rem 1.5rem' }}>
@@ -56,8 +58,9 @@ export default async function LecturePage({
         <LectureFlowWrapper
           lecture={lecture}
           course={course as Course}
-          initialConceptIndex={progress?.concept_index ?? 0}
+          initialConceptIndex={initialConceptIndex}
           nextLectureId={nextLecture?.id ?? null}
+          isAuthenticated={!!session}
         />
       </div>
     </main>
