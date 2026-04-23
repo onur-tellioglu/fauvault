@@ -3,11 +3,12 @@ import type { Content } from './types'
 import { content as aipContent } from './content-aip'
 import { content as reContent } from './content-re'
 import { content as de1Content } from './content-de1'
+import { content as apContent } from './content-ap'
 import './exam-prep-re'
 
-export type Course = 'aip' | 're' | 'de1'
+export type Course = 'aip' | 're' | 'de1' | 'ap'
 
-export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1']
+export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap']
 
 export const COURSES: Record<Course, {
   label: string
@@ -33,9 +34,16 @@ export const COURSES: Record<Course, {
   de1: {
     label: 'Data Engineering 1',
     shortLabel: 'DE1',
-    description: 'FAU · 1 Lecture',
+    description: 'FAU · 2 Lectures',
     examDate: '',   // TBD — update when exam date is announced
     content: de1Content,
+  },
+  ap: {
+    label: 'Applied Programming',
+    shortLabel: 'AP',
+    description: 'FAU · 1 Lecture',
+    examDate: '',   // TBD — oral exam, date not yet announced
+    content: apContent,
   },
 }
 
