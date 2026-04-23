@@ -7,5 +7,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  test: { environment: 'node' },
+  test: { environment: 'node', globals: true },
 })
