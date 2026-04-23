@@ -1,14 +1,16 @@
 'use client'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { Lecture } from '@/lib/types'
 import type { Course } from '@/lib/courses'
 import { LectureFlow } from '@/components/lecture/LectureFlow'
+import { upsertGuestProgress } from '@/lib/guest-progress'
 
 type Props = {
   lecture: Lecture
   course: Course
   initialConceptIndex: number
   nextLectureId: number | null
+  isAuthenticated: boolean
 }
 
 const MAX_RETRIES = 3
@@ -31,17 +33,34 @@ async function saveWithRetry(course: Course, lectureId: number, patch: object): 
   }
 }
 
-export function LectureFlowWrapper({ lecture, course, initialConceptIndex, nextLectureId }: Props) {
+export function LectureFlowWrapper({ lecture, course, initialConceptIndex, nextLectureId, isAuthenticated }: Props) {
   const [saveError, setSaveError] = useState(false)
 
-  async function save(patch: object) {
+  const resolvedInitialIndex = isAuthenticated
+    ? initialConceptIndex
+    : (() => {
+        try {
+          const raw = localStorage.getItem('guest_progress')
+          if (!raw) return 0
+          const store = JSON.parse(raw)
+          return store[`${course}:${lecture.id}`]?.concept_index ?? 0
+        } catch {
+          return 0
+        }
+      })()
+
+  const save = useCallback(async (patch: object) => {
+    if (!isAuthenticated) {
+      upsertGuestProgress(course, lecture.id, patch as Parameters<typeof upsertGuestProgress>[2])
+      return
+    }
     try {
       await saveWithRetry(course, lecture.id, patch)
       if (saveError) setSaveError(false)
     } catch {
       setSaveError(true)
     }
-  }
+  }, [isAuthenticated, course, lecture.id, saveError])
 
   return (
     <>
@@ -56,7 +75,7 @@ export function LectureFlowWrapper({ lecture, course, initialConceptIndex, nextL
       )}
       <LectureFlow
         lecture={lecture}
-        initialConceptIndex={initialConceptIndex}
+        initialConceptIndex={resolvedInitialIndex}
         onProgress={save}
         nextLectureId={nextLectureId}
         course={course}
