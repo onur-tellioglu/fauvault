@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { COURSES, type Course } from '@/lib/courses'
 import { QuizQuestion } from '@/components/quiz/QuizQuestion'
+import { upsertGuestProgress } from '@/lib/guest-progress'
 
 export function QuizClient({ course }: { course: Course }) {
   const content = COURSES[course].content
@@ -19,20 +20,22 @@ export function QuizClient({ course }: { course: Course }) {
   async function handleAnswer(selected: number[], score: number) {
     setScores(prev => [...prev, score])
     setAnswered(true)
-    if (lectureId !== 'all') {
-      await fetch('/api/progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          course,
-          lectureId,
-          patch: {
-            mini_quiz_results: {
-              [questions[qi].id]: { answers: [selected], score, submittedAt: new Date().toISOString() },
-            },
-          },
-        }),
-      })
+    if (lectureId === 'all') return
+
+    const patch = {
+      mini_quiz_results: {
+        [questions[qi].id]: { answers: [selected], score, submittedAt: new Date().toISOString() },
+      },
+    }
+
+    const res = await fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ course, lectureId, patch }),
+    })
+
+    if (res.status === 401) {
+      upsertGuestProgress(course, lectureId as number, patch)
     }
   }
 
