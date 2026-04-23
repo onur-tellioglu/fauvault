@@ -23,7 +23,30 @@ export type TipComment = {
   created_at: string
 }
 
-export async function getTips(course: Course, userId: number): Promise<Tip[]> {
+export async function getTips(course: Course, userId: number | null): Promise<Tip[]> {
+  if (userId === null) {
+    const rows = await sql`
+      SELECT
+        t.id::text,
+        t.course,
+        t.user_id,
+        u.username,
+        t.body,
+        t.verified,
+        t.created_at,
+        COUNT(DISTINCT tu.user_id)::int AS upvote_count,
+        COUNT(DISTINCT tc.id)::int AS comment_count,
+        false AS upvoted_by_me
+      FROM tips t
+      JOIN users u ON u.id = t.user_id
+      LEFT JOIN tip_upvotes tu ON tu.tip_id = t.id
+      LEFT JOIN tip_comments tc ON tc.tip_id = t.id
+      WHERE t.course = ${course}
+      GROUP BY t.id, u.username
+      ORDER BY t.verified DESC, t.created_at DESC
+    `
+    return rows as Tip[]
+  }
   const rows = await sql`
     SELECT
       t.id::text,
