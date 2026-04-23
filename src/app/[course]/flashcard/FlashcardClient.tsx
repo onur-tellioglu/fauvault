@@ -2,30 +2,50 @@
 import { useState, useCallback } from 'react'
 import type { Flashcard } from '@/lib/types'
 import type { Course } from '@/lib/courses'
+import { upsertGuestFlashcardProgress, getGuestFlashcardProgress } from '@/lib/guest-progress'
 
 type Props = {
   flashcards: Flashcard[]
   course: Course
   initialIndex: number
   initialKnown: number[]
+  isAuthenticated: boolean
 }
 
-export function FlashcardClient({ flashcards, course, initialIndex, initialKnown }: Props) {
+export function FlashcardClient({ flashcards, course, initialIndex, initialKnown, isAuthenticated }: Props) {
   const total = flashcards.length
-  const [index, setIndex] = useState(initialIndex)
-  const [known, setKnown] = useState<Set<number>>(new Set(initialKnown))
+  const [index, setIndex] = useState(() => {
+    if (isAuthenticated) return initialIndex
+    try {
+      return getGuestFlashcardProgress(course).card_index
+    } catch {
+      return 0
+    }
+  })
+  const [known, setKnown] = useState<Set<number>>(() => {
+    if (isAuthenticated) return new Set(initialKnown)
+    try {
+      return new Set(getGuestFlashcardProgress(course).known)
+    } catch {
+      return new Set()
+    }
+  })
   const [flipped, setFlipped] = useState(false)
 
   const card = flashcards[index]
   const isKnown = known.has(index)
 
   const save = useCallback((nextKnown: Set<number>, nextIndex: number) => {
-    fetch('/api/flashcard-progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ course, known: [...nextKnown], cardIndex: nextIndex }),
-    })
-  }, [course])
+    if (isAuthenticated) {
+      fetch('/api/flashcard-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course, known: [...nextKnown], cardIndex: nextIndex }),
+      })
+    } else {
+      upsertGuestFlashcardProgress(course, { card_index: nextIndex, known: [...nextKnown] })
+    }
+  }, [course, isAuthenticated])
 
   function goTo(nextIndex: number) {
     setFlipped(false)
