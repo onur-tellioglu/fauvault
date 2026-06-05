@@ -47,5 +47,7 @@ export const config = {
     '/dashboard/:path*',
     '/leaderboard',
     '/profile/:path*',
+    '/:course/leaderboard',
+    '/:course/dashboard',
   ],
 }
