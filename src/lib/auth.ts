@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
+import { cache } from 'react'
 import sql from './db'
 
 function getSecret(): Uint8Array {
@@ -33,12 +34,12 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
   }
 }
 
-export async function getSession(): Promise<SessionPayload | null> {
+export const getSession = cache(async (): Promise<SessionPayload | null> => {
   const jar = await cookies()
   const token = jar.get(COOKIE_NAME)?.value
   if (!token) return null
   return verifySession(token)
-}
+})
 
 export async function setSessionCookie(token: string): Promise<void> {
   const jar = await cookies()
