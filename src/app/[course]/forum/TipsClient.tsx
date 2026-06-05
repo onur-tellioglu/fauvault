@@ -43,12 +43,17 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   async function toggleUpvote(tipId: string) {
-    await fetch(`/api/tips/${tipId}/upvote`, { method: 'POST' })
-    setTips(prev => prev.map(t =>
-      t.id === tipId
-        ? { ...t, upvote_count: t.upvoted_by_me ? t.upvote_count - 1 : t.upvote_count + 1, upvoted_by_me: !t.upvoted_by_me }
-        : t
-    ))
+    try {
+      const res = await fetch(`/api/tips/${tipId}/upvote`, { method: 'POST' })
+      if (!res.ok) throw new Error('Upvote failed')
+      setTips(prev => prev.map(t =>
+        t.id === tipId
+          ? { ...t, upvote_count: t.upvoted_by_me ? t.upvote_count - 1 : t.upvote_count + 1, upvoted_by_me: !t.upvoted_by_me }
+          : t
+      ))
+    } catch {
+      alert('Failed to update upvote. Please try again.')
+    }
   }
 
   async function deleteTip(tipId: string) {
@@ -63,8 +68,13 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   async function toggleVerify(tipId: string) {
-    await fetch(`/api/tips/${tipId}/verify`, { method: 'PATCH' })
-    setTips(prev => prev.map(t => t.id === tipId ? { ...t, verified: !t.verified } : t))
+    try {
+      const res = await fetch(`/api/tips/${tipId}/verify`, { method: 'PATCH' })
+      if (!res.ok) throw new Error('Verify failed')
+      setTips(prev => prev.map(t => t.id === tipId ? { ...t, verified: !t.verified } : t))
+    } catch {
+      alert('Failed to update verification. Please try again.')
+    }
   }
 
   async function expandComments(tipId: string) {
@@ -85,16 +95,22 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   async function submitComment(tipId: string) {
     const body = commentBody[tipId]?.trim()
     if (!body) return
-    await fetch(`/api/tips/${tipId}/comments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ body }),
-    })
-    setCommentBody(prev => ({ ...prev, [tipId]: '' }))
-    const res = await fetch(`/api/tips/${tipId}/comments`)
-    const data = await res.json()
-    setComments(prev => ({ ...prev, [tipId]: data }))
-    setTips(prev => prev.map(t => t.id === tipId ? { ...t, comment_count: t.comment_count + 1 } : t))
+    try {
+      const res = await fetch(`/api/tips/${tipId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body }),
+      })
+      if (!res.ok) throw new Error('Comment failed')
+      setCommentBody(prev => ({ ...prev, [tipId]: '' }))
+      const refetch = await fetch(`/api/tips/${tipId}/comments`)
+      if (!refetch.ok) throw new Error('Refetch failed')
+      const data = await refetch.json()
+      setComments(prev => ({ ...prev, [tipId]: data }))
+      setTips(prev => prev.map(t => t.id === tipId ? { ...t, comment_count: t.comment_count + 1 } : t))
+    } catch {
+      alert('Failed to post comment. Please try again.')
+    }
   }
 
   async function deleteComment(tipId: string, commentId: string) {
