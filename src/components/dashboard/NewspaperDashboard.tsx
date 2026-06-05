@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { EXAM_LOCATION } from '@/lib/exam-config'
 
 export interface CurrentLectureInfo {
   id: number
@@ -256,7 +257,7 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
                 letterSpacing: '0.08em',
                 lineHeight: 1.6,
               }}>
-                H7 · Technical Faculty
+                {EXAM_LOCATION}
                 <br />
                 {new Date(examDate).toLocaleDateString('en-US', {
                   month: 'short', day: 'numeric', year: 'numeric',
