@@ -5,21 +5,11 @@ import { getProgress } from '@/lib/progress'
 import { getRankForUser } from '@/lib/leaderboard'
 import { CoursePicker } from '@/components/layout/CoursePicker'
 import { PublicCourseList } from '@/components/layout/PublicCourseList'
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { version } from '../../package.json'
 
 export async function generateMetadata(): Promise<Metadata> {
   const session = await getSession()
   return { title: session ? 'Choose a Course' : 'FAUVault — Study Smarter' }
-}
-
-function getAppVersion(): string {
-  try {
-    const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf-8'))
-    return pkg.version ?? '0.0.0'
-  } catch {
-    return '0.0.0'
-  }
 }
 
 export default async function HomePage() {
@@ -48,7 +38,7 @@ export default async function HomePage() {
     return (
       <CoursePicker
         username={session.username}
-        appVersion={getAppVersion()}
+        appVersion={version}
         courses={courses}
       />
     )
