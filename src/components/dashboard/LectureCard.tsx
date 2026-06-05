@@ -22,11 +22,12 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
         onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-default)')}
       >
         <span style={{
-          position: 'absolute', top: 4, right: 10,
+          position: 'absolute', top: 4, right: 10, zIndex: 0,
           fontFamily: 'var(--font-fraunces)', fontSize: '4.5rem', fontWeight: 300,
           color: 'var(--border-subtle)', lineHeight: 1, userSelect: 'none',
         }}>{lecture.id}</span>
 
+        <div style={{ position: 'relative', zIndex: 1 }}>
         {done && (
           <span style={{
             fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
@@ -92,6 +93,7 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
             Watch on fau.tv ↗
           </span>
         )}
+        </div>
       </article>
     </Link>
   )
