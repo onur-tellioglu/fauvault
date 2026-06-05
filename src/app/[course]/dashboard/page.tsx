@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
 import { getLeaderboardByCourse } from '@/lib/leaderboard'
@@ -25,11 +25,10 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
-  if (!session) redirect('/')
 
   const content = getCourseContent(course as Course)
   const [progressRows, leaderboard] = await Promise.all([
-    getProgress(session.userId, course as Course),
+    session ? getProgress(session.userId, course as Course) : Promise.resolve([]),
     getLeaderboardByCourse(course as Course),
   ])
 
@@ -64,7 +63,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
     : null
 
   const topUsers = leaderboard
-    .filter(u => u.username !== session.username)
+    .filter(u => u.username !== session?.username)
     .slice(0, 6)
     .map(u => ({ username: u.username, completedCount: u.completed_count }))
 
