@@ -49,7 +49,7 @@ export const COURSES: Record<Course, {
   bio: {
     label: 'Introduction to Molecular Biology',
     shortLabel: 'BIO',
-    description: 'FAU · 6 Lectures',
+    description: 'FAU · 7 Lectures',
     examDate: '',   // TBD — update when exam date is announced
     content: bioContent,
   },
