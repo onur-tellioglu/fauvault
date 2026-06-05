@@ -36,7 +36,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
     try {
       const savedAccent = localStorage.getItem('fv-accent')
       const savedDensity = localStorage.getItem('fv-density')
-      if (savedAccent && ACCENT_COLORS.includes(savedAccent)) setAccentColor(savedAccent)
+      if (savedAccent && (ACCENT_COLORS as readonly string[]).includes(savedAccent)) setAccentColor(savedAccent)
       if (savedDensity === 'Compact' || savedDensity === 'Normal' || savedDensity === 'Roomy') {
         setDensity(savedDensity as typeof density)
       }
