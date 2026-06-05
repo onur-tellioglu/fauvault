@@ -441,7 +441,7 @@ export const content: Content = {
         },
         {
           "heading": "Linear Algebra in AI — Why It All Matters",
-          "body": "Every concept in this lecture — vectors, dot products, matrix products, convolution — is a primitive operation that underlies modern artificial intelligence.\n\n**2-layer MLP (Multi-Layer Perceptron) forward pass:**\n```python\nimport numpy as np\n\ndef relu(x): return np.maximum(0, x)\n\n# Layer 1: (n_hidden, n_input) weight matrix\nh = relu(W1 @ x + b1)   # hidden layer\n# Layer 2: (n_output, n_hidden) weight matrix\ny = W2 @ h + b2          # output layer\n```\n\n**Convolutional Neural Networks (CNNs):** The 2D convolution in a CNN is exactly `np.convolve` extended to 2D — the kernel slides over an image and computes weighted sums, detecting edges, textures, and shapes.\n\n**Embedding lookup:** Retrieving a word/token embedding from a model is a matrix row-selection: `embedding = E[token_id]`.\n\n**Vector databases:** Semantic search is `np.argmin(np.linalg.norm(X - q, axis=1))` at scale (with approximate nearest-neighbour indexing).\n\n**Five lines to remember from Lecture 3:** `a + b` (addition), `u @ v` (dot product), `A @ x` (matrix multiply), `np.convolve(spikes, h)` (convolution), `windows.hann(L)` (window)."
+          "body": "Every concept in this lecture — vectors, dot products, matrix products, convolution — is a primitive operation that underlies modern artificial intelligence.\n\n**2-layer MLP (Multi-Layer Perceptron) forward pass:**\n```python\nimport numpy as np\n\ndef relu(x): return np.maximum(0, x)\n\n# Layer 1: (n_hidden, n_input) weight matrix\nh = relu(W1 @ x + b1)   # hidden layer\n# Layer 2: (n_output, n_hidden) weight matrix\ny = W2 @ h + b2          # output layer\n```\n\n**Convolutional Neural Networks (CNNs):** The 2D convolution in a CNN is exactly `np.convolve` extended to 2D — the kernel slides over an image and computes weighted sums, detecting edges, textures, and shapes.\n\n**Embedding lookup:** Retrieving a word/token embedding from a model is a matrix row-selection: `embedding = E[token_id]`.\n\n**Vector databases:** Semantic search is `np.argmin(np.linalg.norm(X - q, axis=1))` at scale (with approximate nearest-neighbour indexing).\n\n**Five lines to remember from Vectors, Matrices, and Convolutions:** `a + b` (addition), `u @ v` (dot product), `A @ x` (matrix multiply), `np.convolve(spikes, h)` (convolution), `windows.hann(L)` (window)."
         }
       ],
       "questions": [
@@ -537,7 +537,7 @@ export const content: Content = {
           "back": "Convolution with a smooth kernel (Gaussian or Hanning). The binary spike vector (1=spike, 0=silence) is convolved with a normalised Gaussian or Hanning kernel → continuous, smooth estimate of local firing rate at each time point. This converts discrete neuroscience data into a continuous engineering control signal."
         },
         {
-          "front": "Five lines to remember from Lecture 3 (Vectors, Matrices, Convolutions).",
+          "front": "Five lines to remember from Vectors, Matrices, and Convolutions.",
           "back": "1. `a + b` — vector addition (element-wise)\n2. `u @ v` — dot product (scalar)\n3. `A @ x` — matrix–vector product (linear transformation)\n4. `np.convolve(spikes, h)` — convolution with kernel h\n5. `scipy.signal.windows.hann(L)` — Hanning window of length L"
         }
       ]
