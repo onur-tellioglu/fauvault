@@ -131,7 +131,7 @@ function HighlightedCode({ lang, code }: { lang: string; code: string }) {
       <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre', display: 'block' }}>
         {tokens.map((line, lineIndex) => (
           <span key={lineIndex}>
-            {line.map((token, tokenIndex) => (
+            {line.filter(t => !t.empty).map((token, tokenIndex) => (
               <span
                 key={tokenIndex}
                 style={{ color: TOKEN_COLORS[token.types[token.types.length - 1]] ?? 'inherit' }}
