@@ -5,11 +5,12 @@ import { content as reContent } from './content-re'
 import { content as de1Content } from './content-de1'
 import { content as apContent } from './content-ap'
 import { content as bioContent } from './content-bio'
+import { content as adsContent } from './content-ads'
 import './exam-prep-re'
 
-export type Course = 'aip' | 're' | 'de1' | 'ap' | 'bio'
+export type Course = 'aip' | 're' | 'de1' | 'ap' | 'bio' | 'ads'
 
-export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap', 'bio']
+export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap', 'bio', 'ads']
 
 export const COURSES: Record<Course, {
   label: string
@@ -52,6 +53,13 @@ export const COURSES: Record<Course, {
     description: 'FAU · 7 Lectures',
     examDate: '',   // TBD — update when exam date is announced
     content: bioContent,
+  },
+  ads: {
+    label: 'Applied Data Science in Medicine & Psychology',
+    shortLabel: 'ADS',
+    description: 'FAU · 5 Lectures',
+    examDate: '2026-07-13T14:00:00',
+    content: adsContent,
   },
 }
 
