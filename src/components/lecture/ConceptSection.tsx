@@ -67,11 +67,12 @@ export function normalizeLang(lang: string): string {
 /** Minimal token-color map using the app's CSS variables.
  *  Keys are Prism token type strings; values are CSS color values. */
 const TOKEN_COLORS: Record<string, string> = {
-  // Comments — muted
-  comment:          'var(--text-muted)',
-  prolog:           'var(--text-muted)',
-  doctype:          'var(--text-muted)',
-  cdata:            'var(--text-muted)',
+  // Comments — secondary (#8A8A9A on #1C1C22 = 4.99:1, passes WCAG AA).
+  // text-muted (#4A4A58) is only 1.95:1 — insufficient for readable code comments.
+  comment:          'var(--text-secondary)',
+  prolog:           'var(--text-secondary)',
+  doctype:          'var(--text-secondary)',
+  cdata:            'var(--text-secondary)',
   // Punctuation — secondary
   punctuation:      'var(--text-secondary)',
   // Keywords / operators — primary, semi-bold rendered via color
