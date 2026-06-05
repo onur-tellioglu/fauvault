@@ -1,7 +1,120 @@
 'use client'
 import { useMemo, type ReactNode } from 'react'
+import { Prism, normalizeTokens } from 'prism-react-renderer'
 
 type Props = { heading: string; body: string; index: number; total: number }
+
+// Languages supported by the Prism subset bundled with prism-react-renderer.
+// Unsupported grammars fall back to 'clike' (good enough for matlab/cypher)
+// or 'plain' (bare fences).
+const PRISM_SUPPORTED = new Set([
+  'markup', 'html', 'xml', 'svg', 'mathml',
+  'css', 'clike', 'javascript', 'js',
+  'typescript', 'ts', 'jsx', 'tsx',
+  'python', 'bash', 'shell', 'sql',
+  'json', 'yaml', 'markdown', 'md',
+  'java', 'c', 'cpp', 'csharp', 'cs',
+  'go', 'rust', 'ruby', 'kotlin', 'swift',
+  'r', 'scala', 'diff', 'git', 'regex',
+])
+
+const LANG_ALIASES: Record<string, string> = {
+  matlab: 'clike',
+  cypher: 'clike',
+  sh:     'bash',
+  py:     'python',
+}
+
+export function normalizeLang(lang: string): string {
+  if (!lang) return 'plain'
+  const lower = lang.toLowerCase()
+  if (LANG_ALIASES[lower]) return LANG_ALIASES[lower]
+  if (PRISM_SUPPORTED.has(lower)) return lower
+  return 'plain'
+}
+
+/** Minimal token-color map using the app's CSS variables.
+ *  Keys are Prism token type strings; values are CSS color values. */
+const TOKEN_COLORS: Record<string, string> = {
+  // Comments — muted
+  comment:          'var(--text-muted)',
+  prolog:           'var(--text-muted)',
+  doctype:          'var(--text-muted)',
+  cdata:            'var(--text-muted)',
+  // Punctuation — secondary
+  punctuation:      'var(--text-secondary)',
+  // Keywords / operators — primary, semi-bold rendered via color
+  keyword:          'var(--text-primary)',
+  'control-flow':   'var(--text-primary)',
+  operator:         'var(--text-primary)',
+  // Strings — accent (fallback to primary if --accent not defined)
+  string:           'var(--accent, var(--text-primary))',
+  'template-string':'var(--accent, var(--text-primary))',
+  'string-interpolation': 'var(--accent, var(--text-primary))',
+  // Numbers / booleans
+  number:           'var(--text-primary)',
+  boolean:          'var(--text-primary)',
+  // Functions / class names
+  function:         'var(--text-primary)',
+  'class-name':     'var(--text-primary)',
+  // Built-ins / constants
+  builtin:          'var(--text-primary)',
+  constant:         'var(--text-primary)',
+}
+
+/** Renders a code block with Prism token-based syntax highlighting.
+ *  Falls back to plain mono when lang is '' or unrecognized. */
+function HighlightedCode({ lang, code }: { lang: string; code: string }) {
+  const normalizedLang = normalizeLang(lang)
+  const grammar = normalizedLang === 'plain'
+    ? undefined
+    : Prism.languages[normalizedLang as keyof typeof Prism.languages]
+
+  const containerStyle: React.CSSProperties = {
+    background: 'var(--bg-elevated)',
+    border: '1px solid var(--border)',
+    borderRadius: 6,
+    padding: '0.75rem 1rem',
+    overflowX: 'auto',
+    margin: '0.75rem 0',
+    fontFamily: 'var(--font-geist-mono)',
+    fontSize: '0.8125rem',
+    lineHeight: 1.6,
+  }
+
+  // Bare fence or unrecognized language — plain mono, no highlighting.
+  if (!grammar) {
+    return (
+      <pre style={containerStyle}>
+        <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre' }}>
+          {code}
+        </code>
+      </pre>
+    )
+  }
+
+  const tokens = normalizeTokens(Prism.tokenize(code, grammar))
+
+  return (
+    <pre style={containerStyle}>
+      <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre', display: 'block' }}>
+        {tokens.map((line, lineIndex) => (
+          <span key={lineIndex}>
+            {line.map((token, tokenIndex) => (
+              <span
+                key={tokenIndex}
+                style={{ color: TOKEN_COLORS[token.types[token.types.length - 1]] ?? 'inherit' }}
+              >
+                {token.content}
+              </span>
+            ))}
+            {lineIndex < tokens.length - 1 ? '\n' : null}
+          </span>
+        ))}
+      </code>
+    </pre>
+  )
+}
 
 /** Render inline markdown: **bold**, *italic*, `code` */
 function renderInline(text: string): ReactNode[] {
@@ -179,22 +292,7 @@ function renderBody(body: string): ReactNode[] {
       )
     } else if (block.type === 'code') {
       result.push(
-        <pre
-          key={key++}
-          style={{
-            background: 'var(--bg-elevated)',
-            border: '1px solid var(--border)',
-            borderRadius: 6,
-            padding: '0.75rem 1rem',
-            overflowX: 'auto',
-            margin: '0.75rem 0',
-            fontFamily: 'var(--font-geist-mono)',
-            fontSize: '0.8125rem',
-            lineHeight: 1.6,
-          }}
-        >
-          <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre' }}>{block.code}</code>
-        </pre>
+        <HighlightedCode key={key++} lang={block.lang} code={block.code} />
       )
     }
   }
