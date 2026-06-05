@@ -4,6 +4,15 @@ import { useRouter } from 'next/navigation'
 
 type Mode = 'login' | 'register'
 
+/**
+ * Only allow same-origin relative paths as redirect targets.
+ * Rejects absolute URLs (https://evil.com), protocol-relative URLs (//evil.com),
+ * and pseudo-schemes (javascript:) to prevent open-redirect attacks.
+ */
+function isSafeRedirect(url: string | undefined): url is string {
+  return typeof url === 'string' && url.startsWith('/') && !url.startsWith('//')
+}
+
 export function AuthForm({ onSuccess, callbackUrl }: { onSuccess?: () => void; callbackUrl?: string } = {}) {
   const [mode, setMode] = useState<Mode>('login')
   const [username, setUsername] = useState('')
@@ -35,7 +44,7 @@ export function AuthForm({ onSuccess, callbackUrl }: { onSuccess?: () => void; c
     if (onSuccess) {
       onSuccess()
     } else {
-      router.push(callbackUrl ?? '/')
+      router.push(isSafeRedirect(callbackUrl) ? callbackUrl : '/')
     }
   }
 
