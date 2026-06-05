@@ -2,7 +2,8 @@
 // FAU Summer 2026 · PD Dr. Dr. Katja Kobow
 // Exam scope = Katja's core lectures only. Dr. Paraskevi Chasani's paper
 // presentations (Evo2, Basic ML/DL, RNA 3D, AlphaFold 3, Sainsc) are excluded.
-// Sugars (6-1) is Katja's lecture but video-only — no slides to extract.
+// Sugars (6-1) was an AI-narrated video lecture (no PDF) — slides recovered
+// from the video frames and included below.
 import type { Content } from './types'
 
 export const content: Content = {
@@ -1503,6 +1504,246 @@ export const content: Content = {
         {
           "front": "Endosymbiotic theory — key evidence",
           "back": "Mitochondria and chloroplasts have a separate bacterial origin: each has a double membrane and its own circular DNA. mtDNA is ~16.5 kb, encodes 13 proteins, 22 tRNAs, 2 rRNAs, and is maternally inherited."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Sugars: Monosaccharides, Glycosidic Bonds & Polysaccharides",
+      "speaker": "Katja Kobow",
+      "concepts": [
+        {
+          "heading": "What Are Sugars? Mono-, Di- and Polysaccharides",
+          "body": "Sugars (carbohydrates) are organic molecules that serve as both **building blocks** and an **energy source** in cells. They are organized by size:\n\n| Class | Definition | Examples |\n|---|---|---|\n| **Monosaccharide** | Single sugar unit (the basic unit) | Glucose, fructose, galactose, ribose |\n| **Disaccharide** | Two monosaccharides linked | Maltose, sucrose, lactose |\n| **Polysaccharide** | Many units linked into chains | Glycogen, starch, cellulose |\n\n**Monosaccharides** are the basic units. They follow the general formula **(CH₂O)ₙ**, where *n* can be 3, 5, 6, 7 or 8. Each unit has several **hydroxyl (–OH) groups**.\n\nKey size names from the slides:\n- **Hexose** = 6 carbons (e.g. glucose, fructose, galactose)\n- **Pentose** = 5 carbons (e.g. ribose, deoxyribose)\n\nDistribution-of-molecules slide: in a cell, sugar is the **subunit** whose **macromolecule** is the polysaccharide — just as amino acids build proteins and nucleotides build nucleic acids. Polysaccharide makes up ~2% of a bacterial cell's dry chemicals."
+        },
+        {
+          "heading": "Monosaccharide Structure: Aldose vs. Ketose, Linear vs. Ring",
+          "body": "Monosaccharides are classified two ways at once: by the **position of the carbonyl group** and by the **number of carbons**.\n\n**Aldose vs. Ketose** (carbonyl position — a classic exam trap):\n- **Aldose** = the carbonyl is an **aldehyde** at the END of the chain (C1). Examples: glyceraldehyde (triose), ribose (pentose), **glucose** (hexose).\n- **Ketose** = the carbonyl is a **ketone** in the MIDDLE of the chain (usually C2). Examples: dihydroxyacetone (triose), ribulose (pentose), **fructose** (hexose).\n\n```ascii\nALDOSE (glucose)        KETOSE (fructose)\n   H   O                   CH2OH\n    \\ //                     |\n   1 C       <- aldehyde    C=O   <- ketone at C2\n     |          at C1        |\n   H-C-OH                  HO-C-H\n     ...                     ...\n```\n\n**Carbon count:** Triose (3C), Pentose (5C), Hexose (6C).\n\n**Important:** every carbon atom is **numbered** (C1, C2, C3…). The numbering matters for naming bonds and stereoisomers later."
+        },
+        {
+          "heading": "Ring Formation & Fischer vs. Haworth Projections",
+          "body": "In aqueous solution, the **aldehyde or ketone group** of a sugar reacts with a **hydroxyl group of the same molecule**, closing the molecule into a **ring** (an intramolecular reaction forming a hemiacetal/hemiketal).\n\n- **Glucose** (aldose, hexose) → six-membered ring = **pyranose**. The ring product β-D-glucopyranose is the **hemiacetal** of D-glucose.\n- **Fructose** (ketose, hexose) → five-membered ring = **furanose**. The ring product α-D-fructofuranose is the **hemiketal** of D-fructose.\n- **Ribose** (pentose) → five-membered (furanose) ring.\n\n**Two ways to draw a sugar:**\n- **Fischer projection** = the open, vertical-chain drawing. Convention: the **most oxidized carbon (carbonyl) is at the top**, the carbon chain is vertical.\n- **Haworth projection** = the ring drawing. Rule for converting: groups on the **left side** of the Fischer projection face **upwards** on the ring, and groups on the **right side** face **downwards**.\n\nRemember: \"up on the ring / down on the ring\" tracks where each –OH ends up after closure."
+        },
+        {
+          "heading": "Stereoisomerism: Enantiomers, Epimers & Anomers",
+          "body": "Many monosaccharides differ only in the **spatial arrangement of atoms** — they are **isomers**. For example, glucose, galactose and mannose all share the formula **C₆H₁₂O₆** but differ in the arrangement of groups around one or two carbon atoms. These small differences cause only minor chemical changes, but are **recognized by enzymes and other proteins**, so they have **major biological effects**.\n\n| Type | Definition | Example |\n|---|---|---|\n| **Enantiomers** | ALL chiral centers inverted (mirror images) | D-glucose vs. L-glucose |\n| **Epimers** | ONE chiral center inverted | D-glucose vs. D-mannose (at C2) |\n| **Anomers** | Differ at the anomeric carbon (C1) | α-D-glucose vs. β-D-glucose |\n\n**Trap:** an epimer differs at **one (non-anomeric) center**; an anomer is the special case differing specifically at the **anomeric carbon (C1)**. Galactose is the **C4 epimer** of glucose; mannose is the **C2 epimer**.\n\n**D vs. L** configuration is determined by the position of the –OH on the highest-numbered chiral carbon; the two are non-superimposable mirror images (illustrated as left/right hands)."
+        },
+        {
+          "heading": "Anomers: α vs. β (the Anomeric Carbon)",
+          "body": "When a sugar cyclizes, a **new chiral center is created at C1** (the former carbonyl carbon) — the **anomeric carbon**. The –OH on this carbon can point two ways, giving two **anomers**:\n\n- **β-anomer**: the anomeric –OH and the CH₂OH (reference) group are on the **SAME side** (–OH points up in Haworth).\n- **α-anomer**: the anomeric –OH is on the **OPPOSITE side** (points down in Haworth).\n\nFrom the slide: \"It's the **beta-anomer** when CH₂OH and OH are on the same side.\"\n\n```ascii\nβ-D-glucopyranose: OH (C1) points UP  (same side as CH2OH)\nα-D-glucopyranose: OH (C1) points DOWN (opposite side)\n```\n\n**Crucial point:** the two anomers interconvert (mutarotation) **only while the sugar is free**. \"As soon as one sugar is linked to another, the α or β form is **frozen**\" — the glycosidic bond locks in the anomeric configuration. This is why polysaccharide linkages are specifically α-1,4, β-1,4, etc."
+        },
+        {
+          "heading": "Glycosidic Bonds & Disaccharides",
+          "body": "Two monosaccharides join by a **glycosidic bond**, formed in a **condensation (dehydration) reaction** that releases **one molecule of water (H₂O)**. The bond forms between the anomeric carbon of one sugar and a hydroxyl of the next.\n\n**Three common disaccharides (must memorize the building blocks):**\n\n| Disaccharide | Made from |\n|---|---|\n| **Maltose** | glucose + glucose |\n| **Lactose** | galactose + glucose |\n| **Sucrose** | glucose + fructose |\n\nThe slide's example builds **sucrose** from **α-glucose + β-fructose**, releasing H₂O.\n\n```ascii\nglucose  +  fructose  --(condensation)-->  sucrose  +  H2O\n```\n\n**Exam trap:** don't confuse the building blocks — lactose (milk sugar) contains **galactose**, not two glucoses; sucrose (table sugar) contains **fructose**."
+        },
+        {
+          "heading": "Polysaccharides: Storage vs. Structural",
+          "body": "Polysaccharides are long chains of monosaccharides joined by glycosidic bonds. Two functional categories:\n\n| Function | Polysaccharides |\n|---|---|\n| **Storage** | starch, glycogen |\n| **Structural** | cellulose, chitin |\n\nProperties from the slide:\n- Can be **branched or linear**.\n- Can be **complex (non-repetitive)**.\n- Glycosidic bond formation costs **energy** (energy from a nucleoside triphosphate drives synthesis); hydrolysis breaks them back down.\n\n**Glycogen** (animal storage) is highly **branched**:\n- **α-1,4-glycosidic bonds** form the linear backbone (chains of glucose).\n- **α-1,6-glycosidic bonds** create the **branch points** — branching results from these different α-1,6 bonds.\n\n```ascii\n...glc-α1,4-glc-α1,4-glc-α1,4-glc...   <- linear chain\n              |α1,6                     <- branch point\n            glc-α1,4-glc...\n```\n\n**Cellulose** (plant structural) is built from a **chain of glucose molecules** that pack into **cellulose microfibrils** in the plant **cell wall**; formula **(C₆H₁₀O₅)ₙ**. (Note: the same glucose monomer, but the linkage geometry differs from storage polysaccharides, which is why cellulose is rigid and indigestible to us.)"
+        },
+        {
+          "heading": "Sugars on Cell Surfaces & in Communication (Glycosylation)",
+          "body": "Sugars are not only fuel and structure — surface sugars (glycans on glycoproteins/glycolipids) mediate **cell communication and recognition**:\n\n- **Pathogen recognition:** surface sugar chains are docking sites recognized by **viruses** and **bacteria**.\n- **Modulation of immune response:** **immune cells** read surface glycans to distinguish self from non-self.\n\n**Blood groups (ABO)** are a concrete example of sugar-determined identity. Each erythrocyte surface carries a glycan whose **terminal sugar** defines the blood type:\n\n| Group | Terminal sugar added |\n|---|---|\n| **O** | base chain only (fucose + galactose + GlcNAc) — no extra terminal sugar |\n| **A** | **N-acetylgalactosamine** added |\n| **B** | **galactose** added |\n| **AB** | both A and B terminal sugars present |\n\nBuilding-block sugars in the legend: **galactose, N-acetylglucosamine (GlcNAc), N-acetylgalactosamine (GalNAc), fucose**. A single different terminal sugar changes immune recognition — illustrating how protein/enzyme recognition of tiny sugar differences has major biological effects."
+        },
+        {
+          "heading": "Sugars in Complex Biomolecules: Ribose vs. Deoxyribose (DNA vs. RNA)",
+          "body": "Pentose sugars form the backbone of nucleic acids. Each nucleotide = **sugar + phosphate + nucleobase**.\n\n| | DNA (deoxyribonucleic acid) | RNA (ribonucleic acid) |\n|---|---|---|\n| **Sugar** | **deoxyribose** (no –OH at C2) | **ribose** (–OH at C2) |\n| **Backbone** | sugar + phosphate | sugar + phosphate |\n| **Strands** | double-stranded | single-stranded |\n| **Unique base** | **thymine** | **uracil** |\n| **Shared bases** | adenine, guanine, cytosine | adenine, guanine, cytosine |\n\nThe defining chemical difference is at the **2′ carbon**: ribose has a hydroxyl there, deoxyribose has only hydrogen (\"deoxy\" = one less oxygen). This single missing oxygen makes DNA more chemically stable than RNA.\n\n```ascii\nRibose (RNA):       2'C has -OH\nDeoxyribose (DNA):  2'C has -H   (no oxygen)\n```\n\nThis ties sugars back to the cell's central molecules: the same chemistry of pentose rings underlies the genetic material."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L7Q1",
+          "text": "Which monosaccharide is a KETOSE rather than an aldose?",
+          "options": [
+            "Glucose",
+            "Galactose",
+            "Fructose",
+            "Ribose"
+          ],
+          "correct": [
+            2
+          ],
+          "explanation": "Fructose carries its carbonyl as a ketone at C2, making it a ketose. Glucose, galactose and ribose are aldoses — their carbonyl is an aldehyde at C1 (the end of the chain). This aldose/ketose distinction is a classic trap.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q2",
+          "text": "What is the general chemical formula of a monosaccharide, and what does n represent?",
+          "options": [
+            "(CH₂O)ₙ, where n can be 3, 5, 6, 7 or 8 (number of carbons)",
+            "(C₆H₁₂O₆)ₙ, where n is the number of rings",
+            "(CHO)ₙ, where n is the number of hydroxyl groups",
+            "(C₆H₁₀O₅)ₙ, where n is the number of monomers"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slide gives the monosaccharide general formula as (CH₂O)ₙ with n = 3, 5, 6, 7 or 8 carbons. (C₆H₁₀O₅)ₙ is the formula for cellulose (a polysaccharide), and C₆H₁₂O₆ is one specific hexose, not the general form.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q3",
+          "text": "Match the stereoisomer relationships correctly. Select ALL true statements.",
+          "options": [
+            "Enantiomers have ALL chiral centers inverted (e.g. D-glucose vs L-glucose)",
+            "Epimers differ at exactly ONE chiral center (e.g. D-glucose vs D-mannose at C2)",
+            "Anomers differ at the anomeric carbon C1 (e.g. α-D-glucose vs β-D-glucose)",
+            "Epimers and anomers are the same thing"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "Enantiomers = all chiral centers inverted (mirror images); epimers = one chiral center inverted; anomers = differ specifically at the anomeric carbon C1. The last option is false: an anomer is a special case differing at C1, whereas a general epimer differs at any single non-anomeric center.",
+          "type": "multiple"
+        },
+        {
+          "id": "L7Q4",
+          "text": "In the Haworth ring drawing, a glucose molecule is the β-anomer when…",
+          "options": [
+            "the C1 –OH and the CH₂OH group are on the SAME side",
+            "the C1 –OH and the CH₂OH group are on OPPOSITE sides",
+            "the ring is five-membered instead of six-membered",
+            "all hydroxyl groups point downward"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slide states it is the beta-anomer when CH₂OH and the anomeric OH are on the same side. The α-anomer has them on opposite sides. Ring size (furanose vs pyranose) is a separate property unrelated to α/β.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q5",
+          "text": "Which disaccharide is correctly paired with its monosaccharide building blocks?",
+          "options": [
+            "Maltose = galactose + glucose",
+            "Lactose = glucose + fructose",
+            "Sucrose = glucose + fructose",
+            "Sucrose = glucose + glucose"
+          ],
+          "correct": [
+            2
+          ],
+          "explanation": "Sucrose = glucose + fructose. Maltose = glucose + glucose; lactose = galactose + glucose. Mixing these up (especially putting galactose in maltose or fructose in lactose) is a common exam error.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q6",
+          "text": "How is a glycosidic bond formed between two monosaccharides?",
+          "options": [
+            "By a condensation (dehydration) reaction that releases one H₂O",
+            "By a hydrolysis reaction that consumes one H₂O",
+            "By addition of a phosphate group",
+            "By oxidation of the anomeric carbon"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "A glycosidic bond forms by condensation/dehydration, releasing one molecule of water (shown as the +H₂O leaving when α-glucose and β-fructose join into sucrose). Hydrolysis is the reverse reaction that breaks the bond.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q7",
+          "text": "In glycogen, which glycosidic bonds form the linear backbone versus the branch points?",
+          "options": [
+            "α-1,4 bonds form the linear chain; α-1,6 bonds form the branch points",
+            "α-1,6 bonds form the linear chain; α-1,4 bonds form the branch points",
+            "β-1,4 bonds form the linear chain; β-1,6 bonds form the branch points",
+            "Both backbone and branches use β-1,4 bonds"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Per the glycogen slide, α-1,4-glycosidic bonds build the linear glucose chain and α-1,6-glycosidic bonds create the branch points. β-1,4 linkages are associated with cellulose, not glycogen.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q8",
+          "text": "Select ALL polysaccharides that the lecture classifies as STRUCTURAL (rather than storage).",
+          "options": [
+            "Cellulose",
+            "Glycogen",
+            "Chitin",
+            "Starch"
+          ],
+          "correct": [
+            0,
+            2
+          ],
+          "explanation": "The slide groups cellulose and chitin as structural polysaccharides, while starch and glycogen are storage polysaccharides. Cellulose forms plant cell-wall microfibrils; chitin is also structural.",
+          "type": "multiple"
+        },
+        {
+          "id": "L7Q9",
+          "text": "What is the key chemical difference between the sugar in DNA and the sugar in RNA?",
+          "options": [
+            "DNA uses deoxyribose (no –OH at the 2′ carbon); RNA uses ribose (–OH at 2′)",
+            "DNA uses ribose; RNA uses deoxyribose",
+            "DNA uses a hexose; RNA uses a pentose",
+            "DNA uses galactose; RNA uses glucose"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "DNA's sugar is deoxyribose, which lacks the hydroxyl at the 2′ carbon (one less oxygen), while RNA's sugar is ribose with a 2′ –OH. Both are pentoses. The thymine/uracil base difference is separate from the sugar difference.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q10",
+          "text": "Glucose, galactose and mannose all share the formula C₆H₁₂O₆ yet behave differently in the body. Why do these small structural differences matter biologically?",
+          "options": [
+            "They are recognized by enzymes and other proteins, producing major biological effects",
+            "They give the sugars completely different chemical formulas",
+            "They change whether the sugar is an aldose or a ketose",
+            "They prevent the sugars from forming rings"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slide states these isomers cause only minor chemical changes but are recognized by enzymes and proteins, so they have major biological effects (e.g. determining blood type via a single terminal sugar). They keep the same formula and the same aldose nature, and all still cyclize.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "Aldose vs. ketose — what distinguishes them, and give a hexose example of each.",
+          "back": "Aldose = carbonyl is an aldehyde at C1 (end of chain), e.g. glucose. Ketose = carbonyl is a ketone, usually at C2 (middle), e.g. fructose."
+        },
+        {
+          "front": "General formula of a monosaccharide and what 'hexose' and 'pentose' mean.",
+          "back": "(CH₂O)ₙ with n = 3, 5, 6, 7 or 8. Hexose = 6 carbons (glucose, fructose, galactose); pentose = 5 carbons (ribose, deoxyribose)."
+        },
+        {
+          "front": "Enantiomer vs. epimer vs. anomer.",
+          "back": "Enantiomer = ALL chiral centers inverted, mirror images (D- vs L-glucose). Epimer = ONE chiral center inverted (glucose vs mannose at C2). Anomer = differs at the anomeric carbon C1 (α- vs β-D-glucose)."
+        },
+        {
+          "front": "When is a cyclic glucose the β-anomer vs the α-anomer?",
+          "back": "β-anomer: the C1 –OH and CH₂OH are on the SAME side (OH points up in Haworth). α-anomer: they are on OPPOSITE sides (OH points down)."
+        },
+        {
+          "front": "How does ring formation happen, and what ring sizes do glucose vs fructose form?",
+          "back": "In water the aldehyde/ketone reacts with an –OH of the same molecule, closing a ring (hemiacetal/hemiketal). Glucose → 6-membered pyranose; fructose and ribose → 5-membered furanose."
+        },
+        {
+          "front": "Fischer-to-Haworth conversion rule.",
+          "back": "Groups on the LEFT side of the Fischer projection face UPWARD on the Haworth ring; groups on the RIGHT side face DOWNWARD. (Fischer: carbonyl at top, chain vertical.)"
+        },
+        {
+          "front": "Building blocks of maltose, lactose, and sucrose. How is the bond formed?",
+          "back": "Maltose = glucose + glucose; lactose = galactose + glucose; sucrose = glucose + fructose. All joined by a glycosidic bond via condensation, releasing one H₂O."
+        },
+        {
+          "front": "Glycogen linkages: backbone vs. branch points.",
+          "back": "α-1,4-glycosidic bonds form the linear glucose chain; α-1,6-glycosidic bonds create the branch points."
+        },
+        {
+          "front": "Storage vs. structural polysaccharides.",
+          "back": "Storage: starch, glycogen. Structural: cellulose, chitin. Cellulose [(C₆H₁₀O₅)ₙ] forms plant cell-wall microfibrils from chains of glucose."
+        },
+        {
+          "front": "Sugar difference between DNA and RNA, and how blood groups use sugars.",
+          "back": "DNA = deoxyribose (no 2′ –OH); RNA = ribose (2′ –OH). Blood groups: terminal surface sugar defines type — A adds N-acetylgalactosamine, B adds galactose, AB has both, O has neither."
         }
       ]
     }
