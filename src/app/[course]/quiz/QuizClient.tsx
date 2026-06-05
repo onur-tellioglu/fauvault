@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { COURSES, type Course } from '@/lib/courses'
 import { QuizQuestion } from '@/components/quiz/QuizQuestion'
 import { upsertGuestProgress } from '@/lib/guest-progress'
@@ -93,7 +94,23 @@ export function QuizClient({ course }: { course: Course }) {
           )}
         </>
       ) : (
-        <p style={{ color: 'var(--text-muted)' }}>No questions available.</p>
+        <div style={{ textAlign: 'center', padding: '4rem 1rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+            No questions available for this selection.
+          </p>
+          <Link
+            href={`/${course}/lectures`}
+            style={{
+              display: 'inline-flex', alignItems: 'center',
+              padding: '9px 18px', border: '1px solid var(--border-default)',
+              borderRadius: 7, background: 'var(--bg-surface)',
+              color: 'var(--text-secondary)', fontSize: '0.85rem',
+              textDecoration: 'none',
+            }}
+          >
+            ← Browse lectures
+          </Link>
+        </div>
       )}
     </div>
   )

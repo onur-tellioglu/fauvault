@@ -35,16 +35,30 @@ export default async function LeaderboardPage() {
         </header>
 
         {rows.length === 0 ? (
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', marginTop: '4rem' }}>
-            No one has completed a lecture yet. Be the first!
-          </p>
+          <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+              No one has completed a lecture yet. Be the first!
+            </p>
+            <Link
+              href="/"
+              style={{
+                display: 'inline-flex', alignItems: 'center',
+                padding: '9px 18px', border: '1px solid var(--border-default)',
+                borderRadius: 7, background: 'var(--bg-surface)',
+                color: 'var(--text-secondary)', fontSize: '0.85rem',
+                textDecoration: 'none',
+              }}
+            >
+              ← Go to dashboard
+            </Link>
+          </div>
         ) : (
           <div style={{ border: '1px solid var(--border-default)', borderRadius: 10, overflow: 'hidden', background: 'var(--bg-surface)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-default)' }}>
                   {['#', 'User', 'Completed', 'Semester', 'Score'].map(h => (
-                    <th key={h} style={{
+                    <th key={h} scope="col" style={{
                       padding: '0.75rem 1rem',
                       textAlign: h === '#' || h === 'Score' || h === 'Completed' ? 'center' : 'left',
                       fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)',
@@ -66,7 +80,10 @@ export default async function LeaderboardPage() {
                       }}
                     >
                       <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontFamily: 'var(--font-geist-mono)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                        {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
+                        {i === 0 ? <span role="img" aria-label="Gold medal — 1st place">🥇</span>
+                          : i === 1 ? <span role="img" aria-label="Silver medal — 2nd place">🥈</span>
+                          : i === 2 ? <span role="img" aria-label="Bronze medal — 3rd place">🥉</span>
+                          : i + 1}
                       </td>
                       <td style={{ padding: '0.75rem 1rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: isMe ? 600 : 400 }}>
                         {row.username}{isMe ? ' (you)' : ''}

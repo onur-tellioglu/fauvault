@@ -32,7 +32,28 @@ export function ExamCountdown() {
     return () => clearInterval(id)
   }, [])
 
-  if (!left) return null
+  if (!left) {
+    return (
+      <div style={{
+        width: '100%',
+        background: 'var(--bg-elevated)',
+        borderBottom: '1px solid var(--border-subtle)',
+        padding: '1rem 1.5rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <span style={{
+          fontFamily: 'var(--font-geist-mono)',
+          fontSize: '0.8rem',
+          color: 'var(--text-muted)',
+          letterSpacing: '0.08em',
+        }}>
+          Exam has begun — good luck.
+        </span>
+      </div>
+    )
+  }
 
   const urgent = left.days === 0
   const numColor = urgent ? 'var(--error)' : 'var(--accent)'
