@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function LectureError({
@@ -9,6 +10,9 @@ export default function LectureError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const params = useParams<{ course: string }>()
+  const lecturesHref = params?.course ? `/${params.course}/lectures` : '/'
+
   useEffect(() => {
     console.error(error)
   }, [error])
@@ -33,7 +37,7 @@ export default function LectureError({
             Try again
           </button>
           <Link
-            href="../../lectures"
+            href={lecturesHref}
             style={{
               padding: '9px 18px', border: '1px solid var(--border-default)', borderRadius: 7,
               background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: '0.85rem',
