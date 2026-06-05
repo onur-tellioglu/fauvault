@@ -273,6 +273,142 @@ export const content: Content = {
           "back": "By Newton's 3rd Law, the ground pushes back with a force equal and opposite to the body's applied force. On sand (inelastic contact), GRF disperses in multiple directions — less force is returned upward — so reaching the same jump height requires greater muscle output than on concrete."
         }
       ]
+    },
+    {
+      "id": 3,
+      "title": "Signals: Time, Frequency, and the Digital World",
+      "speaker": "Prof. Dr. Alessandro Del Vecchio",
+      "concepts": [
+        {
+          "heading": "Signals as Functions — 1D, 2D, and 3D Arrays",
+          "body": "A **signal** is any quantity that depends on another variable — most often time: `y(t)`. The dimensionality of a signal describes the number of independent variables it depends on.\n\n| Dimensionality | Description | Biomedical example | NumPy shape |\n|---|---|---|---|\n| **1D** | Depends on time only | Single EMG channel `voltage(t)`, elbow angle `θ(t)` | `(T,)` |\n| **2D** | Depends on two variables (space × space, or space × time snapshot) | EMG electrode-grid frame at one instant; greyscale image | `(rows, cols)` |\n| **3D** | Depends on three variables | MUAP propagation movie (rows × cols × time); fMRI volume | `(rows, cols, T)` |\n\nIn Python, a signal is an `np.ndarray` plus **metadata**: the sampling rate `fs` [Hz] and the physical unit (mV, deg, N). Without metadata, the array is just numbers — always document what the axes represent.\n\n```python\nimport numpy as np\nfs = 2000          # 2000 samples per second\nt = np.linspace(0, 1, fs)   # 1-second time axis, shape (2000,)\nemg = np.random.randn(fs)   # placeholder 1D signal, shape (2000,)\n```"
+        },
+        {
+          "heading": "Deterministic vs Random (Stochastic) Signals",
+          "body": "**Deterministic signals** are fully predictable — described by a mathematical equation. Given the formula, you can compute the exact value at any instant.\n- Examples: pure sinusoid `A·sin(2πft)`, rectangular pulse train, evoked potential (averaged ERP)\n- Tools: closed-form analysis, exact Fourier transform\n\n**Stochastic (random) signals** cannot be predicted from a formula — only their *statistics* are consistent across trials.\n- Examples: surface EMG (algebraic sum of many asynchronous MUAPTs), EEG, thermal (Johnson) noise\n- Tools: statistical estimators — RMS, ARV, power spectral density\n- Because individual trials differ, you must *average* many trials or use parametric models\n\n**Quasi-deterministic signals** have a deterministic shape but slowly-varying parameters:\n- Examples: ECG (each beat is similar but the rate drifts), a single MUAPT during a sustained contraction\n\n> **Key insight:** sEMG is stochastic because it is the *algebraic sum* of potentially hundreds of motor unit action potential trains (MUAPTs) firing independently. No two 1-second windows of EMG look identical, even at the same force level."
+        },
+        {
+          "heading": "The Sinusoid — Building Block of All Signals",
+          "body": "Every signal studied in this course can be decomposed into a sum of sinusoids — this is the core insight behind Fourier analysis. Understanding one sinusoid therefore unlocks the entire frequency domain.\n\n**General form:**\n$$y(t) = A \\cdot \\sin(2\\pi f t + \\varphi)$$\n\n| Parameter | Symbol | Unit | Meaning |\n|-----------|--------|------|---------|\n| Amplitude | A | mV, N, … | Peak deviation from zero |\n| Frequency | f | Hz | Oscillations per second |\n| Period | T = 1/f | s | Duration of one cycle |\n| Phase | φ | rad | Time shift at t=0 |\n| Angular frequency | ω = 2πf | rad/s | Radians swept per second |\n\n**NumPy idiom** — always the same five lines:\n```python\nimport numpy as np\nA, f, phi = 1.0, 10.0, 0.0   # amplitude, frequency (Hz), phase (rad)\nfs = 2000                      # sampling rate\nt = np.linspace(0, 1, fs)     # 1-second time vector\ny = A * np.sin(2 * np.pi * f * t + phi)\n```\nIncreasing `f` compresses the waveform. Increasing `A` stretches it vertically. Changing `phi` shifts it horizontally."
+        },
+        {
+          "heading": "Time-Domain Descriptors — Peak, ARV, and RMS",
+          "body": "Three standard amplitude descriptors are used to summarise a signal's magnitude over a time window:\n\n| Descriptor | Formula | NumPy | Characteristics |\n|---|---|---|---|\n| **Peak** | max\\|x\\| | `np.max(np.abs(x))` | Sensitive to outliers and transient spikes |\n| **ARV** (Average Rectified Value) | mean\\|x\\| | `np.mean(np.abs(x))` | Proportional to force at low contraction levels; used in fatigue studies |\n| **RMS** (Root Mean Square) | √(mean(x²)) | `np.sqrt(np.mean(x**2))` | Most robust; directly relates to signal *power*; preferred for EMG amplitude |\n\n**Five lines to remember for RMS:**\n```python\nx = emg[0, :]                       # one EMG channel\nrms = np.sqrt(np.mean(x**2))        # RMS of the entire channel\nprint(f\"RMS amplitude: {rms:.4f} mV\")\n```\n\n**EMG envelope:** A slow-varying RMS computed over a sliding window (e.g., 200 ms) tracks how contraction intensity changes over time. Implemented as convolution with a moving-average kernel (covered in Lecture 3)."
+        },
+        {
+          "heading": "Frequency Domain — Fourier Series and FFT",
+          "body": "Any periodic signal can be decomposed into a sum of sinusoids at integer multiples of a fundamental frequency — this is the **Fourier series**. The **FFT** (Fast Fourier Transform) computes all coefficients simultaneously in O(N log N) operations.\n\n**Key concepts:**\n\n- **Spectrum:** A plot of amplitude (or power) vs frequency. Each spike corresponds to a sinusoidal component.\n- **Power Spectral Density (PSD):** Describes how signal power is distributed across frequencies. For sEMG, the PSD typically peaks at 50–150 Hz.\n- **Welch's method** (`scipy.signal.welch`): Divides the signal into overlapping windows, computes FFT on each, and averages the squared magnitudes. Preferred for stochastic signals because averaging reduces variance of the estimate.\n- **Mean frequency:** The centre of gravity of the PSD. For EMG, mean frequency **drops with muscle fatigue** — a useful fatigue indicator.\n\n```python\nimport numpy as np\nfrom scipy.signal import welch\n\nfs = 2000\nfreqs, psd = welch(emg_channel, fs=fs, nperseg=512)\nmean_freq = np.sum(freqs * psd) / np.sum(psd)\nprint(f\"Mean frequency: {mean_freq:.1f} Hz\")\n```"
+        },
+        {
+          "heading": "Filtering — Low-pass, High-pass, and Band-pass",
+          "body": "A **filter** selects which frequency components to keep and which to remove. The three main types:\n\n| Filter type | Keeps | Removes | Typical use for EMG |\n|---|---|---|---|\n| **Low-pass (LP)** | Low frequencies | High-frequency noise | Remove above 450 Hz |\n| **High-pass (HP)** | High frequencies | Slow drifts / DC | Remove below 20 Hz (motion artifact) |\n| **Band-pass (BP)** | A frequency band | Everything outside | 20–450 Hz — standard EMG |\n| **Notch** | All except a narrow band | One frequency (50/60 Hz) | Remove powerline interference |\n\nIn SciPy, always use `butter` + `filtfilt` for zero-phase filtering (applying forward then backward avoids phase distortion):\n\n```python\nfrom scipy.signal import butter, filtfilt\n\n# Band-pass: keep 20–450 Hz\nb, a = butter(4, [20, 450], btype='bandpass', fs=2000)\ny = filtfilt(b, a, x)   # zero-phase: applies filter twice (fwd + bwd)\n```\n\nThe order (`4`) controls how steeply the filter rolls off outside the passband. Higher order → steeper roll-off → more computationally expensive."
+        },
+        {
+          "heading": "Analog-to-Digital Conversion — Sampling and the Nyquist Theorem",
+          "body": "Before any digital processing, a continuous analog signal must be **sampled** — measured at discrete time points — to produce a digital array.\n\n**Sampling rate** `fs` [Hz] = number of samples per second.\n\n**Nyquist–Shannon theorem:** To faithfully reconstruct a signal whose highest frequency component is `B` Hz, you must sample at:\n$$f_s \\geq 2B$$\n\nFor surface EMG, content extends to ≈ 450–500 Hz → minimum `fs` = 900 Hz. Standard practice: **fs = 2000 Hz** (gives a 4× safety margin and convenient numbers).\n\n**Aliasing** occurs when `fs < 2B`: high-frequency components fold back into the spectrum at false lower frequencies, corrupting the signal irreversibly — no post-hoc filter can fix aliased data.\n\n**Quantisation:** Representing continuous amplitude as a finite integer. An N-bit ADC has 2^N levels:\n\n| Bit depth | Levels | Voltage step (at ±5 V range) |\n|---|---|---|\n| 8-bit | 256 | ~39 mV |\n| 12-bit | 4096 | ~2.4 mV |\n| **16-bit** | **65,536** | **~0.15 mV** ← typical EMG |\n\nSmaller voltage step = better amplitude resolution. EMG signals are in the µV–mV range, so 16-bit or 24-bit ADCs are standard."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L3Q1",
+          "text": "Which NumPy expression correctly computes the RMS (Root Mean Square) of array `x`?",
+          "options": [
+            "np.mean(x**2)",
+            "np.sqrt(np.sum(x**2))",
+            "np.sqrt(np.mean(x**2))",
+            "np.abs(np.mean(x))"
+          ],
+          "correct": [2],
+          "explanation": "RMS = √(mean(x²)). In NumPy: `np.sqrt(np.mean(x**2))`. Option A omits the square root — it gives the mean square (the variance, if x is zero-mean), not the RMS. Option B takes the square root of the *sum* rather than the *mean* — this gives a result that grows with signal length, making it useless for amplitude comparison across different-length recordings. Option D computes the mean first (averaging positive and negative values, which cancel for zero-mean signals) and takes the absolute value — this is related to mean absolute value, not RMS.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q2",
+          "text": "An EMG signal has frequency content up to 450 Hz. What is the MINIMUM sampling rate required to avoid aliasing according to the Nyquist theorem?",
+          "options": [
+            "225 Hz",
+            "450 Hz",
+            "900 Hz",
+            "1800 Hz"
+          ],
+          "correct": [2],
+          "explanation": "The Nyquist–Shannon theorem states that to reconstruct a signal with highest frequency component B, you must sample at fs ≥ 2B. For B = 450 Hz: fs_min = 2 × 450 = 900 Hz. Option A (225 Hz) is only half the signal bandwidth — severe aliasing would occur. Option B (450 Hz) equals the signal bandwidth, not twice it — still insufficient. Option D (1800 Hz) exceeds the minimum but the question asks for the *minimum*. In practice, the standard EMG sampling rate is 2000 Hz to provide a comfortable safety margin.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q3",
+          "text": "Which of the following is a stochastic (random) signal?",
+          "options": [
+            "A pure sinusoid: y(t) = A·sin(2πft)",
+            "Surface EMG recorded during a sustained hand contraction",
+            "A rectangular pulse train with fixed period",
+            "An evoked potential averaged over 100 trials"
+          ],
+          "correct": [1],
+          "explanation": "Surface EMG is stochastic because it is the algebraic superposition of many independent motor unit action potential trains (MUAPTs) firing at slightly different rates and times. No two windows of EMG look the same, even at identical contraction levels — only the statistics (RMS, PSD) are consistent. A pure sinusoid is perfectly deterministic — given A, f, and φ, the waveform is fully specified. A rectangular pulse train with fixed period is also deterministic. An averaged evoked potential converges to a deterministic waveform as the number of trials increases (averaging cancels the stochastic noise).",
+          "type": "single"
+        },
+        {
+          "id": "L3Q4",
+          "text": "Why is Welch's method preferred over a single FFT for estimating the power spectrum of surface EMG?",
+          "options": [
+            "Welch's method is faster than FFT for long signals",
+            "Welch's method averages multiple overlapping windows, reducing the variance of the spectral estimate",
+            "Welch's method avoids the need for zero-padding",
+            "A single FFT cannot handle signals longer than 1024 samples"
+          ],
+          "correct": [1],
+          "explanation": "Surface EMG is a stochastic signal — a single FFT of a random process produces a very noisy (high-variance) spectral estimate. Welch's method divides the signal into overlapping segments, computes the FFT magnitude squared on each, and *averages* across segments. Averaging reduces variance without reducing frequency resolution (given sufficient signal length). Option A is incorrect: Welch is *more* expensive than a single FFT because it computes many FFTs. Option C is wrong: zero-padding is still applicable and unrelated to variance. Option D is false: NumPy FFT works on arrays of any length.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q5",
+          "text": "A researcher wants to remove slow baseline drift (below 20 Hz) and powerline interference at 50 Hz from an EMG recording. Which filter combination is correct?",
+          "options": [
+            "Low-pass at 20 Hz, then notch at 50 Hz",
+            "High-pass at 20 Hz, then notch at 50 Hz",
+            "Notch at 50 Hz, then low-pass at 20 Hz",
+            "Band-pass 50–500 Hz to remove both at once"
+          ],
+          "correct": [1],
+          "explanation": "To remove slow drift (below 20 Hz), use a **high-pass** filter with cutoff 20 Hz — this passes everything above 20 Hz and attenuates the low-frequency drift. To remove the 50 Hz powerline interference, add a **notch** filter centred at 50 Hz. The order (HP then notch) does not change the mathematical result, but it is conventional to apply the broadband filter first. Option A incorrectly uses a low-pass at 20 Hz — that would *remove* all EMG content above 20 Hz, leaving only the drift. Option C applies a notch first (fine), then low-passes at 20 Hz — again destroying the EMG band. Option D is wrong: a band-pass starting at 50 Hz removes the very low-frequency content but not specifically the 50 Hz powerline (it would pass it), and it removes useful EMG content below 50 Hz.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "Signal dimensionality: what are 1D, 2D, and 3D signals in NumPy?",
+          "back": "1D — single time series, shape `(T,)`. Example: one EMG channel.\n2D — spatial snapshot or image, shape `(rows, cols)`. Example: electrode grid frame.\n3D — spatial + time, shape `(rows, cols, T)`. Example: MUAP propagation movie or fMRI volume."
+        },
+        {
+          "front": "Deterministic vs stochastic signals — one example each and the right analysis tool.",
+          "back": "Deterministic: pure sinusoid, ECG beat shape — use closed-form formulas and exact FFT.\nStochastic: surface EMG, EEG, thermal noise — use statistical estimators (RMS, ARV) and averaged spectra (Welch's method). Stochastic signals are not reproducible trial-to-trial; only their statistics are stable."
+        },
+        {
+          "front": "Sinusoid parameters: state the formula and the meaning of A, f, T, φ, ω.",
+          "back": "y(t) = A·sin(2πft + φ)\n• A — amplitude (peak value)\n• f — frequency [Hz] (cycles per second)\n• T = 1/f — period [s] (duration of one cycle)\n• φ — phase [rad] (time shift at t=0)\n• ω = 2πf — angular frequency [rad/s]"
+        },
+        {
+          "front": "RMS formula and why it is preferred over peak for EMG amplitude.",
+          "back": "RMS = √(mean(x²)) → `np.sqrt(np.mean(x**2))`. Preferred because: (1) relates directly to signal power; (2) robust to brief transient spikes that inflate the peak; (3) proportional to muscle contraction force across a wide range; (4) consistent across different signal lengths."
+        },
+        {
+          "front": "What does ARV stand for, and when is it used?",
+          "back": "ARV = Average Rectified Value = mean|x| → `np.mean(np.abs(x))`. Used as an amplitude descriptor for surface EMG at low contraction levels where it is approximately proportional to force. Less robust than RMS at high contraction levels or with noisy signals."
+        },
+        {
+          "front": "Nyquist theorem — state it and give the EMG example.",
+          "back": "To reconstruct a signal with highest frequency B, sample at fs ≥ 2B. If fs < 2B, aliasing occurs: high-frequency components fold into the spectrum as false low-frequency artefacts — irreversible.\nEMG example: EMG content up to 450 Hz → minimum fs = 900 Hz. Standard practice: 2000 Hz (4× safety margin)."
+        },
+        {
+          "front": "Band-pass filter for EMG — typical frequency bounds and SciPy idiom.",
+          "back": "Standard EMG band-pass: 20–450 Hz.\n• High-pass at 20 Hz removes slow motion artifacts.\n• Low-pass at 450 Hz removes high-frequency noise.\n```python\nfrom scipy.signal import butter, filtfilt\nb, a = butter(4, [20, 450], btype='bandpass', fs=2000)\ny = filtfilt(b, a, x)  # zero-phase\n```"
+        },
+        {
+          "front": "What is the Welch method and why use it for stochastic signals?",
+          "back": "Welch's method divides a signal into overlapping segments, computes the FFT squared magnitude on each, and averages across segments to estimate the Power Spectral Density (PSD). Used for stochastic signals (EMG, EEG) because a single FFT of a random process has very high variance — averaging across windows reduces variance without sacrificing frequency resolution. `scipy.signal.welch(x, fs=2000, nperseg=512)`."
+        }
+      ]
     }
   ]
 }
