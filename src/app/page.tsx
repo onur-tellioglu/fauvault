@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
 import { getSession } from '@/lib/auth'
-import { AuthForm } from '@/components/layout/AuthForm'
 import { COURSES, COURSE_SLUGS, type Course } from '@/lib/courses'
 import { getProgress } from '@/lib/progress'
 import { getRankForUser } from '@/lib/leaderboard'
 import { CoursePicker } from '@/components/layout/CoursePicker'
+import { PublicCourseList } from '@/components/layout/PublicCourseList'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
 export async function generateMetadata(): Promise<Metadata> {
   const session = await getSession()
-  return { title: session ? 'Choose a Course' : 'Sign In' }
+  return { title: session ? 'Choose a Course' : 'FAUVault — Study Smarter' }
 }
 
 function getAppVersion(): string {
@@ -54,19 +54,5 @@ export default async function HomePage() {
     )
   }
 
-  return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-        <div style={{ animation: 'fadeSlideUp 300ms ease forwards' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h1 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.6rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 6 }}>
-              Study App
-            </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>AI Perspectives · Renewable Energies</p>
-          </div>
-          <AuthForm />
-        </div>
-      </div>
-    </main>
-  )
+  return <PublicCourseList />
 }
