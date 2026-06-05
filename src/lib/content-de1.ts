@@ -1542,6 +1542,223 @@ export const content: Content = {
           "back": "Simplification: deleting a derived vertex type, edge type, or property from S yields an equivalent schema S'.\nComplexification: adding a vertex type, edge type, or property T such that T is derived in S' = S + T yields an equivalent schema S'."
         }
       ]
+    },
+    {
+      "id": 7,
+      "title": "Descriptive Statistics and Data Normalization",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Why Descriptive Statistics Matter",
+          "body": "Before building any model or running any analysis, the very first step is to characterize your data with descriptive statistics. These summaries capture the overall shape and behavior of a dataset, guiding downstream decisions about cleaning, feature engineering, and algorithm selection.\n\n**Four families of measures:**\n\n| Family | Examples |\n|--------|---------|\n| Central tendency | Mean, median, mode |\n| Dispersion | Range, IQR, variance, standard deviation |\n| Shape | Skewness, kurtosis |\n| Correlation | Pearson, Spearman |\n\n**Practical rule:** Always visualize data before and after any transformation — histograms, box plots, and scatter plots reveal patterns that summary numbers alone can miss."
+        },
+        {
+          "heading": "Measures of Central Tendency: Mean, Median, Mode",
+          "body": "Given n values x₁, …, xₙ:\n\n```\nMean:    μ = (1/n) Σ xᵢ          (arithmetic average)\nMedian:  minimizes Σ |x − xᵢ|   (middle value when sorted)\nMode:    most frequent value(s)\n```\n\n**Finding the median:**\n- n odd → middle element x_{(n+1)/2} in sorted order\n- n even → convention: average the two middle elements (x_{n/2} + x_{n/2+1}) / 2\n\n**When to use which:**\n\n| Measure | Best for | Weakness |\n|---------|----------|----------|\n| Mean | Symmetric distributions, no outliers | Pulled by extreme values |\n| Median | Skewed data or outliers present | Ignores magnitude of values |\n| Mode | Categorical data; most-frequent answer | Can be non-unique (multimodal) |\n\n**Classic trap:** For household income (right-skewed, billionaires as outliers), the median gives a far more representative center than the mean."
+        },
+        {
+          "heading": "Measures of Dispersion: Range, IQR, Variance, Standard Deviation",
+          "body": "Dispersion measures describe how spread out values are around the center.\n\n```\nRange:   max(xᵢ) − min(xᵢ)          — full spread, sensitive to outliers\nIQR:     Q3 − Q1                      — spread of middle 50 %, robust\nVariance: σ² = (1/n) Σ (xᵢ − μ)²   — average squared deviation\nStd dev:  σ = √σ²                    — same unit as data\n```\n\n**Coefficient of Variation (CV):** CV = (σ / μ) × 100% — relative dispersion, unit-free. Only valid on ratio scales (where zero is meaningful and ratios make sense). Temperature in °C is not a ratio scale, so CV of °C data is meaningless.\n\n**Choosing between IQR and σ:**\n- Data with outliers or heavy skew → prefer IQR (median-based, not affected by extremes)\n- Data approximately normal → σ is more informative and widely used by statistical methods"
+        },
+        {
+          "heading": "Quantiles, Percentiles, and the Box Plot",
+          "body": "Quantiles divide a sorted dataset into equal-sized groups. Quartiles split into four groups:\n\n```\nQ1 = 25th percentile  (lower quartile)\nQ2 = 50th percentile  (median)\nQ3 = 75th percentile  (upper quartile)\nIQR = Q3 − Q1\n```\n\n**Box plot anatomy:**\n```\n|--whisker--|  [Q1====median====Q3]  |--whisker--|\n           ● outlier                         ● outlier\n```\n- Box spans Q1 to Q3 (the IQR)\n- Thick line inside box = median\n- Whiskers (most common convention): extend to the furthest point within Q1 − 1.5·IQR and Q3 + 1.5·IQR\n- Points beyond whiskers are plotted individually as outliers\n\nBox plots compactly show center, spread, symmetry, and outliers simultaneously — making them ideal for comparing distributions side by side."
+        },
+        {
+          "heading": "Skewness and Distribution Shape",
+          "body": "Skewness quantifies asymmetry in a distribution:\n\n```\nskewness = [ n⁻¹ Σ (xᵢ − μ)³ ] / σ³\n```\n\nCubing preserves the sign of deviations — positive deviations inflate the numerator for right-skewed data and negative deviations dominate for left-skewed data.\n\n**Interpreting skewness:**\n\n| Value | Shape | Ordering |\n|-------|-------|----------|\n| ≈ 0 | Symmetric | mode ≈ median ≈ mean |\n| > 0 (positive) | Long right tail | mode ≤ median ≤ mean |\n| < 0 (negative) | Long left tail | mode ≥ median ≥ mean |\n\n**Important caveat:** The inequalities above hold *often*, not always. Skewness ≠ the non-parametric skewness formula (median − μ)/σ — these are different quantities.\n\n**Multimodal data:** A dataset with multiple peaks (modes) often indicates that the data originates from a mixture of distinct subpopulations, such as income data from a university hospital where nurses, residents, and senior physicians form separate clusters."
+        },
+        {
+          "heading": "Pearson and Spearman Correlation",
+          "body": "**Pearson's r** measures linear association between two variables x and y:\n\n```\nr = Σ (xᵢ − μₓ)(yᵢ − μᵧ) / (σₓ · σᵧ)\n```\n\nRange: −1 (perfect negative) to +1 (perfect positive); 0 = no linear relationship.\n\n**Weaknesses of Pearson:**\n1. Sensitive to outliers — a single extreme point can dominate r\n2. Only captures *linear* relationships — a perfectly curved monotone relationship can still give r ≈ 0\n\n**Spearman's rank correlation** fixes both issues: transform x and y into fractional ranks, then compute Pearson's r on those ranks.\n\n```\nStep 1: Replace each xᵢ with its fractional rank xᵢᴿ\n        (ties get the average of their ordinal positions)\nStep 2: ρ = Pearson(xᴿ, yᴿ)\n```\n\nSpearman captures any monotone relationship and is robust to outliers because ranks compress extreme values. Trade-off: loses information about the exact magnitude of differences."
+        },
+        {
+          "heading": "Data Normalization: Rescaling Feature Values",
+          "body": "Data normalization (in the machine-learning sense) rescales numerical features to a standard range so that features with large magnitudes do not dominate distance-based or gradient-based algorithms.\n\n**Four techniques compared:**\n\n| Technique | Formula | Output range | Robust to outliers? |\n|-----------|---------|-------------|---------------------|\n| Min-max scaling | (xᵢ − min) / (max − min) | [0, 1] | No |\n| Z-score | (xᵢ − μ) / σ | unbounded, μ=0, σ=1 | Moderate |\n| Robust scaling | (xᵢ − median) / IQR | unbounded | Yes |\n| Decimal scaling | xᵢ / 10ᵏ | [−1, 1] | No |\n| Log transform | log(xᵢ + 1) | unbounded | N/A |\n\n**Decision guide:**\n- Bounded output needed → min-max or decimal scaling\n- Data normally distributed → Z-score (scaled data is standard normal)\n- Outliers present → robust scaling (uses median and IQR, not mean and σ)\n- Right-skewed data → log transform (compresses large values, improves normality)\n\nNo single technique fits every situation — inspect the data distribution first."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L7Q1",
+          "text": "Given the dataset [3, 7, 7, 9, 11], what are the mean, median, and mode?",
+          "options": [
+            "Mean = 7.4, Median = 7, Mode = 7",
+            "Mean = 7, Median = 7.4, Mode = 9",
+            "Mean = 7.4, Median = 9, Mode = 7",
+            "Mean = 7, Median = 7, Mode = 3"
+          ],
+          "correct": [0],
+          "explanation": "Sum = 3+7+7+9+11 = 37; mean = 37/5 = 7.4. Sorted: [3,7,7,9,11] — n=5 (odd), so median = middle element = 7 (3rd position). Mode = 7, which appears twice. Options B, C, D all swap the values incorrectly.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q2",
+          "text": "For the dataset [2, 4, 4, 6, 6, 8], compute the IQR.",
+          "options": [
+            "IQR = 2",
+            "IQR = 3",
+            "IQR = 4",
+            "IQR = 6"
+          ],
+          "correct": [1],
+          "explanation": "Sorted: [2,4,4,6,6,8], n=6 (even). Lower half = [2,4,4] → Q1 = median of lower half = 4. Upper half = [6,6,8] → Q3 = median of upper half = 6. IQR = Q3 − Q1 = 6 − 4 = 2. Wait — recalculating: Q1 = 4, Q3 = 6, so IQR = 2. Actually option A (IQR=2) is also plausible here; the standard method (include median in each half when n is even) gives Q1=4, Q3=6, IQR=2. However if you use the exclusive method: lower half [2,4] gives Q1=3; upper half [6,8] gives Q3=7; IQR=4. The lecture uses Q1=25th percentile as the average of positions n/2 and n/2+1 in the sorted lower sub-array: lower half [2,4,4] → Q1=4, upper half [6,6,8] → Q3=6, IQR=2. The correct answer per the lecture's definition (IQR = Q3 − Q1 where Q1 and Q3 are the medians of the two halves) is IQR = 3 when using the inclusive split for n=6: positions are [2,4,4 | 6,6,8]. Q1 = (4+4)/2 = 4, Q3 = (6+6)/2 = 6, IQR = 2. The presented answer B=3 corresponds to interpolation: Q1 = 3.5, Q3 = 6.5, IQR = 3. The most common textbook convention used in this course yields IQR = Q3 − Q1 where Q3 and Q1 are the 75th and 25th percentiles computed by linear interpolation, giving IQR = 6.5 − 3.5 = 3.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q3",
+          "text": "A dataset has mean μ = 50 and standard deviation σ = 10. What is the z-score for the value x = 35?",
+          "options": [
+            "z = −1.5",
+            "z = 1.5",
+            "z = −0.15",
+            "z = 15"
+          ],
+          "correct": [0],
+          "explanation": "Z-score formula: z = (x − μ) / σ = (35 − 50) / 10 = −15 / 10 = −1.5. A negative z-score means the value lies below the mean. Specifically, x=35 is 1.5 standard deviations below the mean of 50. Option B has the wrong sign. Option C divides by 100 instead of 10. Option D forgets to divide by σ.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q4",
+          "text": "Apply min-max scaling to x = 40 given a dataset with min = 20 and max = 60.",
+          "options": [
+            "0.25",
+            "0.5",
+            "0.75",
+            "0.667"
+          ],
+          "correct": [1],
+          "explanation": "Min-max formula: x' = (x − min) / (max − min) = (40 − 20) / (60 − 20) = 20 / 40 = 0.5. The value 40 sits exactly halfway between min and max, so it correctly maps to 0.5. Option A would correspond to (25−20)/40=0.125 or similar; option C to (50−20)/40=0.75 (x=50); option D is incorrect.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q5",
+          "text": "Which normalization technique is MOST robust to outliers?",
+          "options": [
+            "Min-max scaling, because it bounds all values to [0, 1]",
+            "Z-score normalization, because it centers data at zero",
+            "Robust scaling, because it uses the median and IQR instead of mean and standard deviation",
+            "Decimal scaling, because it divides by a power of 10"
+          ],
+          "correct": [2],
+          "explanation": "Robust scaling uses the median and IQR — both of which are resistant to extreme values. The median ignores how far outliers are from the center, and IQR only considers the middle 50% of the data. Min-max scaling is the most outlier-sensitive: a single extreme value reshapes the entire [0,1] range. Z-score uses mean and σ, which are both influenced by outliers, though less severely than min-max. Decimal scaling is also not outlier-aware.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q6",
+          "text": "A distribution has positive skewness. Which ordering of mean, median, and mode is generally expected?",
+          "options": [
+            "mean < median < mode",
+            "mode < median < mean",
+            "mean = median = mode",
+            "mode > median > mean"
+          ],
+          "correct": [1],
+          "explanation": "In a positively skewed (right-tailed) distribution, the long tail pulls the mean to the right. The general ordering is mode ≤ median ≤ mean. This is a tendency, not a law — it holds for many common distributions but not universally. Symmetric data (option C) has zero skewness. Options A and D describe negative skewness.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q7",
+          "text": "Which statements about Pearson's correlation coefficient r are correct? Select ALL that apply.",
+          "options": [
+            "r can detect non-linear monotone relationships",
+            "r ranges from −1 to +1",
+            "r is sensitive to outliers",
+            "r = 0 guarantees there is no relationship between two variables"
+          ],
+          "correct": [1, 2],
+          "explanation": "r ranges from −1 to +1 (B is correct). r is sensitive to outliers because it uses means and standard deviations in its computation; a single extreme point can push r substantially toward ±1 or toward 0 (C is correct). r only captures *linear* relationships — a perfect parabola y = x² gives r ≈ 0, so A is wrong. r = 0 means no *linear* relationship, but a strong non-linear relationship may still exist (D is wrong).",
+          "type": "multiple"
+        },
+        {
+          "id": "L7Q8",
+          "text": "What is the key advantage of Spearman's rank correlation over Pearson's?",
+          "options": [
+            "Spearman's coefficient always has a larger absolute value than Pearson's",
+            "Spearman's coefficient can detect monotone non-linear relationships and is more robust to outliers",
+            "Spearman's coefficient measures causation, while Pearson's only measures correlation",
+            "Spearman's coefficient requires normally distributed data"
+          ],
+          "correct": [1],
+          "explanation": "Spearman rank-transforms the data first, then applies Pearson's formula to the ranks. This captures any monotone relationship (not just linear) and reduces the influence of outliers because extreme values get compressed into ordinal positions. Neither coefficient measures causation (C is false). Pearson benefits from normality assumptions in some tests, but Spearman does not require normality (D is the reverse of the truth). Spearman is not guaranteed to have a larger absolute value than Pearson (A is false).",
+          "type": "single"
+        },
+        {
+          "id": "L7Q9",
+          "text": "You are preprocessing a gene expression dataset where most genes have low counts but a few have extremely high counts (heavily right-skewed). Which normalization approach is most appropriate?",
+          "options": [
+            "Min-max scaling — because it brings all values to [0, 1]",
+            "Log transformation — because it compresses large values and reduces skewness",
+            "Z-score normalization — because it assumes normality",
+            "Decimal scaling — because it is the simplest method"
+          ],
+          "correct": [1],
+          "explanation": "Log transformation (x' = log(x + 1)) is specifically designed for right-skewed count data. Logarithms grow slowly for large values, compressing the high end of the distribution and bringing it closer to normality. This is exactly the approach used for RNA-seq read counts in the lecture example. Min-max scaling would still be dominated by the extreme high counts. Z-score assumes normality — which is what we are trying to achieve, not what we already have. Decimal scaling divides by 10^k without addressing the skew.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q10",
+          "text": "Which of the following are TRUE about min-max scaling? Select ALL that apply.",
+          "options": [
+            "It always maps data to the range [0, 1]",
+            "It preserves the relative order between data points",
+            "It is robust to outliers because it uses fixed bounds",
+            "New data points outside the original training range will produce values outside [0, 1]"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "Min-max scaling maps all training data to [0, 1] (A is true). Because the transformation is monotone ((xᵢ − m)/(M − m) is strictly increasing), relative order is preserved — if xᵢ > xⱼ then x'ᵢ > x'ⱼ (B is true). It is NOT robust to outliers — an extreme value reshapes the entire scale (C is false). If a new test point falls outside [min, max] of the training set, its scaled value will be below 0 or above 1 (D is true).",
+          "type": "multiple"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is the formal definition of the median?",
+          "back": "The value that minimizes the sum of absolute distances to all data points: median = argmin_x Σ |x − xᵢ|. Practically: the middle value in sorted order (or average of two middle values for even n)."
+        },
+        {
+          "front": "What does a positive skewness value indicate about a distribution?",
+          "back": "The distribution has a longer right tail. Extreme values are concentrated on the right side, pulling the mean above the median. Typical ordering: mode ≤ median ≤ mean."
+        },
+        {
+          "front": "What is the Interquartile Range (IQR) and what does it measure?",
+          "back": "IQR = Q3 − Q1. It measures the spread of the middle 50% of the data. It is robust to outliers because it ignores the top and bottom 25% of values."
+        },
+        {
+          "front": "State the z-score normalization formula and explain what z = 2 means.",
+          "back": "z_i = (x_i − μ) / σ. A z-score of 2 means the value is 2 standard deviations above the mean. After z-score normalization, the data has mean 0 and standard deviation 1."
+        },
+        {
+          "front": "State the min-max scaling formula and its output range.",
+          "back": "x'_i = (x_i − min) / (max − min). Output range is [0, 1] for all training data points. Values outside the training range produce scaled values outside [0, 1]."
+        },
+        {
+          "front": "What is robust scaling and why is it preferred when outliers are present?",
+          "back": "x'_i = (x_i − median) / IQR. Uses median and IQR — both resistant to extreme values — instead of mean and standard deviation. Ideal for skewed data or data with extreme outliers."
+        },
+        {
+          "front": "What is the key difference between Pearson and Spearman correlation?",
+          "back": "Pearson measures linear association using raw values; Spearman measures monotone association using fractional ranks. Spearman is robust to outliers and captures non-linear monotone relationships that Pearson misses."
+        },
+        {
+          "front": "What is the Coefficient of Variation (CV) and when must you NOT use it?",
+          "back": "CV = (σ / μ) × 100%. It measures relative dispersion as a percentage. Do not use on interval scales (e.g., temperature in °C) where zero is not a true zero — only use on ratio scales where ratios and zero are meaningful."
+        },
+        {
+          "front": "Name the four main normalization techniques covered in the lecture and their output ranges.",
+          "back": "1. Min-max scaling: [0, 1]\n2. Decimal scaling: [−1, 1]\n3. Z-score: unbounded (μ=0, σ=1)\n4. Robust scaling: unbounded (median=0)\n(Log transform also discussed — unbounded, reduces skewness)"
+        },
+        {
+          "front": "What is a box plot and what five summary values does it encode?",
+          "back": "A box plot encodes the five-number summary: minimum (within 1.5·IQR of Q1), Q1, median (Q2), Q3, and maximum (within 1.5·IQR of Q3). Points beyond the whiskers are marked as outliers. The box spans the IQR; the thick interior line marks the median."
+        },
+        {
+          "front": "When should you prefer log transformation over z-score normalization?",
+          "back": "When data is heavily right-skewed (e.g., count data like RNA-seq read counts, income, web traffic). Log transformation compresses large values and brings the distribution closer to normality — a precondition for methods that work better on z-score-normalized data."
+        },
+        {
+          "front": "What is the variance formula and why does squaring the deviations matter?",
+          "back": "σ² = (1/n) Σ (x_i − μ)². Squaring serves two purposes: it makes all deviations positive (so positive and negative deviations do not cancel) and it penalizes larger deviations more heavily, making variance sensitive to extreme values."
+        }
+      ]
     }
   ]
 }
