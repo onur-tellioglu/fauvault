@@ -17,7 +17,7 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
-  if (!session) redirect('/login')
+  if (!session) redirect('/login?callbackUrl=' + encodeURIComponent(`/${course}/leaderboard`))
 
   const rows = await getLeaderboardByCourse(course as Course)
   const totalLectures = COURSES[course as Course].content.lectures.length

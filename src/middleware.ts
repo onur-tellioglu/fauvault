@@ -4,13 +4,19 @@ import { neon } from '@neondatabase/serverless'
 
 const REFRESH_THRESHOLD = 60 * 60 * 24 * 2 // Refresh if < 2 days left
 
+function loginRedirect(req: NextRequest): URL {
+  const loginUrl = new URL('/login', req.url)
+  loginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname + req.nextUrl.search)
+  return loginUrl
+}
+
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value
-  if (!token) return NextResponse.redirect(new URL('/login', req.url))
+  if (!token) return NextResponse.redirect(loginRedirect(req))
 
   const session = await verifySession(token)
   if (!session) {
-    const res = NextResponse.redirect(new URL('/login', req.url))
+    const res = NextResponse.redirect(loginRedirect(req))
     res.cookies.delete(COOKIE_NAME)
     return res
   }
@@ -19,7 +25,7 @@ export async function middleware(req: NextRequest) {
   const sql = neon(process.env.DATABASE_URL!)
   const rows = await sql`SELECT token_version FROM users WHERE id = ${session.userId}` as { token_version: number }[]
   if (!rows[0] || rows[0].token_version !== session.tokenVersion) {
-    const res = NextResponse.redirect(new URL('/login', req.url))
+    const res = NextResponse.redirect(loginRedirect(req))
     res.cookies.delete(COOKIE_NAME)
     return res
   }

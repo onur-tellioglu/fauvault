@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: 'Global Leaderboard' }
 
 export default async function LeaderboardPage() {
   const session = await getSession()
-  if (!session) redirect('/login')
+  if (!session) redirect('/login?callbackUrl=' + encodeURIComponent('/leaderboard'))
 
   const rows = await getLeaderboard()
 
