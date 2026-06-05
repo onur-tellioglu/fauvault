@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { EXAM_TIME } from '@/lib/exam-config'
 
-const EXAM_TIME = new Date('2026-03-27T08:00:00+01:00').getTime()
 const STORAGE_KEY = 'exam-dismissed'
 
 export function PostExamModal() {

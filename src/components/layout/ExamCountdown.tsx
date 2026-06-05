@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-
-const EXAM_TIME = new Date('2026-03-27T08:00:00+01:00').getTime()
+import { EXAM_TIME, EXAM_COUNTDOWN_LABEL } from '@/lib/exam-config'
 
 function getTimeLeft() {
   const diff = EXAM_TIME - Date.now()
@@ -75,7 +74,7 @@ export function ExamCountdown() {
         color: 'var(--text-muted)',
         letterSpacing: '0.08em',
       }}>
-        H7 · Technical Faculty · 27 Mar 08:00
+        {EXAM_COUNTDOWN_LABEL}
       </span>
 
       <div style={{ display: 'flex', gap: '0.75rem' }}>
