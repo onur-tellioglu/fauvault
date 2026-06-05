@@ -43,7 +43,7 @@ export const COURSES: Record<Course, {
   ap: {
     label: 'Applied Programming',
     shortLabel: 'AP',
-    description: 'FAU · 1 Lecture',
+    description: 'FAU · 5 Lectures',
     examDate: '',   // TBD — oral exam, date not yet announced
     content: apContent,
   },
