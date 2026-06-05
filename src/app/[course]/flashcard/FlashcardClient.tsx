@@ -118,7 +118,7 @@ export function FlashcardClient({ flashcards, course, initialIndex, initialKnown
         <button
           onClick={() => goTo(index - 1)}
           disabled={index === 0}
-          style={{ ...btnBase, background: 'none', border: '1px solid var(--border-default)', color: index === 0 ? 'var(--text-muted)' : 'var(--text-secondary)', opacity: index === 0 ? 0.4 : 1 }}
+          style={{ ...btnBase, background: 'none', border: '1px solid var(--border-default)', color: index === 0 ? 'var(--text-muted)' : 'var(--text-secondary)', opacity: index === 0 ? 0.4 : 1, cursor: index === 0 ? 'not-allowed' : 'pointer' }}
         >
           ← Prev
         </button>
@@ -138,7 +138,7 @@ export function FlashcardClient({ flashcards, course, initialIndex, initialKnown
         <button
           onClick={() => goTo(index + 1)}
           disabled={index === total - 1}
-          style={{ ...btnBase, background: 'none', border: '1px solid var(--border-default)', color: index === total - 1 ? 'var(--text-muted)' : 'var(--text-secondary)', opacity: index === total - 1 ? 0.4 : 1 }}
+          style={{ ...btnBase, background: 'none', border: '1px solid var(--border-default)', color: index === total - 1 ? 'var(--text-muted)' : 'var(--text-secondary)', opacity: index === total - 1 ? 0.4 : 1, cursor: index === total - 1 ? 'not-allowed' : 'pointer' }}
         >
           Next →
         </button>
