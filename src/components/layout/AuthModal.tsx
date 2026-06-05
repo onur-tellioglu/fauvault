@@ -22,20 +22,25 @@ export function AuthModal() {
           zIndex: 100, backdropFilter: 'blur(2px)',
         }}
       />
-      <div style={{
-        position: 'fixed', top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 101,
-        background: 'var(--bg-elevated)',
-        border: '1px solid var(--border-default)',
-        borderRadius: 16,
-        padding: '2rem',
-        width: 'min(90vw, 400px)',
-        boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-      }}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
+        style={{
+          position: 'fixed', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 101,
+          background: 'var(--bg-elevated)',
+          border: '1px solid var(--border-default)',
+          borderRadius: 16,
+          padding: '2rem',
+          width: 'min(90vw, 400px)',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+        }}
+      >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
           <div>
-            <h2 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.5rem', fontWeight: 400, color: 'var(--text-primary)', margin: 0 }}>
+            <h2 id="auth-modal-title" style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.5rem', fontWeight: 400, color: 'var(--text-primary)', margin: 0 }}>
               Welcome back
             </h2>
             {message && (
@@ -46,6 +51,7 @@ export function AuthModal() {
           </div>
           <button
             onClick={closeModal}
+            aria-label="Close dialog"
             style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.25rem', lineHeight: 1, padding: '0 4px' }}
           >
             ×

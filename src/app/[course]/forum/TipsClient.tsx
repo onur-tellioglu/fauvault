@@ -17,20 +17,29 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   const [tips, setTips] = useState(initialTips)
   const [newBody, setNewBody] = useState('')
   const [posting, setPosting] = useState(false)
+  const [postError, setPostError] = useState<string | null>(null)
   const [expandedTip, setExpandedTip] = useState<string | null>(null)
   const [comments, setComments] = useState<Record<string, TipComment[]>>({})
   const [commentBody, setCommentBody] = useState<Record<string, string>>({})
+  const [loadingComments, setLoadingComments] = useState<string | null>(null)
 
   async function submitTip() {
     if (!newBody.trim()) return
     setPosting(true)
-    await fetch('/api/tips', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ course, body: newBody.trim() }),
-    })
-    setPosting(false)
-    window.location.reload()
+    setPostError(null)
+    try {
+      const res = await fetch('/api/tips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course, body: newBody.trim() }),
+      })
+      if (!res.ok) throw new Error('Post failed')
+      window.location.reload()
+    } catch {
+      setPostError('Failed to post. Please try again.')
+    } finally {
+      setPosting(false)
+    }
   }
 
   async function toggleUpvote(tipId: string) {
@@ -43,8 +52,14 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   async function deleteTip(tipId: string) {
-    await fetch(`/api/tips/${tipId}`, { method: 'DELETE' })
-    setTips(prev => prev.filter(t => t.id !== tipId))
+    if (!window.confirm('Delete this tip? This cannot be undone.')) return
+    try {
+      const res = await fetch(`/api/tips/${tipId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+      setTips(prev => prev.filter(t => t.id !== tipId))
+    } catch {
+      alert('Failed to delete tip. Please try again.')
+    }
   }
 
   async function toggleVerify(tipId: string) {
@@ -56,9 +71,14 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
     if (expandedTip === tipId) { setExpandedTip(null); return }
     setExpandedTip(tipId)
     if (!comments[tipId]) {
-      const res = await fetch(`/api/tips/${tipId}/comments`)
-      const data = await res.json()
-      setComments(prev => ({ ...prev, [tipId]: data }))
+      setLoadingComments(tipId)
+      try {
+        const res = await fetch(`/api/tips/${tipId}/comments`)
+        const data = await res.json()
+        setComments(prev => ({ ...prev, [tipId]: data }))
+      } finally {
+        setLoadingComments(null)
+      }
     }
   }
 
@@ -78,9 +98,15 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   async function deleteComment(tipId: string, commentId: string) {
-    await fetch(`/api/tips/${tipId}/comments/${commentId}`, { method: 'DELETE' })
-    setComments(prev => ({ ...prev, [tipId]: (prev[tipId] ?? []).filter(c => c.id !== commentId) }))
-    setTips(prev => prev.map(t => t.id === tipId ? { ...t, comment_count: t.comment_count - 1 } : t))
+    if (!window.confirm('Delete this comment? This cannot be undone.')) return
+    try {
+      const res = await fetch(`/api/tips/${tipId}/comments/${commentId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+      setComments(prev => ({ ...prev, [tipId]: (prev[tipId] ?? []).filter(c => c.id !== commentId) }))
+      setTips(prev => prev.map(t => t.id === tipId ? { ...t, comment_count: t.comment_count - 1 } : t))
+    } catch {
+      alert('Failed to delete comment. Please try again.')
+    }
   }
 
   const cardStyle: React.CSSProperties = {
@@ -135,6 +161,11 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
                 {posting ? '…' : 'Post'}
               </button>
             </div>
+            {postError && (
+              <p style={{ color: 'var(--error, #f87171)', fontSize: '0.8rem', marginTop: '0.5rem', marginBottom: 0 }}>
+                {postError}
+              </p>
+            )}
           </div>
         ) : (
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
@@ -179,8 +210,12 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
                 <span style={{ ...mutedText, marginLeft: 4 }}>↑ {tip.upvote_count}</span>
               )}
 
-              <button onClick={() => expandComments(tip.id)} style={btnBase}>
-                💬 {tip.comment_count}
+              <button
+                onClick={() => expandComments(tip.id)}
+                disabled={loadingComments === tip.id}
+                style={{ ...btnBase, cursor: loadingComments === tip.id ? 'wait' : 'pointer' }}
+              >
+                {loadingComments === tip.id ? '…' : `💬 ${tip.comment_count}`}
               </button>
 
               {isAdmin && (

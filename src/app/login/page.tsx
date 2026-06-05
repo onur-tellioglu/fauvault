@@ -6,10 +6,12 @@ import { AuthForm } from '@/components/layout/AuthForm'
 
 export const metadata: Metadata = { title: 'Sign In' }
 
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
   const session = await getSession()
   // Already logged in — send to authenticated home
   if (session) redirect('/')
+
+  const { callbackUrl } = await searchParams
 
   return (
     <main style={{
@@ -32,7 +34,7 @@ export default async function LoginPage() {
               AI Perspectives · Renewable Energies
             </p>
           </div>
-          <AuthForm />
+          <AuthForm callbackUrl={callbackUrl} />
         </div>
       </div>
     </main>

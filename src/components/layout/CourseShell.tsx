@@ -3,11 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthModal } from './AuthModalContext'
-
-const ACCENT_COLORS = [
-  '#E8B84B', '#E8934B', '#E8604A', '#E84B7A', '#C84BE8', '#7A4BE8',
-  '#4B7AE8', '#4BC8E8', '#4BE8C8', '#4BE87A', '#A0E84B', '#E8D84B',
-]
+import { ACCENT_COLORS } from '@/lib/constants'
 
 const SHELL_SEGMENTS = ['/dashboard', '/lectures', '/quiz', '/flashcard', '/forum', '/leaderboard', '/exam-prep']
 
@@ -40,7 +36,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
     try {
       const savedAccent = localStorage.getItem('fv-accent')
       const savedDensity = localStorage.getItem('fv-density')
-      if (savedAccent && ACCENT_COLORS.includes(savedAccent)) setAccentColor(savedAccent)
+      if (savedAccent && (ACCENT_COLORS as readonly string[]).includes(savedAccent)) setAccentColor(savedAccent)
       if (savedDensity === 'Compact' || savedDensity === 'Normal' || savedDensity === 'Roomy') {
         setDensity(savedDensity as typeof density)
       }

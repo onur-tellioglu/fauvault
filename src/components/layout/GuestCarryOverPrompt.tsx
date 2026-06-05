@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthModal } from './AuthModalContext'
 import { getGuestProgress, clearGuestProgress } from '@/lib/guest-progress'
-import type { Course } from '@/lib/courses'
+import { COURSE_SLUGS, type Course } from '@/lib/courses'
 
 export function GuestCarryOverPrompt() {
   const { showCarryOver, dismissCarryOver } = useAuthModal()
@@ -17,8 +17,9 @@ export function GuestCarryOverPrompt() {
     setSaving(true)
     setError(false)
     try {
-      const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap']
       const entries: Array<{ course: Course; lectureId: number; patch: object }> = []
+      // COURSE_SLUGS includes all 6 courses (incl. bio, ads) — confirmed accepted
+      // by /api/progress, which validates the course via isValidCourse().
       for (const course of COURSE_SLUGS) {
         for (const row of getGuestProgress(course)) {
           entries.push({

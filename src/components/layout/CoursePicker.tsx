@@ -2,11 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ProgressRing } from '@/components/dashboard/ProgressRing'
-
-const ACCENT_COLORS = [
-  '#E8B84B', '#E8934B', '#E8604A', '#E84B7A', '#C84BE8', '#7A4BE8',
-  '#4B7AE8', '#4BC8E8', '#4BE8C8', '#4BE87A', '#A0E84B', '#E8D84B',
-]
+import { ACCENT_COLORS } from '@/lib/constants'
 
 export interface CoursePickerCourse {
   slug: string
@@ -32,7 +28,7 @@ export function CoursePicker({ username, appVersion, courses }: CoursePickerProp
     try {
       const savedAccent = localStorage.getItem('fv-accent')
       const savedDensity = localStorage.getItem('fv-density')
-      if (savedAccent && ACCENT_COLORS.includes(savedAccent)) setAccentColor(savedAccent)
+      if (savedAccent && (ACCENT_COLORS as readonly string[]).includes(savedAccent)) setAccentColor(savedAccent)
       if (savedDensity === 'Compact' || savedDensity === 'Normal' || savedDensity === 'Roomy') {
         setDensity(savedDensity as typeof density)
       }

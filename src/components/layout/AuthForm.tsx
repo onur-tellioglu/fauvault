@@ -4,7 +4,22 @@ import { useRouter } from 'next/navigation'
 
 type Mode = 'login' | 'register'
 
-export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
+/**
+ * Only allow same-origin relative paths as redirect targets.
+ * Rejects absolute URLs (https://evil.com), protocol-relative URLs (//evil.com
+ * and the backslash variant /\evil.com, which browsers normalize to //evil.com),
+ * and pseudo-schemes (javascript:) to prevent open-redirect attacks.
+ */
+function isSafeRedirect(url: string | undefined): url is string {
+  return (
+    typeof url === 'string' &&
+    url.startsWith('/') &&
+    !url.startsWith('//') &&
+    !url.startsWith('/\\')
+  )
+}
+
+export function AuthForm({ onSuccess, callbackUrl }: { onSuccess?: () => void; callbackUrl?: string } = {}) {
   const [mode, setMode] = useState<Mode>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -35,7 +50,7 @@ export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
     if (onSuccess) {
       onSuccess()
     } else {
-      router.push('/')
+      router.push(isSafeRedirect(callbackUrl) ? callbackUrl : '/')
     }
   }
 
@@ -53,12 +68,12 @@ export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
     <div style={{ width: '100%', maxWidth: 340 }}>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
-          <label style={labelStyle}>Username</label>
-          <input value={username} onChange={e => setUsername(e.target.value)} style={inputStyle} autoComplete="username" required />
+          <label htmlFor="auth-username" style={labelStyle}>Username</label>
+          <input id="auth-username" value={username} onChange={e => setUsername(e.target.value)} style={inputStyle} autoComplete="username" required />
         </div>
         <div>
-          <label style={labelStyle}>Password</label>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle}
+          <label htmlFor="auth-password" style={labelStyle}>Password</label>
+          <input id="auth-password" type="password" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle}
             autoComplete={mode === 'register' ? 'new-password' : 'current-password'} required />
         </div>
         {error && <p style={{ color: 'var(--error)', fontSize: '0.85rem', margin: 0 }}>{error}</p>}

@@ -10,16 +10,36 @@ const styles: Record<State, React.CSSProperties> = {
   missed:   { background: 'var(--success-subtle)', borderColor: 'var(--success)',        color: 'var(--text-secondary)', opacity: 0.7 },
 }
 
+const stateIcons: Record<State, string | null> = {
+  default:  null,
+  selected: null,
+  correct:  '✓',
+  wrong:    '✗',
+  missed:   '✓',
+}
+
 export function QuizOption({ label, text, state, onClick, disabled }: Props) {
+  const icon = stateIcons[state]
   return (
     <button onClick={onClick} disabled={disabled} style={{
       width: '100%', textAlign: 'left', padding: '13px 16px',
       border: '1px solid', borderRadius: 10, cursor: disabled ? 'default' : 'pointer',
       transition: 'all 120ms ease', fontFamily: 'var(--font-body)', fontSize: '0.9rem',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       ...styles[state],
     }}>
-      <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', marginRight: 10, opacity: 0.5 }}>{label}</span>
-      {text}
+      <span>
+        <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', marginRight: 10, opacity: 0.5 }}>{label}</span>
+        {text}
+      </span>
+      {icon && (
+        <span
+          aria-hidden="true"
+          style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.9rem', fontWeight: 700, marginLeft: 8, flexShrink: 0 }}
+        >
+          {icon}
+        </span>
+      )}
     </button>
   )
 }
