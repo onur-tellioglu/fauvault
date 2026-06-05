@@ -52,6 +52,7 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   async function deleteTip(tipId: string) {
+    if (!window.confirm('Delete this tip? This cannot be undone.')) return
     await fetch(`/api/tips/${tipId}`, { method: 'DELETE' })
     setTips(prev => prev.filter(t => t.id !== tipId))
   }
@@ -92,6 +93,7 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   }
 
   async function deleteComment(tipId: string, commentId: string) {
+    if (!window.confirm('Delete this comment? This cannot be undone.')) return
     await fetch(`/api/tips/${tipId}/comments/${commentId}`, { method: 'DELETE' })
     setComments(prev => ({ ...prev, [tipId]: (prev[tipId] ?? []).filter(c => c.id !== commentId) }))
     setTips(prev => prev.map(t => t.id === tipId ? { ...t, comment_count: t.comment_count - 1 } : t))
