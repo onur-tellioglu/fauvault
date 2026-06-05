@@ -885,6 +885,223 @@ export const content: Content = {
           "back": "When the shared attributes R₁ ∩ R₂ form a superkey in at least one of R₁ or R₂. Without this, rejoining may produce spurious tuples not in the original relation."
         }
       ]
+    },
+    {
+      "id": 4,
+      "title": "Relational Algebra and SQL Queries",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Relational Algebra: Purpose and Structure",
+          "body": "Relational algebra is a formal query language whose operands are relations and whose operators produce new relations. It serves two roles: it is the theoretical foundation for how DBMSs process queries, and many of its ideas are directly incorporated into SQL.\n\nEvaluating an expression yields two things:\n- **Result schema** — determined by the schemas of the input relations and the operators applied\n- **Result instance** — the actual set of tuples obtained by running the operations\n\nThe complete set `{σ, π, ∪, ρ, −, ×}` is sufficient to express every other operator; joins, intersection, and renaming can all be derived from these six primitives.\n\n| Category | Operators |\n|----------|-----------|\n| Set operators (union-compatible) | ∪, ∩, − |\n| Cartesian product | × |\n| Unary relation operators | σ (select), π (project), ρ (rename) |\n| Inner joins | Natural ⋈, Equi ⋈=, Theta ⋈_θ |\n| Outer joins | Left ⟕, Right ⟖, Full ⟗ |"
+        },
+        {
+          "heading": "Set Operators: Union, Intersection, Difference",
+          "body": "All three operators require **union-compatible** input relations: same number of attributes and matching domains at every position.\n\n**Union** r₁ ∪ r₂ — tuples in r₁, r₂, or both; duplicates removed.\n**Intersection** r₁ ∩ r₂ — tuples that appear in both; |result| ≤ min(|r₁|, |r₂|).\n**Difference** r₁ − r₂ — tuples in r₁ but not in r₂; |result| ≤ |r₁|.\n\nKey properties:\n- Union and intersection are **commutative and associative**: R ∪ S = S ∪ R\n- Set difference is **neither commutative nor associative**: R − S ≠ S − R\n\n**SQL equivalents:**\n```sql\n-- Union (eliminates duplicates)\nSELECT * FROM A  UNION  SELECT * FROM B;\n-- Intersection\nSELECT * FROM A  INTERSECT  SELECT * FROM B;\n-- Difference\nSELECT * FROM A  EXCEPT  SELECT * FROM B;\n-- ALL variants keep duplicates (multiset semantics)\nSELECT * FROM A  UNION ALL  SELECT * FROM B;\n```\n\n**Cartesian product** r₁ × r₂ combines every tuple of r₁ with every tuple of r₂ — relations need not be union-compatible. Result size = |r₁| × |r₂|. SQL: `CROSS JOIN`."
+        },
+        {
+          "heading": "Selection σ and Projection π — Orthogonal Unary Operators",
+          "body": "**Selection σ_C(r)** — keeps rows that satisfy condition C; think horizontal cut.\n- Result schema = R (unchanged)\n- Result size ≤ |r|\n- Condition C is a conjunction/disjunction of predicates A θ B or A θ c, where θ ∈ {=, <, ≤, >, ≥, ≠} for ordered domains\n- Cascading selections can be merged: σ_{C1}(σ_{C2}(R)) ≡ σ_{C1∧C2}(R)\n- SQL equivalent: **WHERE clause**\n\n```sql\n-- σ_{Dno=4 ∧ Salary>25000}(EMPLOYEE)\nSELECT * FROM Employee\nWHERE Dno = 4 AND Salary > 25000;\n```\n\n**Projection π_Y(r)** — keeps only the listed attributes; think vertical cut.\n- Result schema = Y (a subset of R)\n- Removes duplicate tuples — if Y is not a superkey, result may be smaller than |r|\n- π is **idempotent**: π_Y(π_Y(r)) = π_Y(r)\n- SQL equivalent: **SELECT DISTINCT**\n\n```sql\n-- π_{Sex,Salary}(EMPLOYEE)\nSELECT DISTINCT Sex, Salary FROM Employee;\n```\n\n**Order matters:** Apply selection before projection (σ then π) when the condition references attributes not in the final output list."
+        },
+        {
+          "heading": "The Rename Operator ρ",
+          "body": "The rename operator changes attribute names in the schema **without altering the data**. This is essential for making two union-compatible relations share the same attribute names, or for disambiguating attributes when the same relation appears twice in a query.\n\n**Notation:** ρ_{(B₁,B₂,...,Bₘ ← A₁,A₂,...,Aₘ)}(R) renames attribute A₁ to B₁, A₂ to B₂, etc.\n\n**Example use case — ancestors query:**\n```\n-- Father-Child and Mother-Child share domain but differ in attribute names\n-- ρ_{Parent←Father}(Father-Child) makes them union-compatible with Mother-Child\n```\n\n**SQL equivalent: AS**\n```sql\nSELECT E.Fname AS FirstName, E.Lname AS LastName\nFROM Employee AS E;\n```\nTable aliases (`FROM Employee AS E`) also serve as the SQL form of relation renaming, needed in self-joins."
+        },
+        {
+          "heading": "Inner Joins: Theta, Equi, and Natural",
+          "body": "All three inner join variants are shorthand for selecting from a Cartesian product.\n\n| Join type | Condition | Duplicate columns? | SQL syntax |\n|-----------|-----------|-------------------|------------|\n| Theta-join ⋈_C | Arbitrary Boolean on attributes from both sides | Yes (R₁ ∪ R₂) | `JOIN ... ON C` |\n| Equi-join ⋈= | Only equality predicates | Yes (both join columns kept) | `JOIN ... ON A=B` |\n| Natural join ⋈ | Equality on **all** common attributes; shared columns kept once | No | `NATURAL JOIN` |\n\n**Theta-join definition:**\n```\nr₁ ⋈_C r₂ = σ_C(r₁ × r₂)\n```\n\n**Natural join definition:**\n```\nr₁ ⋈ r₂ = π_{X,R₁.Y,Z}(σ_{R₁.Y₁=R₂.Y₁∧...}(r₁ × r₂))\n```\nwhere Y is the set of common attributes, X belongs only to R₁, Z only to R₂.\n\n**Result size of natural join:** 0 ≤ |r₁ ⋈ r₂| ≤ |r₁| × |r₂|. When Y is a superkey in R₂, |r₁ ⋈ r₂| ≤ |r₁|.\n\n```sql\n-- Theta join: employees earning more than their department's bonus threshold\nSELECT * FROM Employee E\nJOIN Bonus B ON E.Salary > B.Threshold;\n\n-- Natural join: projects with department info, matching on Dnum\nSELECT * FROM Project NATURAL JOIN Department;\n```"
+        },
+        {
+          "heading": "Outer Joins — Preserving Unmatched Tuples",
+          "body": "Inner joins drop tuples with no match on the other side. Outer joins preserve them by padding with NULLs.\n\n| Variant | Which side preserved | SQL |\n|---------|---------------------|-----|\n| Left outer join R ⟕ S | All tuples from R; unmatched get NULL for S columns | `LEFT OUTER JOIN` |\n| Right outer join R ⟖ S | All tuples from S; unmatched get NULL for R columns | `RIGHT OUTER JOIN` |\n| Full outer join R ⟗ S | All tuples from both sides | `FULL OUTER JOIN` |\n\n**Properties:** Outer joins are **neither associative nor commutative** — unlike natural join.\nResult size ≥ max(|R|, |S|).\n\n```sql\n-- All departments, even those with no employees\nSELECT D.Dname, E.Fname\nFROM Department D\nLEFT OUTER JOIN Employee E ON D.Dnumber = E.Dno;\n```\n\n**NULL handling:** A NULL in a comparison (e.g., `NULL > 25000`) evaluates to **unknown** in SQL's three-valued logic (TRUE / FALSE / UNKNOWN), so the tuple is excluded from WHERE results."
+        },
+        {
+          "heading": "Operator Composition and Query Trees",
+          "body": "Because every RA operator returns a relation, operators can be freely composed. The execution order is depicted by a **query tree** (query evaluation tree):\n- **Leaf nodes** = input base relations\n- **Internal nodes** = RA operators\n- **Root** = final result\n- Execution flows **leaves → root**; each operator fires as soon as its inputs are ready.\n\n**Example:** For every project in Stafford, retrieve project number, controlling department number, and manager's last name, address, and birth date.\n\n```\nπ_{Pnumber, Dnum, Lname, Address, Bdate}(\n  ( (σ_{Plocation='Stafford'}(PROJECT)) ⋈_{Dnum=Dnumber} DEPARTMENT )\n  ⋈_{Mgr_ssn=Ssn} EMPLOYEE\n)\n```\n\n**Query optimisation** rewrites the tree to reduce intermediate result sizes:\n1. **Selection atomisation** — split σ_{C1∧C2} into two stacked selections\n2. **Push selections down** — apply σ before ×/⋈ to shrink operands early\n3. **Inline selections into joins** — convert σ(R × S) to R ⋈_C S directly\n4. **Push projections down** — project early to eliminate unused columns\n\nThese transformations preserve query equivalence while reducing work."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L4Q1",
+          "text": "Which set of relational algebra operators is considered a complete set — meaning all other RA operators can be derived from them?",
+          "options": [
+            "{σ, π, ∪, ρ, −, ×}",
+            "{σ, π, ⋈, ∪, ∩}",
+            "{σ, π, ⋈, ∪, −}",
+            "{σ, π, ρ, ⋈, ∩, ×}"
+          ],
+          "correct": [0],
+          "explanation": "The complete set is {σ, π, ∪, ρ, −, ×}. From these six primitives every other operator can be expressed: intersection via union and difference (R ∩ S ≡ (R ∪ S) − ((R − S) ∪ (S − R))), theta-join via Cartesian product and selection (R ⋈_C S ≡ σ_C(R × S)), and natural join via Cartesian product, selection, and projection. Option B includes ⋈ and ∩ as primitives — they are derived operators, not part of the minimal complete set. Options C and D have similar issues.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q2",
+          "text": "Consider tables A(X, Y) and B(X, Y) below.\n\nA: {(1, a), (2, b)}\nB: {(1, a), (3, c)}\n\nWhat does A − B return?",
+          "options": [
+            "{(1, a), (2, b), (3, c)}",
+            "{(1, a)}",
+            "{(2, b)}",
+            "{(2, b), (3, c)}"
+          ],
+          "correct": [2],
+          "explanation": "Set difference A − B returns all tuples that are in A but NOT in B. The tuple (1, a) is in both A and B, so it is excluded. The tuple (2, b) is only in A, so it survives. The tuple (3, c) is only in B, so it does not appear in A − B at all. The answer is {(2, b)}. A ∪ B would give option A; A ∩ B would give option B; neither of those is the difference.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q3",
+          "text": "Which SQL query is the correct translation of the relational algebra expression π_{Fname, Lname}(σ_{Salary > 40000}(EMPLOYEE))?",
+          "options": [
+            "SELECT Fname, Lname FROM Employee;",
+            "SELECT DISTINCT Fname, Lname FROM Employee WHERE Salary > 40000;",
+            "SELECT * FROM Employee WHERE Salary > 40000;",
+            "SELECT Fname, Lname FROM Employee GROUP BY Salary HAVING Salary > 40000;"
+          ],
+          "correct": [1],
+          "explanation": "The expression first applies selection σ_{Salary>40000} — which maps to a WHERE clause — then projection π_{Fname,Lname} — which maps to SELECT DISTINCT (projection removes duplicates). Option A is missing the WHERE filter. Option C projects all columns (*) rather than only Fname and Lname, and misses DISTINCT. Option D uses GROUP BY/HAVING, which is an aggregation construct, not a plain filter. DISTINCT is needed because projection in RA always eliminates duplicate tuples.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q4",
+          "text": "You have EMPLOYEE(Ssn, Fname, Dno) and DEPARTMENT(Dnumber, Dname). Which relational algebra expression correctly retrieves the first name and department name for every employee?",
+          "options": [
+            "π_{Fname, Dname}(EMPLOYEE × DEPARTMENT)",
+            "π_{Fname, Dname}(σ_{Dno=Dnumber}(EMPLOYEE × DEPARTMENT))",
+            "σ_{Dno=Dnumber}(EMPLOYEE × DEPARTMENT)",
+            "π_{Fname, Dname}(EMPLOYEE ∪ DEPARTMENT)"
+          ],
+          "correct": [1],
+          "explanation": "To combine EMPLOYEE and DEPARTMENT we need a Cartesian product first, then a selection that enforces the join condition Dno = Dnumber, then projection to keep only Fname and Dname. This is exactly the theta/equi-join definition: π_{Fname,Dname}(σ_{Dno=Dnumber}(EMPLOYEE × DEPARTMENT)). Option A does the Cartesian product without filtering, producing every employee paired with every department — garbage. Option C correctly filters but omits projection. Option D uses union, which requires union-compatible schemas — EMPLOYEE and DEPARTMENT have different attributes and so are not union-compatible.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q5",
+          "text": "Which statements about the natural join R ⋈ S are correct? Select ALL that apply.",
+          "options": [
+            "It matches tuples on all attributes whose names appear in both R and S",
+            "Each shared attribute column appears twice in the result",
+            "It is commutative: R ⋈ S = S ⋈ R (up to column order)",
+            "If R and S share no attributes, R ⋈ S equals the Cartesian product R × S"
+          ],
+          "correct": [0, 2, 3],
+          "explanation": "Statement A is the definition of natural join — equality is enforced on all attributes common to both schemas. Statement B is false: the natural join keeps only ONE copy of each shared attribute, which distinguishes it from an equi-join (where both columns are retained). Statement C is correct — natural join is commutative (up to column reordering) and also associative, unlike outer joins. Statement D is correct: when the common attribute set Y = ∅, the natural join degenerates into the Cartesian product because there is no join condition to filter on.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q6",
+          "text": "Given the following SQL query, which relational algebra expression does it correspond to?\n\n```sql\nSELECT E.Fname, E.Salary\nFROM Employee E\nJOIN Bonus B ON E.Salary > B.Threshold;\n```",
+          "options": [
+            "π_{Fname,Salary}(EMPLOYEE ⋈ BONUS)",
+            "π_{Fname,Salary}(σ_{Salary>Threshold}(EMPLOYEE × BONUS))",
+            "σ_{Salary>Threshold}(π_{Fname,Salary}(EMPLOYEE) × BONUS)",
+            "π_{Fname,Salary}(EMPLOYEE ∪ BONUS)"
+          ],
+          "correct": [1],
+          "explanation": "The SQL uses a JOIN ON with a non-equality condition (>), which is a theta-join. The theta-join is defined as σ_C(R × S). Therefore the expression is: first form the Cartesian product of EMPLOYEE and BONUS, then select pairs where E.Salary > B.Threshold, then project onto Fname and Salary. Option A uses a natural join — incorrect, since natural join only uses equality on common attributes. Option C applies projection before the Cartesian product, which would lose the Threshold column needed for the selection condition. Option D uses union, which is entirely wrong here.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q7",
+          "text": "A database has STUDENT(StudentID, Name) and ENROLLMENT(StudentID, CourseID). Which query retrieves ALL students, including those enrolled in no courses, along with any courses they may be taking?",
+          "options": [
+            "SELECT S.Name, E.CourseID FROM Student S INNER JOIN Enrollment E ON S.StudentID = E.StudentID;",
+            "SELECT S.Name, E.CourseID FROM Student S LEFT OUTER JOIN Enrollment E ON S.StudentID = E.StudentID;",
+            "SELECT S.Name, E.CourseID FROM Student S RIGHT OUTER JOIN Enrollment E ON S.StudentID = E.StudentID;",
+            "SELECT S.Name, E.CourseID FROM Student S CROSS JOIN Enrollment E;"
+          ],
+          "correct": [1],
+          "explanation": "The goal is to keep ALL students, even those with no enrollment records. This requires a left outer join (S ⟕ E): every tuple in the left relation (STUDENT) is preserved; for students with no matching ENROLLMENT row, CourseID is filled with NULL. INNER JOIN (A) drops students with no enrollment, which is the opposite of what we want. RIGHT OUTER JOIN (C) would preserve all enrollment records instead of all students. CROSS JOIN (D) produces every combination of student and course, including invalid pairings.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q8",
+          "text": "The selection operator σ distributes over set operators. Which of the following equivalences are correct? Select ALL that apply.",
+          "options": [
+            "σ_C(R ∪ S) ≡ σ_C(R) ∪ σ_C(S)",
+            "σ_C(R ∩ S) ≡ σ_C(R) ∩ σ_C(S)",
+            "π_Y(R ∩ S) ≡ π_Y(R) ∩ π_Y(S)",
+            "π_Y(R ∪ S) ≡ π_Y(R) ∪ π_Y(S)"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "Selection distributes over union, intersection, and difference: σ_C(R ∪ S) ≡ σ_C(R) ∪ σ_C(S) and σ_C(R ∩ S) ≡ σ_C(R) ∩ σ_C(S), so A and B are correct. Projection distributes over union (D is correct): π_Y(R ∪ S) ≡ π_Y(R) ∪ π_Y(S). However, projection does NOT distribute over intersection (C is false): π_Y(R ∩ S) ≢ π_Y(R) ∩ π_Y(S). The reason: projection can hide attributes on which tuples differ, so π_Y(R) ∩ π_Y(S) may include tuples whose full originals were not in R ∩ S. The same issue applies to set difference.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q9",
+          "text": "In query optimisation, which of the following transformations reduce the size of intermediate results and are therefore generally beneficial? Select ALL that apply.",
+          "options": [
+            "Pushing selection operations closer to the leaf (base relation) nodes in the query tree",
+            "Performing Cartesian products before applying selection conditions",
+            "Pushing projection operations below joins to eliminate unneeded columns early",
+            "Replacing a sequence σ_{C1}(σ_{C2}(R)) with σ_{C1∧C2}(R) to merge selections"
+          ],
+          "correct": [0, 2, 3],
+          "explanation": "Pushing selections down (A) reduces the number of tuples that participate in joins — smaller operands mean faster and cheaper join evaluation. Pushing projections down (C) reduces the width (number of columns) of intermediate relations, cutting memory and I/O cost. Merging cascaded selections into a single selection (D) reduces the number of operator passes over the data. Option B is the opposite of good practice: performing a Cartesian product before selection produces a result of size |R| × |S| that must then be filtered; it is always better to push the selection before (or into) the join to avoid building the large intermediate result.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q10",
+          "text": "Consider the query: find the names of all departments that have at least one project located in Houston.\n\nDEPARTMENT(Dnumber, Dname) and PROJECT(Pnumber, Plocation, Dnum).\n\nWhich relational algebra expression is correct?",
+          "options": [
+            "π_{Dname}(DEPARTMENT ⋈_{Dnumber=Dnum} σ_{Plocation='Houston'}(PROJECT))",
+            "π_{Dname}(σ_{Plocation='Houston'}(DEPARTMENT))",
+            "π_{Dname}(DEPARTMENT) ⋈ π_{Dnum}(σ_{Plocation='Houston'}(PROJECT))",
+            "σ_{Plocation='Houston'}(π_{Dname}(DEPARTMENT ⋈_{Dnumber=Dnum} PROJECT))"
+          ],
+          "correct": [0],
+          "explanation": "We need to: (1) filter projects to only those in Houston — σ_{Plocation='Houston'}(PROJECT); (2) join with DEPARTMENT on the department number link — ⋈_{Dnumber=Dnum}; (3) project out only the department name — π_{Dname}. Option A does exactly this in the optimal order (select then join then project). Option B incorrectly applies selection to DEPARTMENT, which has no Plocation attribute. Option C uses projection before the join and relies on natural join, but the projected relations share no common attributes (Dname vs Dnum), so the natural join degenerates to a Cartesian product — wrong. Option D applies the selection on Plocation to the join result, which is correct logically but syntactically broken because after the join the Plocation attribute does exist — however, the projection π_{Dname} has already discarded it, so D evaluates to σ on a relation that no longer has Plocation.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What does relational algebra provide, and why does it matter for SQL?",
+          "back": "Relational algebra is a formal, closed language where every operator takes relations as input and returns a relation. It provides the theoretical foundation for DBMS query processing and optimisation. SQL's SELECT/FROM/WHERE, joins, and set operations are all direct implementations of RA operators."
+        },
+        {
+          "front": "What is union compatibility, and which RA operators require it?",
+          "back": "Two relations are union-compatible iff they have the same number of attributes and each pair of corresponding attributes has the same domain. The operators ∪ (union), ∩ (intersection), and − (difference) all require union-compatible operands. The Cartesian product × does not."
+        },
+        {
+          "front": "What does σ_C(R) return, and what is its SQL equivalent?",
+          "back": "Selection σ_C(R) returns all tuples of R that satisfy the Boolean condition C — a horizontal slice of the table. Result schema = R, result size ≤ |R|. SQL equivalent: the WHERE clause. Multiple selections merge: σ_{C1}(σ_{C2}(R)) ≡ σ_{C1∧C2}(R)."
+        },
+        {
+          "front": "What does π_Y(R) return, and what is its SQL equivalent?",
+          "back": "Projection π_Y(R) extracts only the columns in attribute set Y from R — a vertical slice that removes duplicates. Result schema = Y, result size ≤ |R| (equal only if Y is a superkey). SQL equivalent: SELECT DISTINCT with listed columns. Projection is idempotent: π_Y(π_Y(R)) = π_Y(R)."
+        },
+        {
+          "front": "What does the rename operator ρ do, and when do you need it?",
+          "back": "ρ_{(B←A)}(R) renames attribute A to B without changing the data. You need it to: (1) make two schemas union-compatible when attribute names differ; (2) disambiguate attributes in a self-join (joining a relation with itself). SQL equivalent: the AS keyword for column or table aliases."
+        },
+        {
+          "front": "How is the theta-join defined in terms of more primitive operators?",
+          "back": "Theta-join: R ⋈_C S = σ_C(R × S). Form the Cartesian product of R and S, then select only the pairs satisfying condition C. The equi-join is the special case where C uses only equality predicates. The natural join further removes duplicate copies of the common attributes."
+        },
+        {
+          "front": "How does a natural join differ from an equi-join?",
+          "back": "An equi-join R ⋈_{A=B} S keeps BOTH join columns in the result (schema = R ∪ S, including both A and B). A natural join automatically joins on ALL common attribute names and keeps only ONE copy of each shared attribute. Natural join is commutative and associative; it degenerates to a Cartesian product when the schemas share no attributes."
+        },
+        {
+          "front": "What are the three outer join variants, and how do they handle unmatched tuples?",
+          "back": "Left outer join R ⟕ S: all tuples of R preserved; unmatched get NULL for S-columns.\nRight outer join R ⟖ S: all tuples of S preserved; unmatched get NULL for R-columns.\nFull outer join R ⟗ S: all tuples from both sides preserved; unmatched padded with NULLs on the missing side.\nAll outer joins are neither commutative nor associative."
+        },
+        {
+          "front": "How does three-valued logic affect NULL comparisons in SQL WHERE clauses?",
+          "back": "SQL uses TRUE / FALSE / UNKNOWN. Any comparison involving NULL evaluates to UNKNOWN (e.g., NULL > 25000 = UNKNOWN). WHERE only passes rows where the condition is TRUE — UNKNOWN is treated as FALSE, so NULL comparisons silently exclude rows. Use IS NULL / IS NOT NULL to explicitly test for NULLs."
+        },
+        {
+          "front": "What is a query tree and how does execution proceed through it?",
+          "back": "A query tree (query evaluation tree) is a data structure representing a relational algebra expression. Leaf nodes hold input base relations. Internal nodes represent RA operators. The root holds the final result. Execution flows from leaves to root: each operator executes as soon as both its inputs are available. Query optimisers rewrite trees to reduce intermediate result sizes."
+        },
+        {
+          "front": "Why does projection NOT distribute over intersection, even though it distributes over union?",
+          "back": "π_Y(R ∪ S) ≡ π_Y(R) ∪ π_Y(S) — TRUE.\nπ_Y(R ∩ S) ≢ π_Y(R) ∩ π_Y(S) — FALSE in general.\nThe reason: projection hides attributes outside Y. Two full tuples in R and S may disagree on a hidden attribute (not in Y), so they would not be in R ∩ S, yet their Y-projections are identical and would appear in π_Y(R) ∩ π_Y(S). Thus the RHS can contain tuples absent from the LHS."
+        },
+        {
+          "front": "What is the key query optimisation heuristic for combining selection and Cartesian product?",
+          "back": "Push selections as close to the base relations as possible, before forming Cartesian products or joins. Instead of σ_C(R × S), evaluate σ_C(R) × S (if C only involves R's attributes) or directly R ⋈_C S. This reduces the size of the operands fed into the expensive join operation, dramatically cutting execution time and memory usage."
+        }
+      ]
     }
   ]
 }
