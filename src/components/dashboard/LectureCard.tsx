@@ -27,6 +27,7 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
           color: 'var(--border-subtle)', lineHeight: 1, userSelect: 'none',
         }}>{lecture.id}</span>
 
+        <div style={{ position: 'relative', zIndex: 1 }}>
         {done && (
           <span style={{
             fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
@@ -36,14 +37,12 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
           }}>Complete</span>
         )}
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <h3 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.05rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 3, paddingRight: '2.5rem' }}>
-            {lecture.title}
-          </h3>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            {lecture.speaker} · {lecture.questions.length} questions
-          </p>
-        </div>
+        <h3 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.05rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 3, paddingRight: '2.5rem' }}>
+          {lecture.title}
+        </h3>
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+          {lecture.speaker} · {lecture.questions.length} questions
+        </p>
 
         {score !== undefined && (
           <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', marginBottom: 8, color: score >= 0.9 ? 'var(--success)' : 'var(--accent)' }}>
@@ -94,6 +93,7 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
             Watch on fau.tv ↗
           </span>
         )}
+        </div>
       </article>
     </Link>
   )
