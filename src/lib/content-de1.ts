@@ -1252,7 +1252,7 @@ export const content: Content = {
             "{(A,B,C,D), (A)} — adding a key relation to the original"
           ],
           "correct": [1],
-          "explanation": "Step 1: F = {A→B, B→C, C→D} is already a minimal cover G — all FDs have single RHS attributes, no extraneous LHS attributes, and no FD is redundant. Step 2: Distinct LHS values are A, B, C — so create R_A=(A,B), R_B=(B,C), R_C=(C,D). Step 3: Check if any schema contains a key of R. A⁺ = {A,B,C,D} = all attributes, so A is a candidate key. R_A=(A,B) contains A — key relation already present. Step 4: No schema is a subset of another. Result: D = {(A,B),(B,C),(C,D)}. The original relation is NOT in 3NF (A→B→C is a transitive dependency for non-prime attributes), ruling out option A.",
+          "explanation": "Step 1: F = {A→B, B→C, C→D} is already a minimal cover G — all FDs have single RHS attributes, no extraneous LHS attributes, and no FD is redundant. Step 2: Distinct LHS values are A, B, C — so create R_A=(A,B), R_B=(B,C), R_C=(C,D). Step 3: Check if any schema contains a key of R. A⁺ = {A,B,C,D} = all attributes, so A is a candidate key. R_A=(A,B) contains A — key relation already present. Step 4: No schema is a subset of another. Result: D = {(A,B),(B,C),(C,D)}. The original relation is NOT in 3NF: B→C and C→D both have a non-superkey on the left (B and C are not keys) and non-prime attributes on the right, ruling out option A.",
           "type": "single"
         },
         {
