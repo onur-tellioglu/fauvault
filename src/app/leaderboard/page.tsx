@@ -35,9 +35,23 @@ export default async function LeaderboardPage() {
         </header>
 
         {rows.length === 0 ? (
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', marginTop: '4rem' }}>
-            No one has completed a lecture yet. Be the first!
-          </p>
+          <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+              No one has completed a lecture yet. Be the first!
+            </p>
+            <Link
+              href="/"
+              style={{
+                display: 'inline-flex', alignItems: 'center',
+                padding: '9px 18px', border: '1px solid var(--border-default)',
+                borderRadius: 7, background: 'var(--bg-surface)',
+                color: 'var(--text-secondary)', fontSize: '0.85rem',
+                textDecoration: 'none',
+              }}
+            >
+              ← Go to dashboard
+            </Link>
+          </div>
         ) : (
           <div style={{ border: '1px solid var(--border-default)', borderRadius: 10, overflow: 'hidden', background: 'var(--bg-surface)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
