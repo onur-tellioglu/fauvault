@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { AuthForm } from '@/components/layout/AuthForm'
+import { SITE_NAME, SITE_TAGLINE } from '@/lib/constants'
 
 export const metadata: Metadata = { title: 'Sign In' }
 
@@ -28,10 +29,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               fontFamily: 'var(--font-fraunces)', fontSize: '1.6rem',
               fontWeight: 400, color: 'var(--text-primary)', marginBottom: 6,
             }}>
-              Study App
+              {SITE_NAME}
             </h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-              AI Perspectives · Renewable Energies
+              {SITE_TAGLINE}
             </p>
           </div>
           <AuthForm callbackUrl={callbackUrl} />
