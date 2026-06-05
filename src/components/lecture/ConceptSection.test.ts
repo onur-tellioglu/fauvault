@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { parseBody, normalizeLang } from './ConceptSection'
+import { Prism } from 'prism-react-renderer'
 
 describe('parseBody — code block handling', () => {
   it('parses a fenced python block', () => {
@@ -54,10 +55,17 @@ describe('parseBody — unterminated fence fail-safe', () => {
 })
 
 describe('normalizeLang', () => {
-  it('passes through known Prism languages unchanged', () => {
+  it('passes through known bundled Prism languages unchanged', () => {
     expect(normalizeLang('python')).toBe('python')
-    expect(normalizeLang('bash')).toBe('bash')
     expect(normalizeLang('sql')).toBe('sql')
+    expect(normalizeLang('typescript')).toBe('typescript')
+    expect(normalizeLang('graphql')).toBe('graphql')
+  })
+
+  it('maps bash/sh/shell to clike (not bundled — clike is best approximation)', () => {
+    expect(normalizeLang('bash')).toBe('clike')
+    expect(normalizeLang('sh')).toBe('clike')
+    expect(normalizeLang('shell')).toBe('clike')
   })
 
   it('maps matlab to clike (Prism has no matlab grammar)', () => {
@@ -74,6 +82,34 @@ describe('normalizeLang', () => {
 
   it('maps empty string (bare fence) to plain', () => {
     expect(normalizeLang('')).toBe('plain')
+  })
+})
+
+describe('normalizeLang — grammar resolution', () => {
+  // Every language returned by normalizeLang (except 'plain') must resolve to
+  // a real grammar object in the bundled Prism instance. This test closes the
+  // false-confidence gap where tests only validated the returned string but not
+  // whether that string actually maps to a bundled grammar.
+  it.each([
+    // Core languages the course content uses
+    'python', 'sql', 'typescript', 'javascript', 'graphql',
+    // Languages that were previously listed in PRISM_SUPPORTED but are not
+    // bundled — they now map via LANG_ALIASES; the resolved value must be bundled
+    'bash', 'sh', 'shell', 'r', 'java', 'csharp', 'cs', 'ruby', 'scala',
+    // Explicitly aliased languages
+    'matlab', 'cypher',
+  ])('normalizeLang(%s) resolves to a bundled grammar', (lang) => {
+    const normalized = normalizeLang(lang)
+    if (normalized === 'plain' || normalized === 'plaintext' || normalized === 'text' || normalized === 'txt') return
+    expect(Prism.languages[normalized]).toBeTruthy()
+  })
+
+  it('normalizeLang of bare fence returns plain (no grammar needed)', () => {
+    expect(normalizeLang('')).toBe('plain')
+  })
+
+  it('normalizeLang of unknown lang returns plain', () => {
+    expect(normalizeLang('foobar123')).toBe('plain')
   })
 })
 

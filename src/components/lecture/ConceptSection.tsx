@@ -4,25 +4,56 @@ import { Prism, normalizeTokens } from 'prism-react-renderer'
 
 type Props = { heading: string; body: string; index: number; total: number }
 
-// Languages supported by the Prism subset bundled with prism-react-renderer.
-// Unsupported grammars fall back to 'clike' (good enough for matlab/cypher)
-// or 'plain' (bare fences).
+// Languages actually bundled in prism-react-renderer v2's Prism subset.
+// Verified at install time via:
+//   node -e "const {Prism}=require('prism-react-renderer'); console.log(Object.keys(Prism.languages).sort().join(','))"
+// Only list languages that have a real grammar object — listing a language
+// that isn't bundled causes a silent plain-mono fallback with no error.
 const PRISM_SUPPORTED = new Set([
-  'markup', 'html', 'xml', 'svg', 'mathml',
-  'css', 'clike', 'javascript', 'js',
-  'typescript', 'ts', 'jsx', 'tsx',
-  'python', 'bash', 'shell', 'sql',
-  'json', 'yaml', 'markdown', 'md',
-  'java', 'c', 'cpp', 'csharp', 'cs',
-  'go', 'rust', 'ruby', 'kotlin', 'swift',
-  'r', 'scala', 'diff', 'git', 'regex',
+  // Core web
+  'markup', 'html', 'xml', 'svg', 'mathml', 'rss', 'ssml',
+  'css',
+  'javascript', 'js', 'jsx',
+  'typescript', 'ts', 'tsx',
+  // Data / config
+  'json', 'yaml', 'yml', 'webmanifest',
+  // Prose
+  'markdown', 'md',
+  // Systems / compiled
+  'c', 'cpp', 'clike',
+  'go', 'rust', 'swift',
+  // JVM / other languages
+  'kotlin', 'kt', 'kts',
+  'python', 'py',
+  'coffeescript', 'coffee',
+  // Query / graph
+  'sql', 'graphql',
+  // Misc
+  'regex', 'reason',
+  'objectivec', 'objc',
+  'n4js', 'n4jsd',
+  'jsdoc',
+  // Catch-all plain variants (Prism built-ins)
+  'plain', 'plaintext', 'text', 'txt',
 ])
 
 const LANG_ALIASES: Record<string, string> = {
-  matlab: 'clike',
-  cypher: 'clike',
-  sh:     'bash',
-  py:     'python',
+  // Languages not bundled — map to closest approximation
+  bash:   'clike',   // not bundled; clike approximates comments + strings
+  sh:     'clike',   // same
+  shell:  'clike',   // same
+  java:   'clike',   // not bundled; clike is a reasonable C-family approximation
+  csharp: 'clike',   // not bundled
+  cs:     'clike',   // not bundled
+  ruby:   'clike',   // not bundled
+  r:      'clike',   // not bundled; clike approximates R comments + strings
+  scala:  'clike',   // not bundled
+  diff:   'plain',   // not bundled; plain is safer than a wrong grammar
+  git:    'plain',   // not bundled
+  // Convenience aliases for bundled languages
+  matlab: 'clike',   // no matlab grammar anywhere; clike is best approximation
+  cypher: 'clike',   // no cypher grammar; clike handles keywords + strings
+  py:     'python',  // py is in PRISM_SUPPORTED but alias for explicitness
 }
 
 export function normalizeLang(lang: string): string {
