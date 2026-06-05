@@ -1102,6 +1102,223 @@ export const content: Content = {
           "back": "Push selections as close to the base relations as possible, before forming Cartesian products or joins. Instead of σ_C(R × S), evaluate σ_C(R) × S (if C only involves R's attributes) or directly R ⋈_C S. This reduces the size of the operands fed into the expensive join operation, dramatically cutting execution time and memory usage."
         }
       ]
+    },
+    {
+      "id": 5,
+      "title": "Normal Forms",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Why Normalization? Anomalies and Redundancy",
+          "body": "When a relation schema bundles together facts about different entities, storing the same information in multiple tuples causes three classic problems:\n\n| Anomaly | What goes wrong |\n|---------|-----------------|\n| **Redundancy** | The same fact (e.g. a department name) appears in every employee tuple — wastes space, risks inconsistency |\n| **Update anomaly** | Changing one fact requires touching every tuple that contains it; a missed update leaves the database in an inconsistent state |\n| **Insertion anomaly** | A new fact (e.g. a new department) cannot be recorded until at least one related entity (an employee) also exists |\n| **Deletion anomaly** | Deleting the last tuple for some entity (e.g. the last employee in a department) silently destroys facts about the other entity (the department) |\n\n**Goal of normalization:** Decompose a large relation schema R(A) with FDs F into smaller schemas Rᵢ(Aᵢ) such that:\n- redundancy is minimized\n- information is not lost (**lossless-join**)\n- all constraints remain enforceable (**dependency-preserving**)\n\nThe *normal form* of a relation is the highest-level normalization condition it satisfies. 1NF is independent of FDs; 2NF, 3NF, and BCNF are defined in terms of FDs."
+        },
+        {
+          "heading": "Lossless-Join and Dependency-Preserving Decomposition",
+          "body": "Given R(A, B, C) and FDs F, a decomposition into R₁(A, B) and R₂(B, C) must satisfy two properties:\n\n**Lossless-join:** r = Π_{A,B}(r) ⋈ Π_{B,C}(r) for every valid instance r — no spurious tuples are created when joining the pieces back together.\n\n**Key test (binary decomposition):** R(A, B, C) → R₁(A, B), R₂(B, C) is lossless-join **iff B is a superkey in R₁ or R₂**, i.e. iff F⁺ contains B → C or B → A.\n\n```\nExample — R(Employee, Level, Salary)\nF = {Employee→Level, Employee→Salary, Level→Salary}\n\nLossy split:   R₁(Employee, Salary)  R₂(Level, Salary)\n  Salary is NOT a superkey in either → lossy (spurious tuples possible)\n\nLossless split: R₁(Employee, Level)  R₂(Level, Salary)\n  Level is a key in R₂ (Level→Salary ∈ F) → lossless ✓\n  But: dependency Level→Salary is now local to R₂; Employee→Salary\n       is only implied transitively — dependency still preserved ✓\n```\n\n**Dependency-preserving:** The union of FDs derived from each piece (F₁ ∪ F₂ … ∪ Fₖ) is equivalent to F. Every original FD must be checkable within a single decomposed relation — no cross-table join needed to enforce the constraint.\n\nFor decompositions into more than two schemas: lossless-join means the natural join of all projections recovers r exactly; dependency preservation means each FD in F is covered by some Fᵢ restricted to Sᵢ."
+        },
+        {
+          "heading": "First Normal Form (1NF)",
+          "body": "**Definition:** A relation schema is in 1NF iff every attribute's domain contains only **atomic (indivisible) values**, and each attribute in each tuple holds exactly one value from its domain.\n\nThis rules out:\n- Multi-valued attributes (e.g. a `Dlocations` column storing `{Bellaire, Sugarland, Houston}` as a set)\n- Nested relations / tuples as attribute values\n\n**Fix:** Expand multi-valued attributes into separate rows, one value per row:\n\n```\nBefore (violates 1NF):\nDname        | Dnumber | Dlocations\n-------------|---------|---------------------------\nResearch     | 5       | {Bellaire, Sugarland, Houston}\n\nAfter (1NF satisfied):\nDname        | Dnumber | Dlocation\n-------------|---------|----------\nResearch     | 5       | Bellaire\nResearch     | 5       | Sugarland\nResearch     | 5       | Houston\n```\n\n**Note:** The relational model formally requires 1NF — a table with non-atomic values is not a valid relation. 1NF is therefore considered part of the basic definition of a relation, independent of any FDs or keys."
+        },
+        {
+          "heading": "Second Normal Form (2NF) — No Partial Dependencies",
+          "body": "**Prime vs. non-prime attributes:** An attribute is *prime* if it belongs to at least one candidate key; otherwise it is *non-prime*.\n\n**Definition:** R with FDs F is in 2NF iff it is in 1NF and there is no non-prime attribute A such that (Y → A) ∈ F⁺ for some **proper subset Y of a candidate key** K.\n\nIn plain terms: every non-prime attribute must be **fully** functionally dependent on the whole key — not just on part of it.\n\n**Shortcut:** If every candidate key is a single attribute, 2NF is automatically satisfied (no proper subset of a single-attribute key can exist).\n\n**Worked example — EMP_PROJ with key {Ssn, Pnumber}:**\n```\nEMP_PROJ(Ssn, Pnumber, Hours, Ename, Pname, Plocation)\n  FD1: {Ssn, Pnumber} → Hours         (full dependency — OK)\n  FD2: Ssn            → Ename         (partial — Ename depends on Ssn alone)\n  FD3: Pnumber        → Pname, Plocation (partial — depends on Pnumber alone)\n\n2NF decomposition:\n  EP1(Ssn, Pnumber, Hours)   — FD1\n  EP2(Ssn, Ename)            — FD2\n  EP3(Pnumber, Pname, Plocation) — FD3\n```\nNow every non-prime attribute is fully dependent on its table's key.\n\n**Anomalies caused by 2NF violation:** Ename is repeated for every project Paris works on; deleting all of Paris's projects loses her name; we can't store Pname until at least one employee is assigned."
+        },
+        {
+          "heading": "Third Normal Form (3NF) — No Transitive Dependencies",
+          "body": "**Definition:** R with FDs F is in 3NF iff for **every** FD (X → Y) ∈ F, at least one of the following holds:\n1. X → Y is **trivial** (Y ⊆ X)\n2. X is a **superkey** of R\n3. Every attribute A ∈ Y − X is a **prime attribute**\n\nCondition 3 is the relaxation that distinguishes 3NF from BCNF. 3NF forbids a non-prime attribute from being transitionally dependent on a key via another non-prime attribute.\n\n**3NF implies 2NF:** A 2NF violation (partial dependency Y → A, Y ⊊ K, A non-prime) also violates 3NF — Y is not a superkey, the FD is non-trivial, and A is non-prime.\n\n**Worked example — EMP_DEPT:**\n```\nEMP_DEPT(Ename, Ssn, Bdate, Address, Dnumber, Dname, Dmgr_ssn)\n  Key: Ssn\n  FD: Dnumber → Dname, Dmgr_ssn   (violates 3NF: Dnumber is not a superkey,\n                                    Dname and Dmgr_ssn are non-prime)\n\n3NF decomposition:\n  ED1(Ename, Ssn, Bdate, Address, Dnumber)\n  ED2(Dnumber, Dname, Dmgr_ssn)\n```\nNow Dname and Dmgr_ssn are directly determined by the key of their own table.\n\n**Quick check checklist for any FD X → A:**\n```\nIs X → A trivial?   → YES → OK\nIs X a superkey?    → YES → OK\nIs A prime?         → YES → OK (3NF only, not BCNF)\nNone of the above?  → VIOLATION\n```"
+        },
+        {
+          "heading": "Boyce-Codd Normal Form (BCNF) — Stricter Than 3NF",
+          "body": "**Definition:** R with FDs F is in BCNF iff for every FD (X → Y) ∈ F, one of the following holds:\n1. X → Y is **trivial** (Y ⊆ X)\n2. X is a **superkey** of R\n\nBCNF removes condition 3 from the 3NF definition — it never allows a non-trivial FD whose left-hand side is not a superkey, even if the right-hand side contains only prime attributes.\n\n**The LOTS1A example (3NF but not BCNF):**\n```\nLOTS1A(Property_id#, County_name, Lot#, Area)\n  FD1: Property_id#          → County_name, Lot#, Area  (superkey → OK)\n  FD2: County_name, Lot#     → Property_id#, Area       (superkey → OK)\n  FD5: Area                  → County_name              (Area NOT a superkey → BCNF violation)\n\n  But LOTS1A is in 3NF: in FD5, County_name IS prime ({County_name, Lot#} is a candidate key)\n```\n\n**BCNF decomposition along FD5:**\n```\nLOTS1AX(Property_id#, Area, Lot#)   — lossless, in BCNF\nLOTS1AY(Area, County_name)          — in BCNF\n\nProblem: FD2 (County_name, Lot# → Property_id#, Area) is lost — not dependency-preserving\n```\n\n**The BCNF tradeoff:**\n\n| Property | 3NF algorithm | BCNF algorithm |\n|----------|---------------|----------------|\n| All schemas in target NF | Yes | Yes |\n| Lossless-join | Yes | Yes |\n| Dependency-preserving | **Yes** (by construction) | **Not guaranteed** |\n\nWhen a schema cannot be decomposed into BCNF while preserving all dependencies, 3NF is the practical target."
+        },
+        {
+          "heading": "3NF Synthesis Algorithm",
+          "body": "The 3NF synthesis algorithm guarantees a lossless-join, dependency-preserving decomposition where every output schema is in 3NF.\n\n**Steps:**\n```\nInput:  R(A), set of FDs F\nOutput: Database schema D, all schemas in 3NF\n\n1. Compute minimal cover G of F\n   (canonical form: single RHS, remove extraneous LHS attributes,\n    remove redundant FDs)\n\n2. For each distinct LHS X in G, create a relation schema:\n   R_X = X ∪ {A₁, A₂, …, Aₖ}  where X → A₁, …, X → Aₖ are all FDs in G with LHS = X\n   D = {R_X | X is an LHS in G}\n\n3. Key relation (if needed):\n   If no schema in D already contains a candidate key of R,\n   add one schema consisting only of the attributes of a candidate key.\n\n4. Eliminate redundant schemas:\n   If R_X ⊆ R_Y for some pair, remove R_X from D.\n```\n\n**Why it works:**\n- **Dependency-preserving:** Every FD in G (and therefore F) acts within exactly one R_X ∈ D, and G ≡ F.\n- **Lossless-join:** The key relation (step 3) ensures a tuple of R can always be identified; compositions of lossless decompositions remain lossless.\n- **All schemas in 3NF:** The minimality of G guarantees no violations exist within any R_X.\n\n**Worked example:**\n```\nR(A, B, C, D),  F = {A→B, B→C, C→D}\nMinimal cover G = F (already minimal)\n\nStep 2 creates:\n  R_A = (A, B),  R_B = (B, C),  R_C = (C, D)\n\nStep 3: Does any schema contain a key of R?  A⁺ = {A,B,C,D} = all → A is a key.\n  R_A = (A, B) contains A → key relation already present, no extra schema needed.\n\nResult: D = {(A,B), (B,C), (C,D)}  — lossless-join, dep.-preserving, all in 3NF\n```"
+        }
+      ],
+      "questions": [
+        {
+          "id": "L5Q1",
+          "text": "Which of the following correctly describes an update anomaly in an unnormalized relation?",
+          "options": [
+            "Adding a new entity requires a separate INSERT statement for each attribute",
+            "Changing a single fact stored in multiple tuples may leave the database inconsistent if only some tuples are updated",
+            "Querying the relation requires a full table scan instead of an index lookup",
+            "NULL values appear in non-key attributes when a new tuple is inserted"
+          ],
+          "correct": [1],
+          "explanation": "An update anomaly occurs because the same real-world fact (e.g. a department name) is physically stored in multiple rows. If only a subset of those rows is updated — perhaps due to a partial update transaction — different rows now show different values for the same fact, creating inconsistency. Option A describes an insertion operation, not an anomaly. Option C is a query-performance concern unrelated to normalization. Option D describes an insertion anomaly (specifically the case of a partial key), not an update anomaly.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q2",
+          "text": "A decomposition of R(A, B, C) into R₁(A, B) and R₂(B, C) is lossless-join iff:",
+          "options": [
+            "A is a superkey of R₁ or R₂",
+            "B is a superkey of R₁ or R₂",
+            "C is a superkey of R₁ or R₂",
+            "The FD set F contains A → C or C → A"
+          ],
+          "correct": [1],
+          "explanation": "The necessary and sufficient condition for a binary lossless-join decomposition on the shared attribute set B is that B forms a superkey in at least one of the two resulting schemas. This means F⁺ contains either B → A (making B a superkey of R₁(A,B)) or B → C (making B a superkey of R₂(B,C)). Options A and C pick the wrong shared attribute. Option D describes a condition that is unrelated to the lossless-join criterion — what matters is the relationship between the join attribute and the other attributes.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q3",
+          "text": "Consider R(Ssn, Pnumber, Hours, Ename, Pname, Plocation) with candidate key {Ssn, Pnumber} and FDs: {Ssn,Pnumber}→Hours, Ssn→Ename, Pnumber→{Pname,Plocation}. What is the highest normal form of R?",
+          "options": [
+            "1NF — because all attribute values are atomic",
+            "2NF — because all non-prime attributes are fully dependent on the key",
+            "3NF — because there are no transitive dependencies among non-prime attributes",
+            "BCNF — because every FD has a superkey on the left-hand side"
+          ],
+          "correct": [0],
+          "explanation": "The relation is in 1NF (atomic values) but violates 2NF. The non-prime attribute Ename depends on Ssn alone — a proper subset of the composite key {Ssn, Pnumber}. This is a partial dependency, which 2NF forbids. Similarly, Pname and Plocation depend only on Pnumber. Because 2NF is violated, the highest normal form R satisfies is 1NF. Options B, C, D are all higher than 1NF and therefore incorrect.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q4",
+          "text": "R(Employee, Level, Salary) has FDs F = {Employee→Level, Employee→Salary, Level→Salary}. Consider decomposition D1: R₁(Employee, Level), R₂(Level, Salary). Which properties does D1 have? Select ALL that apply.",
+          "options": [
+            "Lossless-join",
+            "Dependency-preserving",
+            "All schemas in BCNF",
+            "All schemas in 3NF"
+          ],
+          "correct": [0, 1, 2, 3],
+          "explanation": "Lossless-join: Level is a key of R₂ (Level→Salary ∈ F), so the shared attribute Level is a superkey of R₂ — the binary lossless-join condition is satisfied. Dependency-preserving: F₁ = {Employee→Level} covers FD1; F₂ = {Level→Salary} covers FD3; Employee→Salary is derivable by transitivity from F₁ ∪ F₂ — all FDs are preserved. BCNF: In R₁, Employee is the sole key, so Employee→Level has a superkey on the left — BCNF. In R₂, Level is the sole key, so Level→Salary is fine — BCNF. 3NF: BCNF implies 3NF. All four properties hold.",
+          "type": "multiple"
+        },
+        {
+          "id": "L5Q5",
+          "text": "A relation schema R is in 3NF. Which of the following can we conclude? Select ALL that apply.",
+          "options": [
+            "R is in 2NF",
+            "R is in BCNF",
+            "No non-prime attribute is transitively dependent on any candidate key via a non-prime attribute",
+            "Every non-trivial FD has a superkey on the left-hand side"
+          ],
+          "correct": [0, 2],
+          "explanation": "3NF implies 2NF (option A is true): a 2NF violation would be a partial dependency Y→A where Y is a proper key-subset and A is non-prime. Such a FD fails all three 3NF conditions — Y is not a superkey (it's a proper key-subset), the FD is non-trivial, and A is non-prime — so the relation wouldn't be in 3NF either. Option C is true: 3NF directly prohibits transitive dependencies through non-prime attributes. Option B is false: BCNF is strictly stronger than 3NF — a relation can be in 3NF without being in BCNF (e.g. LOTS1A). Option D describes BCNF, not 3NF — 3NF allows non-superkey LHS as long as the RHS is prime.",
+          "type": "multiple"
+        },
+        {
+          "id": "L5Q6",
+          "text": "LOTS1A(Property_id#, County_name, Lot#, Area) has FDs: FD1: Property_id#→{County_name,Lot#,Area}; FD2: {County_name,Lot#}→{Property_id#,Area}; FD5: Area→County_name. What is the highest normal form of LOTS1A?",
+          "options": [
+            "1NF",
+            "2NF",
+            "3NF",
+            "BCNF"
+          ],
+          "correct": [2],
+          "explanation": "LOTS1A has two candidate keys: Property_id# (from FD1) and {County_name, Lot#} (from FD2). All four attributes are therefore prime. For FD5 (Area→County_name): it is non-trivial; Area is not a superkey; but County_name IS a prime attribute — so condition 3 of 3NF is satisfied and 3NF is not violated. However, BCNF requires that every non-trivial FD has a superkey on the left. Area is not a superkey, so FD5 violates BCNF. Thus LOTS1A is in 3NF but not BCNF — the highest normal form it satisfies is 3NF.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q7",
+          "text": "The 3NF synthesis algorithm guarantees which of the following properties? Select ALL that apply.",
+          "options": [
+            "Lossless-join decomposition",
+            "Dependency-preserving decomposition",
+            "All output schemas are in BCNF",
+            "All output schemas are in 3NF"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "The 3NF synthesis algorithm constructs schemas from a minimal cover G and always adds a key relation if needed — this guarantees lossless-join (option A). Because every FD in G is represented in exactly one output schema and G is equivalent to F, the decomposition is dependency-preserving (option B). The output schemas are guaranteed to be in 3NF (option D) — this follows from the minimality of G. Option C is false: the algorithm targets 3NF, not BCNF. BCNF may not be achievable while preserving dependencies, and the 3NF algorithm does not attempt it.",
+          "type": "multiple"
+        },
+        {
+          "id": "L5Q8",
+          "text": "When should you prefer a 3NF decomposition over a BCNF decomposition?",
+          "options": [
+            "When storage space is a primary concern, since 3NF leaves more redundancy",
+            "When dependency preservation is required and the schema cannot be decomposed into BCNF while preserving all FDs",
+            "When the relation has a single-attribute candidate key, which prevents BCNF from being achieved",
+            "When query performance is more important than data integrity"
+          ],
+          "correct": [1],
+          "explanation": "The key practical tradeoff: BCNF provides stronger redundancy elimination but does not guarantee dependency preservation. When a BCNF decomposition would lose an FD — meaning that FD can no longer be enforced by local constraints on a single table — the designer must fall back to 3NF, which always achieves both lossless-join and dependency preservation. Option A is backwards: less redundancy is a benefit of higher normal forms, not a reason to prefer a lower one. Option C is false: a single-attribute key schema is already in BCNF. Option D confuses normalization concerns with query optimization.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q9",
+          "text": "R(A, B, C, D) has FDs F = {A→B, B→C, C→D}. Apply the 3NF synthesis algorithm. Which database schema D does the algorithm produce (assuming no redundant schemas)?",
+          "options": [
+            "{(A,B,C,D)} — the original relation is already in 3NF",
+            "{(A,B), (B,C), (C,D)} — one schema per distinct LHS in the minimal cover",
+            "{(A,B,C), (C,D)} — grouping FDs with overlapping LHS attributes",
+            "{(A,B,C,D), (A)} — adding a key relation to the original"
+          ],
+          "correct": [1],
+          "explanation": "Step 1: F = {A→B, B→C, C→D} is already a minimal cover G — all FDs have single RHS attributes, no extraneous LHS attributes, and no FD is redundant. Step 2: Distinct LHS values are A, B, C — so create R_A=(A,B), R_B=(B,C), R_C=(C,D). Step 3: Check if any schema contains a key of R. A⁺ = {A,B,C,D} = all attributes, so A is a candidate key. R_A=(A,B) contains A — key relation already present. Step 4: No schema is a subset of another. Result: D = {(A,B),(B,C),(C,D)}. The original relation is NOT in 3NF (A→B→C is a transitive dependency for non-prime attributes), ruling out option A.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q10",
+          "text": "Consider decomposing LOTS1A(Property_id#, County_name, Lot#, Area) into LOTS1AX(Property_id#, Area, Lot#) and LOTS1AY(Area, County_name) to eliminate the BCNF violation Area→County_name. Which statement is correct?",
+          "options": [
+            "The decomposition is lossy because Area is not a superkey of either schema",
+            "The decomposition is lossless-join because Area is the shared attribute and Area→County_name makes Area a superkey of LOTS1AY",
+            "The decomposition is dependency-preserving because all original FDs are captured within LOTS1AX or LOTS1AY",
+            "The decomposition achieves 3NF but not BCNF in both output schemas"
+          ],
+          "correct": [1],
+          "explanation": "The shared attribute between LOTS1AX and LOTS1AY is Area. The FD Area→County_name means Area is a superkey of LOTS1AY (Area determines all other attributes in that schema). By the binary lossless-join criterion, the decomposition is lossless-join — option B is correct. Option A is false: Area IS a superkey of LOTS1AY. Option C is false: FD2 (County_name,Lot#→Property_id#,Area) spans attributes of LOTS1AX and LOTS1AY and cannot be checked in either schema alone — it is lost. Option D is false: both LOTS1AX and LOTS1AY are in BCNF (each non-trivial FD within them has a superkey as its left-hand side).",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What are the three update/insertion/deletion anomalies caused by poor schema design?",
+          "back": "Update anomaly: changing a repeated fact requires updating many tuples — missing one leaves inconsistency. Insertion anomaly: a new fact cannot be stored unless a related entity also exists. Deletion anomaly: deleting the last tuple for one entity silently destroys facts about another entity. All three stem from one relation encoding facts about multiple distinct entities."
+        },
+        {
+          "front": "What is the lossless-join condition for a binary decomposition of R(A,B,C) into R₁(A,B) and R₂(B,C)?",
+          "back": "The decomposition is lossless-join iff the shared attribute set B is a superkey in R₁ or R₂, i.e. F⁺ contains B→A or B→C. Equivalently, no 'spurious' tuples appear when the two projected relations are natural-joined back together."
+        },
+        {
+          "front": "What does it mean for a decomposition to be dependency-preserving?",
+          "back": "Each functional dependency in F can be enforced by local constraints on a single decomposed relation — no cross-table join is needed to check any FD. Formally, F and the union of FD sets Fᵢ (each restricted to schema Sᵢ) must be equivalent: (F₁ ∪ … ∪ Fₖ)⁺ ⊇ F⁺."
+        },
+        {
+          "front": "What does First Normal Form (1NF) require?",
+          "back": "Every attribute domain must consist of atomic (indivisible) values, and each tuple must have exactly one value per attribute. Multi-valued attributes (sets, lists) and nested relations are forbidden. 1NF is part of the basic definition of a relation and is independent of FDs."
+        },
+        {
+          "front": "What is the difference between a prime and a non-prime attribute?",
+          "back": "A prime attribute belongs to at least one candidate key of the relation. A non-prime (non-key) attribute belongs to no candidate key. The distinction matters for 2NF and 3NF: these normal forms impose constraints specifically on non-prime attributes."
+        },
+        {
+          "front": "What does Second Normal Form (2NF) forbid?",
+          "back": "Partial dependencies: a non-prime attribute A must not be functionally determined by a proper subset Y of any candidate key K (Y ⊊ K → A is forbidden when A is non-prime). Every non-prime attribute must be fully functionally dependent on every candidate key. 2NF is automatically satisfied when all candidate keys are single-attribute."
+        },
+        {
+          "front": "State the three conditions that let an FD X→Y pass the 3NF test.",
+          "back": "For R to be in 3NF, every FD X→Y in F must satisfy at least one of: (1) the FD is trivial (Y ⊆ X); (2) X is a superkey of R; (3) every attribute in Y−X is a prime attribute. Condition 3 is the relaxation that distinguishes 3NF from BCNF — it allows non-superkey determinants whose right-hand side is prime."
+        },
+        {
+          "front": "What does BCNF require, and how does it differ from 3NF?",
+          "back": "BCNF requires that for every non-trivial FD X→Y, X must be a superkey. It drops the 3NF exception for prime RHS attributes. Consequence: BCNF is strictly stronger than 3NF — every BCNF schema is also in 3NF, but not vice versa. A schema can be in 3NF yet violate BCNF when a non-superkey determines a prime attribute."
+        },
+        {
+          "front": "What are the four steps of the 3NF synthesis algorithm?",
+          "back": "1. Compute a minimal cover G of F (canonical form, no extraneous attributes, no redundant FDs). 2. For each distinct LHS X in G, create schema Rₓ = X ∪ {all attributes determined by X in G}. 3. If no schema in D contains a candidate key of R, add one schema with only key attributes. 4. Remove redundant schemas (any Rₓ ⊆ Rᵧ). Output: lossless-join, dependency-preserving decomposition, all schemas in 3NF."
+        },
+        {
+          "front": "Why does BCNF decomposition not guarantee dependency preservation?",
+          "back": "BCNF forces every non-trivial FD to have a superkey on the left. When an FD X→Y has X as a non-superkey, the BCNF decomposition splits those attributes across two schemas. The FD that connects attributes in the two pieces can no longer be enforced within either single schema — it is 'lost'. The LOTS1A example: BCNF decomposition along Area→County_name loses FD2 (County_name,Lot#→Property_id#,Area)."
+        },
+        {
+          "front": "How does the Chase test verify lossless-join for a multi-way decomposition?",
+          "back": "Build table T with one row per sub-schema and one column per attribute of R. Initialise cells: T[i,X] = t[X] (the actual value) if X ∈ Sᵢ, else a distinct placeholder xⱼ. Repeatedly apply each FD Y→X ∈ F: if two rows agree on all Y-columns, set their X-values equal (use the real value if either has it). The decomposition is lossless-join iff some row becomes the all-real-values tuple t = (a,b,…,z)."
+        },
+        {
+          "front": "What is the practical guideline for choosing between BCNF and 3NF as a target normal form?",
+          "back": "Prefer BCNF when eliminating all redundancy is the priority and losing some FDs is acceptable (they can be enforced at the application layer). Prefer 3NF when all FDs must be enforceable by the DBMS through local constraints — the 3NF synthesis algorithm always produces a lossless-join and dependency-preserving decomposition. When in doubt: try BCNF first; fall back to 3NF if a required FD is lost."
+        }
+      ]
     }
   ]
 }
