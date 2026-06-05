@@ -21,6 +21,7 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   const [expandedTip, setExpandedTip] = useState<string | null>(null)
   const [comments, setComments] = useState<Record<string, TipComment[]>>({})
   const [commentBody, setCommentBody] = useState<Record<string, string>>({})
+  const [loadingComments, setLoadingComments] = useState<string | null>(null)
 
   async function submitTip() {
     if (!newBody.trim()) return
@@ -64,9 +65,14 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
     if (expandedTip === tipId) { setExpandedTip(null); return }
     setExpandedTip(tipId)
     if (!comments[tipId]) {
-      const res = await fetch(`/api/tips/${tipId}/comments`)
-      const data = await res.json()
-      setComments(prev => ({ ...prev, [tipId]: data }))
+      setLoadingComments(tipId)
+      try {
+        const res = await fetch(`/api/tips/${tipId}/comments`)
+        const data = await res.json()
+        setComments(prev => ({ ...prev, [tipId]: data }))
+      } finally {
+        setLoadingComments(null)
+      }
     }
   }
 
@@ -192,8 +198,12 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
                 <span style={{ ...mutedText, marginLeft: 4 }}>↑ {tip.upvote_count}</span>
               )}
 
-              <button onClick={() => expandComments(tip.id)} style={btnBase}>
-                💬 {tip.comment_count}
+              <button
+                onClick={() => expandComments(tip.id)}
+                disabled={loadingComments === tip.id}
+                style={{ ...btnBase, cursor: loadingComments === tip.id ? 'wait' : 'pointer' }}
+              >
+                {loadingComments === tip.id ? '…' : `💬 ${tip.comment_count}`}
               </button>
 
               {isAdmin && (
