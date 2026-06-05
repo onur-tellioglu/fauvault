@@ -17,58 +17,81 @@ function renderInline(text: string): ReactNode[] {
   })
 }
 
-function renderBody(body: string): ReactNode[] {
+// ── Block types ──────────────────────────────────────────────────────────────
+
+export type PBlock      = { type: 'p';       text: string }
+export type BulletsBlock = { type: 'bullets'; items: string[] }
+export type TableBlock  = { type: 'table';   rows: string[][] }
+export type CodeBlock   = { type: 'code';    lang: string; code: string }
+
+export type Block = PBlock | BulletsBlock | TableBlock | CodeBlock
+
+// ── Pure parser ──────────────────────────────────────────────────────────────
+
+const FENCE_OPEN  = /^```(\w*)\s*$/
+const FENCE_CLOSE = /^```\s*$/
+
+/**
+ * Parse a lecture concept body string into an array of typed blocks.
+ * The paragraph / bullet / table / inline output is byte-for-byte identical
+ * to the previous renderBody implementation; only code-block handling is new.
+ */
+export function parseBody(body: string): Block[] {
   const lines = body.split('\n')
-  const result: ReactNode[] = []
-  let bullets: ReactNode[] = []
-  let key = 0
+  const blocks: Block[] = []
+
+  let pendingBullets: string[] = []
+  let pendingTableRows: string[][] = []
+
+  // Code-collecting state
+  let inCode = false
+  let codeLang = ''
+  let codeLines: string[] = []
 
   const flushBullets = () => {
-    if (bullets.length > 0) {
-      result.push(
-        <ul key={key++} style={{ listStyle: 'disc', paddingLeft: '1.25rem', margin: '0 0 0.5rem' }}>
-          {bullets}
-        </ul>
-      )
-      bullets = []
+    if (pendingBullets.length > 0) {
+      blocks.push({ type: 'bullets', items: pendingBullets })
+      pendingBullets = []
     }
   }
 
-  let tableRows: string[][] = []
-
   const flushTable = () => {
-    if (tableRows.length === 0) return
-    const [head, ...body] = tableRows
-    result.push(
-      <div key={key++} style={{ overflowX: 'auto', margin: '0.75rem 0' }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.9rem' }}>
-          <thead>
-            <tr>
-              {head.map((cell, i) => (
-                <th key={i} style={{ border: '1px solid var(--border)', padding: '6px 12px', textAlign: 'left', background: 'var(--bg-elevated)', color: 'var(--text-primary)', fontWeight: 600 }}>
-                  {renderInline(cell.trim())}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {body.map((row, ri) => (
-              <tr key={ri}>
-                {row.map((cell, ci) => (
-                  <td key={ci} style={{ border: '1px solid var(--border)', padding: '6px 12px', color: 'var(--text-secondary)' }}>
-                    {renderInline(cell.trim())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )
-    tableRows = []
+    if (pendingTableRows.length > 0) {
+      blocks.push({ type: 'table', rows: pendingTableRows })
+      pendingTableRows = []
+    }
+  }
+
+  const flushCode = () => {
+    blocks.push({ type: 'code', lang: codeLang, code: codeLines.join('\n') })
+    inCode = false
+    codeLang = ''
+    codeLines = []
   }
 
   for (const line of lines) {
+    // ── Inside a fenced code block ──
+    if (inCode) {
+      if (FENCE_CLOSE.test(line.trim())) {
+        flushCode()
+      } else {
+        codeLines.push(line)
+      }
+      continue
+    }
+
+    // ── Detect opening fence ──
+    const fenceMatch = FENCE_OPEN.exec(line.trim())
+    if (fenceMatch) {
+      flushBullets()
+      flushTable()
+      inCode = true
+      codeLang = fenceMatch[1] ?? ''
+      codeLines = []
+      continue
+    }
+
+    // ── Table rows ──
     const isTableRow = line.trim().startsWith('|') && line.trim().endsWith('|')
     const isSeparator = isTableRow && /^\|[-| :]+\|$/.test(line.trim())
 
@@ -77,23 +100,105 @@ function renderBody(body: string): ReactNode[] {
     } else if (isTableRow) {
       flushBullets()
       const cells = line.trim().slice(1, -1).split('|')
-      tableRows.push(cells)
+      pendingTableRows.push(cells)
     } else {
       flushTable()
       const bullet = line.match(/^[-*]\s+(.*)/)
       if (bullet) {
-        bullets.push(<li key={key++} style={{ marginBottom: '0.2rem' }}>{renderInline(bullet[1])}</li>)
+        pendingBullets.push(bullet[1])
       } else if (line.trim() === '') {
         flushBullets()
-        result.push(<br key={key++} />)
+        blocks.push({ type: 'p', text: '' })
       } else {
         flushBullets()
-        result.push(<p key={key++} style={{ margin: '0 0 0.5rem' }}>{renderInline(line)}</p>)
+        blocks.push({ type: 'p', text: line })
       }
     }
   }
+
+  // Fail-safe: flush any unterminated fence as a code block
+  if (inCode && codeLines.length > 0) {
+    flushCode()
+  }
+
   flushTable()
   flushBullets()
+
+  return blocks
+}
+
+// ── JSX renderer ─────────────────────────────────────────────────────────────
+
+function renderBody(body: string): ReactNode[] {
+  const blocks = parseBody(body)
+  const result: ReactNode[] = []
+  let key = 0
+
+  for (const block of blocks) {
+    if (block.type === 'p') {
+      if (block.text === '') {
+        result.push(<br key={key++} />)
+      } else {
+        result.push(<p key={key++} style={{ margin: '0 0 0.5rem' }}>{renderInline(block.text)}</p>)
+      }
+    } else if (block.type === 'bullets') {
+      result.push(
+        <ul key={key++} style={{ listStyle: 'disc', paddingLeft: '1.25rem', margin: '0 0 0.5rem' }}>
+          {block.items.map((item, i) => (
+            <li key={i} style={{ marginBottom: '0.2rem' }}>{renderInline(item)}</li>
+          ))}
+        </ul>
+      )
+    } else if (block.type === 'table') {
+      const [head, ...body] = block.rows
+      result.push(
+        <div key={key++} style={{ overflowX: 'auto', margin: '0.75rem 0' }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.9rem' }}>
+            <thead>
+              <tr>
+                {head.map((cell, i) => (
+                  <th key={i} style={{ border: '1px solid var(--border)', padding: '6px 12px', textAlign: 'left', background: 'var(--bg-elevated)', color: 'var(--text-primary)', fontWeight: 600 }}>
+                    {renderInline(cell.trim())}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {body.map((row, ri) => (
+                <tr key={ri}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} style={{ border: '1px solid var(--border)', padding: '6px 12px', color: 'var(--text-secondary)' }}>
+                      {renderInline(cell.trim())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    } else if (block.type === 'code') {
+      result.push(
+        <pre
+          key={key++}
+          style={{
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border)',
+            borderRadius: 6,
+            padding: '0.75rem 1rem',
+            overflowX: 'auto',
+            margin: '0.75rem 0',
+            fontFamily: 'var(--font-geist-mono)',
+            fontSize: '0.8125rem',
+            lineHeight: 1.6,
+          }}
+        >
+          <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre' }}>{block.code}</code>
+        </pre>
+      )
+    }
+  }
+
   return result
 }
 
