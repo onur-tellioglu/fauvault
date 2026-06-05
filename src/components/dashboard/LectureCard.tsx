@@ -4,9 +4,9 @@ import type { Lecture } from '@/lib/types'
 import type { ProgressRow } from '@/lib/progress'
 import type { Course } from '@/lib/courses'
 
-type Props = { lecture: Lecture; progress?: ProgressRow; course: Course }
+type Props = { lecture: Lecture; progress?: ProgressRow; course: Course; videoUrl?: string }
 
-export function LectureCard({ lecture, progress, course }: Props) {
+export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
   const done = !!progress?.completed_at
   const score = progress?.final_quiz_result?.score
   const conceptPct = progress ? Math.min(progress.concept_index / Math.max(lecture.concepts.length, 1), 1) : 0
@@ -61,6 +61,37 @@ export function LectureCard({ lecture, progress, course }: Props) {
         <p style={{ fontSize: '0.7rem', color: done ? 'var(--success)' : progress ? 'var(--accent)' : 'var(--text-muted)', marginTop: 8 }}>
           {done ? 'Completed ✓' : progress ? 'Continue →' : 'Start →'}
         </p>
+
+        {videoUrl && (
+          // Rendered as a span (not a nested <a>) to keep valid HTML inside the
+          // wrapping Link; opens the fau.tv recording in a new tab.
+          <span
+            role="link"
+            tabIndex={0}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              window.open(videoUrl, '_blank', 'noopener,noreferrer')
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                e.stopPropagation()
+                window.open(videoUrl, '_blank', 'noopener,noreferrer')
+              }
+            }}
+            style={{
+              display: 'inline-block',
+              marginTop: 10,
+              fontFamily: 'var(--font-geist-mono)',
+              fontSize: '0.7rem',
+              color: 'var(--accent)',
+              cursor: 'pointer',
+            }}
+          >
+            Watch on fau.tv ↗
+          </span>
+        )}
       </article>
     </Link>
   )
