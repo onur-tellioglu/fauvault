@@ -28,7 +28,7 @@ export type Block = PBlock | BulletsBlock | TableBlock | CodeBlock
 
 // ── Pure parser ──────────────────────────────────────────────────────────────
 
-const FENCE_OPEN  = /^```(\w*)\s*$/
+const FENCE_OPEN  = /^```([\w+#.-]*)\s*$/
 const FENCE_CLOSE = /^```\s*$/
 
 /**
@@ -116,8 +116,8 @@ export function parseBody(body: string): Block[] {
     }
   }
 
-  // Fail-safe: flush any unterminated fence as a code block
-  if (inCode && codeLines.length > 0) {
+  // Fail-safe: flush any unterminated fence as a code block (even if empty)
+  if (inCode) {
     flushCode()
   }
 
