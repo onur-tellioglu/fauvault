@@ -6,6 +6,7 @@ import type { ExamPrepExam } from '@/lib/exam-prep'
 import type { Course } from '@/lib/courses'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 type TaskAnswer = {
   mc: number | null
@@ -170,7 +171,7 @@ export function ExamClient({ exam, course, backHref }: Props) {
         <div style={{ border: '1px solid var(--border-default)', borderRadius: 10, background: 'var(--bg-surface)', padding: '1.5rem', marginBottom: '2rem', animation: 'fadeSlideUp 250ms ease 50ms both' }}>
           <p style={{ fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Scenario</p>
           <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-            <ReactMarkdown>{exam.scenario}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{exam.scenario}</ReactMarkdown>
           </div>
         </div>
 
