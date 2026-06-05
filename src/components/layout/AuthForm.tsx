@@ -53,12 +53,12 @@ export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
     <div style={{ width: '100%', maxWidth: 340 }}>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
-          <label style={labelStyle}>Username</label>
-          <input value={username} onChange={e => setUsername(e.target.value)} style={inputStyle} autoComplete="username" required />
+          <label htmlFor="auth-username" style={labelStyle}>Username</label>
+          <input id="auth-username" value={username} onChange={e => setUsername(e.target.value)} style={inputStyle} autoComplete="username" required />
         </div>
         <div>
-          <label style={labelStyle}>Password</label>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle}
+          <label htmlFor="auth-password" style={labelStyle}>Password</label>
+          <input id="auth-password" type="password" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle}
             autoComplete={mode === 'register' ? 'new-password' : 'current-password'} required />
         </div>
         {error && <p style={{ color: 'var(--error)', fontSize: '0.85rem', margin: 0 }}>{error}</p>}
