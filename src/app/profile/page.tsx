@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: 'Profile' }
 
 export default async function ProfilePage() {
   const session = await getSession()
-  if (!session) redirect('/')
+  if (!session) redirect('/login')
 
   const allProgress = (await Promise.all(
     COURSE_SLUGS.map(c => getProgress(session.userId, c).then(rows => rows.map(r => ({ ...r, course: c }))))
