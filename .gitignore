@@ -50,3 +50,7 @@ next-env.d.ts
 .orchestrate/
 OPTIMIZATIONS-*.md
 SECURITY-*.md
+.worktrees/
+.task-log/
+.orchestrate/*
+!.orchestrate/project-config.json
