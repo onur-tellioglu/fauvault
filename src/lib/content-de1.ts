@@ -663,5 +663,228 @@ export const content: Content = {
         }
       ]
     }
+    ,{
+      "id": 3,
+      "title": "Functional Dependencies",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Why Good Schema Design Matters: Update Anomalies",
+          "body": "Combining attributes from distinct real-world entities into a single relation causes three classes of problems, all rooted in data redundancy.\n\n**The EMP_DEPT anti-pattern** — employee and department attributes crammed into one table:\n\n| Ename | Ssn | Bdate | Dnumber | Dname | Dmgr_ssn |\n|-------|-----|-------|---------|-------|----------|\n| Smith | 123 | 1965  | 5 | Research | 333 |\n| Wong  | 333 | 1955  | 5 | Research | 333 |\n| Zelaya| 999 | 1968  | 4 | Admin    | 987 |\n\nDepartment info (Dname, Dmgr_ssn) is repeated for every employee in that department — this is the redundancy.\n\n**Insert anomaly (new employee):** Must correctly copy all department attribute values or risk inconsistency. If no department is assigned yet, must use NULL for every department column.\n\n**Insert anomaly (new department):** Cannot insert a department with no employees without NULL-ing out the primary key (Ssn) — violates entity integrity.\n\n**Deletion anomaly:** Deleting the last employee in a department destroys all knowledge of that department.\n\n**Modification anomaly:** Renaming a department requires updating every employee tuple in that department — miss one and the database becomes inconsistent.\n\n**Root cause:** The schema mixes two independent concepts (employees and departments) into one relation. The fix is normalization — guided by functional dependencies."
+        },
+        {
+          "heading": "Functional Dependency: Definition and Semantics",
+          "body": "A **functional dependency (FD)** on a relation R is a constraint written X → Y, where X and Y are sets of attributes in R.\n\n**Formal definition:** Relation instance r satisfies X → Y iff for all pairs of tuples t₁, t₂ in r:\n```\nIf t₁[X] = t₂[X], then t₁[Y] = t₂[Y]\n```\nIn plain English: knowing the X-value pinpoints the Y-value — two rows that match on X cannot disagree on Y.\n\n**Critical rule:** FDs express semantic constraints from the real world. They **cannot** be inferred mechanically from a single instance — you could get lucky and see no violation in one snapshot while the FD is semantically false. FDs must be defined by the database designer based on domain knowledge.\n\n**Keys as special FDs:**\n- **Superkey:** A set X is a superkey iff X → U (where U = all attributes of R).\n- **Candidate key:** A minimal superkey — no proper subset of it is also a superkey.\n- **Prime attribute:** An attribute that belongs to some candidate key.\n- **Nonprime attribute:** An attribute not in any candidate key.\n\n**EMP_DEPT example FDs:**\n```\nSsn      → Ename, Bdate, Address, Dnumber, Dname, Dmgr_ssn\nDnumber  → Dname, Dmgr_ssn\n```\nThe second FD is the problem: Dname and Dmgr_ssn are determined by Dnumber alone, yet they appear repeatedly in a relation keyed by Ssn — causing redundancy."
+        },
+        {
+          "heading": "Trivial, Full, and Partial Dependencies",
+          "body": "Three important classifications of FDs:\n\n**Trivial FD:** X → Y is trivial if Y ⊆ X. It always holds and conveys no new information.\n```\nExamples: {Ssn, Pnumber} → Ssn   (trivial — right side ⊆ left side)\n          A → A                    (always trivially true)\n```\nA nontrivial FD is one where Y ⊄ X — it actually constrains the data.\n\n**Full functional dependency:** X → Y is a **full FD** if removing any single attribute from X makes the dependency fail. Every attribute in X is genuinely needed.\n\n**Partial dependency:** X → Y is **partial** if some attribute A ∈ X can be removed and the dependency still holds — i.e., (X − {A}) → Y also holds.\n\n**EMP_PROJ example** (composite key {Ssn, Pnumber}):\n```\nFD1: {Ssn, Pnumber} → Hours       FULL — neither Ssn alone nor Pnumber\n                                         alone determines Hours\nFD2: {Ssn, Pnumber} → Ename       PARTIAL — Ssn → Ename holds alone\nFD3: {Ssn, Pnumber} → Pname       PARTIAL — Pnumber → Pname holds alone\nFD4: {Ssn, Pnumber} → Plocation   PARTIAL — Pnumber → Plocation holds alone\n```\nPartial dependencies are a problem because non-key attributes depend on only part of the key — causing redundancy (each project name is stored for every employee on that project).\n\n**Transitive dependency:** X → Y is transitive in R if there is a set Z of non-prime attributes where X → Z and Z → Y both hold (and Z is neither a candidate key nor a subset of any key).\n```\nEMP_DEPT: Ssn → Dnumber   and   Dnumber → Dname\n⟹ Ssn → Dname is a transitive dependency (through Dnumber)\n```\nTransitive dependencies also cause redundancy — they are the target of 3NF and BCNF normalization."
+        },
+        {
+          "heading": "Armstrong's Axioms and Derived Rules",
+          "body": "Armstrong's axioms (1974) are a **sound and complete** inference system for FDs — any FD implied by a set F can be derived using these rules, and every derivable FD is genuinely implied.\n\n**Three primary axioms:**\n\n| Rule | Name | Statement |\n|------|------|-----------|\n| IR1 | Reflexivity | If Y ⊆ X, then X → Y |\n| IR2 | Augmentation | If X → Y, then XZ → YZ |\n| IR3 | Transitivity | If X → Y and Y → Z, then X → Z |\n\n**Three derived rules** (provable from the three axioms):\n\n| Rule | Name | Statement |\n|------|------|-----------|\n| IR4 | Decomposition | If X → YZ, then X → Y and X → Z |\n| IR5 | Union | If X → Y and X → Z, then X → YZ |\n| IR6 | Pseudotransitivity | If X → Y and WY → Z, then WX → Z |\n\n**Why sound and complete?**\n- **Sound:** Every FD derivable by these rules actually holds in any relation satisfying F.\n- **Complete:** Every FD that holds in every relation satisfying F can be derived by these rules.\n\n**Worked derivation using IR4 (decomposition):**\n```\nGiven: A → BC\nStep 1: BC ⊇ B, so by IR1: BC → B\nStep 2: A → BC (given) and BC → B, so by IR3: A → B  ✓\nSimilarly derive A → C\n```"
+        },
+        {
+          "heading": "Closure of an Attribute Set (X⁺)",
+          "body": "The **closure of X under F**, written X⁺_F (or just X⁺), is the set of all attributes that are functionally determined by X given F:\n```\nX⁺_F = { A | F implies X → A }\n```\n\n**Closure algorithm:**\n```\nInitialize: X⁺ := X\nRepeat until no change:\n  For each FD Y → Z in F:\n    If Y ⊆ X⁺ and Z ⊄ X⁺:\n      X⁺ := X⁺ ∪ Z\nOutput: X⁺\n```\n\n**Two key uses of attribute closure:**\n\n1. **Verify if F implies X → Y:** Compute X⁺; F implies X → Y iff Y ⊆ X⁺.\n\n2. **Verify if X is a superkey:** X is a superkey for R iff X⁺ = U (all attributes of R).\n\n**Worked example:** R = (A, B, C, D, E), F = {A → B, BC → D, B → E, E → C}\n```\nCompute A⁺:\n  Start: {A}\n  A → B:   {A, B}\n  B → E:   {A, B, E}\n  E → C:   {A, B, E, C}\n  BC → D:  B ⊆ {A,B,E,C} and C ⊆ {A,B,E,C} → add D\n  Result: A⁺ = {A, B, C, D, E} = U\n```\nSince A⁺ = U, the single attribute {A} is a superkey (and in fact a candidate key — it is minimal)."
+        },
+        {
+          "heading": "Finding Candidate Keys via Closure",
+          "body": "Because a superkey is any attribute set X with X⁺ = U, we can find candidate keys algorithmically by starting from the full attribute set and greedily removing attributes that are not needed.\n\n**Candidate key finding algorithm:**\n```\nInitialize K := U  (all attributes)\nRepeat until no change:\n  For each attribute A in K:\n    Compute (K − {A})⁺\n    If (K − {A})⁺ = U:\n      K := K − {A}   (A is redundant — remove it)\nReturn K  (a candidate key)\n```\n\n**Worked example:** U = {A, B, C, D, E}, F = {A → E, B → C, C → D, A → D}\n```\nStart: K = {A, B, C, D, E}\nTry removing C: {A,B,D,E}⁺ = {A,B,C,D,E} = U  → remove C, K = {A,B,D,E}\nTry removing D: {A,B,E}⁺   = {A,B,C,D,E} = U  → remove D, K = {A,B,E}\nTry removing E: {A,B}⁺     = {A,B,C,D,E} = U  → remove E, K = {A,B}\nTry removing A: {B}⁺       = {B,C,D} ≠ U      → A is needed\nTry removing B: {A}⁺       = {A,D,E} ≠ U      → B is needed\nResult: {A, B} is a candidate key\n```\n\n**Important:** This algorithm finds one candidate key. A relation may have multiple distinct candidate keys — each must be checked independently.\n\n**Prime vs nonprime:** An attribute is prime if it belongs to at least one candidate key. All others are nonprime. This distinction drives 2NF and 3NF definitions."
+        },
+        {
+          "heading": "Equivalence of FD Sets and Minimal Cover",
+          "body": "Two FD sets F₁ and F₂ are **equivalent** if they have the same closure: F₁⁺ = F₂⁺. Equivalently, F₁ covers F₂ (F₁⁺ ⊇ F₂) and F₂ covers F₁ (F₂⁺ ⊇ F₁).\n\nTo verify F₁ covers F₂: for each FD X → Y in F₂, check that Y ⊆ X⁺_F₁.\n\n**Minimal (canonical) cover:** A set F is **minimal** iff:\n1. **Canonical form:** Every FD in F has a single attribute on the right-hand side (X → A, not X → AB).\n2. **No extraneous attributes:** No attribute in any LHS can be removed while keeping F equivalent.\n3. **No redundant FDs:** No FD can be removed while keeping F equivalent.\n\n**Algorithm to compute a minimal cover (three steps):**\n\n```\nStep 1 — Canonicalize:\n  Replace X → {A₁, A₂, …, Aₙ} with n separate FDs:\n  X → A₁, X → A₂, …, X → Aₙ\n\nStep 2 — Remove extraneous LHS attributes:\n  For each FD XA → B with |X| ≥ 1:\n    If B ⊆ X⁺_F: replace XA → B with X → B\n\nStep 3 — Remove redundant FDs:\n  For each FD f = X → A:\n    If A ⊆ X⁺_{F−{f}}: remove f from F\n```\n\n**Worked example (condensed):**\n```\nInput:  F = {A → {B,C,D},  B → C,  AB → E,  C → D}\nStep 1: F' = {A→B, A→C, A→D, B→C, AB→E, C→D}\nStep 2: In AB→E, test if A is extraneous: B⁺ = {B,C,D} ∌ E → A not extraneous.\n        Test if B is extraneous: A⁺ = {A,B,C,D,E} ∋ E → B IS extraneous → replace AB→E with A→E\n        F'' = {A→B, A→C, A→D, B→C, A→E, C→D}\nStep 3: A→C redundant? Under F''−{A→C}: A⁺ includes C via A→B, B→C. Yes → remove.\n        A→D redundant? Under F'''−{A→D}: A⁺ includes D via A→B, B→C, C→D. Yes → remove.\n        Final: F̂ = {A→B, B→C, A→E, C→D}\n```\nF̂ is equivalent to F and is minimal."
+        },
+        {
+          "heading": "Spurious Tuples and Lossless Decomposition",
+          "body": "When normalizing, a relation is split into multiple smaller relations. A **lossless-join decomposition** guarantees that rejoining the pieces via natural join reconstructs exactly the original relation — no extra (spurious) tuples appear.\n\n**Spurious tuples occur when** the join is performed on attributes that do not form a proper foreign-key/primary-key link.\n\n**Illustration:** Relation R(A, B, C) with tuples:\n```\n(a₁, b₁, c₁)\n(a₁, b₂, c₂)\n```\nDecompose on {A, B} and {A, C}:\n```\n{A,B}: (a₁,b₁), (a₁,b₂)     {A,C}: (a₁,c₁), (a₁,c₂)\n```\nRejoining on A produces **4 tuples** — including 2 spurious ones (a₁, b₁, c₂) and (a₁, b₂, c₁) that were never in R.\n\nDecompose instead on {A, B} and {B, C} where B is the join attribute with a proper FD:\n```\nRejoining on B yields exactly the original 2 tuples — no spurious tuples.\n```\n\n**Why this matters for normalization:** Functional dependencies guide which decompositions are lossless. A decomposition of R into R₁ and R₂ is lossless iff the shared attributes form a superkey in at least one of R₁ or R₂. Getting the FDs right is the prerequisite for safe decomposition."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L3Q1",
+          "text": "Which of the following correctly states when a relation instance satisfies the FD X → Y?",
+          "options": [
+            "There exists at least one tuple where the X-value determines the Y-value.",
+            "For every pair of tuples: if they agree on X, they must agree on Y.",
+            "X and Y have equal values in every tuple of the relation.",
+            "Y is a subset of X in every tuple."
+          ],
+          "correct": [1],
+          "explanation": "A functional dependency X → Y is satisfied by a relation instance r if and only if: for ALL pairs of tuples t₁, t₂ in r, whenever t₁[X] = t₂[X] it also holds that t₁[Y] = t₂[Y]. This is a universal statement — one counterexample (two tuples matching on X but differing on Y) falsifies the FD. Option A describes existential verification, which is insufficient. Option C conflates FDs with equality of column values. Option D describes trivial reflexivity (Y ⊆ X), not the general FD definition.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q2",
+          "text": "Relation EMP_PROJ has composite primary key {Ssn, Pnumber} and attributes Ename, Pname, Plocation, Hours. Which FDs are PARTIAL dependencies on this key? Select ALL that apply.",
+          "options": [
+            "{Ssn, Pnumber} → Hours",
+            "{Ssn, Pnumber} → Ename",
+            "{Ssn, Pnumber} → Pname",
+            "{Ssn, Pnumber} → Plocation"
+          ],
+          "correct": [1, 2, 3],
+          "explanation": "A partial dependency exists when a proper subset of the key already determines the dependent attribute. Hours (A) depends on the full combination of Ssn and Pnumber — neither alone determines how many hours a specific employee works on a specific project. So {Ssn,Pnumber} → Hours is a FULL dependency. Ename (B) depends only on Ssn (Ssn → Ename), so it is partial. Pname (C) and Plocation (D) depend only on Pnumber (Pnumber → Pname and Pnumber → Plocation), so both are partial. Partial dependencies are problematic because project names and employee names are stored redundantly for each assignment row.",
+          "type": "multiple"
+        },
+        {
+          "id": "L3Q3",
+          "text": "Given R = (A, B, C, D, E) and F = {A → B, BC → D, B → E, E → C}, compute A⁺ (closure of A under F). Which result is correct?",
+          "options": [
+            "{A, B}",
+            "{A, B, E}",
+            "{A, B, E, C}",
+            "{A, B, C, D, E}"
+          ],
+          "correct": [3],
+          "explanation": "Apply the closure algorithm step by step: Start with A⁺ = {A}. Apply A → B: A⁺ = {A, B}. Apply B → E: A⁺ = {A, B, E}. Apply E → C: A⁺ = {A, B, E, C}. Now BC → D: B ∈ A⁺ and C ∈ A⁺, so add D: A⁺ = {A, B, C, D, E}. No further FDs fire. Final result: A⁺ = {A, B, C, D, E} = U. Since A⁺ equals the entire attribute set, A alone is a superkey — and in fact a candidate key because no proper subset of {A} is also a superkey.",
+          "shuffle": false,
+          "type": "single"
+        },
+        {
+          "id": "L3Q4",
+          "text": "Given U = {A, B, C, D} and F = {A → B, B → C, A → D}, is {A, B} a superkey for R?",
+          "options": [
+            "Yes — because {A, B}⁺ = {A, B, C, D} = U",
+            "No — because A alone already determines all attributes, so {A, B} is not minimal",
+            "Yes — but only if A and B together uniquely identify all attributes",
+            "No — because B → C does not include D"
+          ],
+          "correct": [0],
+          "explanation": "To check if {A, B} is a superkey, compute {A,B}⁺: Start {A, B}. A → B: already in set. B → C: add C → {A, B, C}. A → D: add D → {A, B, C, D} = U. Since {A,B}⁺ = U, {A,B} IS a superkey. Option B correctly identifies that A alone is also a superkey (A⁺ = {A,B,C,D} = U), which means {A,B} is a superkey but NOT a candidate key — it is not minimal. However, the question asks only whether {A,B} is a superkey, and the answer is yes. The wording of option A is the correct factual statement.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q5",
+          "text": "Which of Armstrong's three primary axioms states: 'If X → Y, then XZ → YZ'?",
+          "options": [
+            "IR1 — Reflexivity",
+            "IR2 — Augmentation",
+            "IR3 — Transitivity",
+            "IR4 — Decomposition"
+          ],
+          "correct": [1],
+          "explanation": "IR2 (Augmentation): if X → Y holds, then adding the same set Z to both sides preserves the dependency — XZ → YZ. Intuitively, if X uniquely determines Y, then knowing X and Z together still uniquely determines Y and Z. IR1 (Reflexivity) says if Y ⊆ X then X → Y — no precondition needed. IR3 (Transitivity) says if X → Y and Y → Z then X → Z — chaining. IR4 (Decomposition) is a derived rule, not a primary axiom: if X → YZ then X → Y.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q6",
+          "text": "Ssn → Dname holds in EMP_DEPT. Why is this a transitive dependency rather than a direct one?",
+          "options": [
+            "Because Ssn and Dname are in different tables",
+            "Because there is a non-prime attribute set (Dnumber) such that Ssn → Dnumber and Dnumber → Dname both hold, and Dnumber is not a key",
+            "Because Dname is a multivalued attribute of the employee",
+            "Because the FD Ssn → Dname is trivial"
+          ],
+          "correct": [1],
+          "explanation": "A transitive dependency X → Y exists when there is a set Z of non-prime attributes where X → Z and Z → Y both hold. Here: Ssn → Dnumber (direct — each employee belongs to one department) and Dnumber → Dname (each department has one name). Dnumber is a non-prime attribute (not part of any candidate key in EMP_DEPT). So Ssn → Dname is transitive through Dnumber. The department name is not directly tied to the employee — it is tied to the department number, which in turn is tied to the employee. This indirection causes the redundancy: department names are repeated for every employee in that department.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q7",
+          "text": "Given F = {A → B, B → C, AC → D, A → D}, is the FD A → D redundant in F?",
+          "options": [
+            "Yes — D is already reachable from A via A → B, B → C, and AC → D without using A → D",
+            "No — A → D is the only way to derive D from A",
+            "Yes — but only because A → D is trivial",
+            "No — removing A → D would break the FD B → C"
+          ],
+          "correct": [0],
+          "explanation": "To check if A → D is redundant, compute A⁺ under G = F − {A → D} = {A → B, B → C, AC → D}. Start: {A}. A → B: {A, B}. B → C: {A, B, C}. AC → D: A ⊆ closure and C ⊆ closure → add D: {A, B, C, D}. Since D ∈ A⁺_G, the FD A → D is implied by G even without itself — it is redundant and can be removed. Option B is wrong: D is reachable via the chain A→B, B→C, then (AC)→D. Option C is wrong: A → D is not trivial (D ⊄ {A}). Option D is wrong: removing A→D has no effect on B→C.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q8",
+          "text": "A set of FDs F is minimal (canonical). Which of the following properties must it satisfy? Select ALL that apply.",
+          "options": [
+            "Every FD in F has exactly one attribute on the right-hand side",
+            "No FD in F has more than two attributes on the left-hand side",
+            "No attribute in any LHS can be removed while keeping F equivalent to the original",
+            "No FD can be removed from F while keeping F equivalent to the original"
+          ],
+          "correct": [0, 2, 3],
+          "explanation": "A minimal (canonical) set of FDs must satisfy exactly three conditions: (A) Canonical form — every FD has a single RHS attribute, e.g. X → A not X → AB. (C) No extraneous attributes — no LHS attribute is redundant (removing it would change the closure). (D) No redundant FDs — no FD is derivable from the remaining ones. Option B is false: canonical FDs can have any number of LHS attributes (e.g. AB → C is fine as long as neither A nor B is extraneous). The cardinality of the LHS is not directly constrained — only redundancy and extraneous attributes are eliminated.",
+          "type": "multiple"
+        },
+        {
+          "id": "L3Q9",
+          "text": "Relation R has U = {A, B, C, D, E} and F = {A → E, B → C, C → D, A → D}. Using the candidate key finding algorithm starting from K = {A, B, C, D, E}, what is a candidate key?",
+          "options": [
+            "{A, B, C, D, E}",
+            "{A, B, C}",
+            "{A, B}",
+            "{A}"
+          ],
+          "correct": [2],
+          "explanation": "Apply the algorithm: Start K = {A,B,C,D,E}. Test removing C: (K−C)⁺ = {A,B,D,E}⁺. A→E: {A,B,D,E}. A→D: already in. B→C: {A,B,C,D,E} = U → C is not needed. K = {A,B,D,E}. Test removing D: (K−D)⁺ = {A,B,E}⁺. A→E: {A,B,E}. A→D: {A,B,D,E}. B→C: {A,B,C,D,E} = U → D not needed. K = {A,B,E}. Test removing E: (K−E)⁺ = {A,B}⁺. A→E: {A,B,E}. A→D: {A,B,D,E}. B→C: {A,B,C,D,E} = U → E not needed. K = {A,B}. Test removing A: {B}⁺ = {B,C,D} ≠ U → A needed. Test removing B: {A}⁺ = {A,D,E} ≠ U → B needed. Result: {A, B} is a candidate key.",
+          "shuffle": false,
+          "type": "single"
+        },
+        {
+          "id": "L3Q10",
+          "text": "Which of the following correctly describes when a decomposition of R into R₁ and R₂ is guaranteed to be lossless?",
+          "options": [
+            "When R₁ ∪ R₂ = R (all attributes are preserved between the two pieces)",
+            "When the attributes shared between R₁ and R₂ form a superkey in at least one of R₁ or R₂",
+            "When the number of tuples in R₁ times the number in R₂ equals the number in R",
+            "When R₁ and R₂ have no attributes in common"
+          ],
+          "correct": [1],
+          "explanation": "A decomposition of R into R₁ and R₂ is lossless-join iff the set of shared attributes (R₁ ∩ R₂) is a superkey in R₁ or in R₂. This means the join can always reconstruct R exactly without spurious tuples. Option A describes attribute preservation (which is necessary for information preservation but is not sufficient to prevent spurious tuples). Option C describes cardinality of a Cartesian product — unrelated to losslessness. Option D (no shared attributes) would mean the join is a full Cartesian product and would produce many spurious tuples — it is the worst case, not a safe condition. Functional dependencies guide which attributes to share, ensuring the shared set forms a key.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is a functional dependency X → Y?",
+          "back": "A constraint on relation R: for all pairs of tuples t₁, t₂, if t₁[X] = t₂[X] then t₁[Y] = t₂[Y]. Two rows that agree on X must agree on Y. One counterexample falsifies it."
+        },
+        {
+          "front": "Can FDs be inferred automatically from a relation instance?",
+          "back": "No. An instance is a snapshot — it may satisfy an FD by coincidence. FDs must be defined by the database designer based on domain semantics."
+        },
+        {
+          "front": "What are the three update anomalies caused by redundancy?",
+          "back": "1. Insertion anomaly — must copy all dependent attribute values correctly, or use NULLs that violate entity integrity.\n2. Deletion anomaly — deleting the last tuple referencing an entity erases that entity's data.\n3. Modification anomaly — updating one fact requires changing many rows; missing one causes inconsistency."
+        },
+        {
+          "front": "What is the difference between a full and a partial FD?",
+          "back": "Full FD X → Y: removing any attribute from X breaks the dependency — every attribute in X is necessary.\nPartial FD X → Y: some attribute A ∈ X can be removed and (X − {A}) → Y still holds."
+        },
+        {
+          "front": "What is a transitive dependency?",
+          "back": "X → Y is transitive in R if there exists a set Z of non-prime attributes where X → Z and Z → Y both hold (Z is not a key or subset of any key). Example: Ssn → Dname is transitive via Dnumber."
+        },
+        {
+          "front": "State Armstrong's three primary axioms.",
+          "back": "IR1 Reflexivity: Y ⊆ X ⟹ X → Y\nIR2 Augmentation: X → Y ⟹ XZ → YZ\nIR3 Transitivity: X → Y and Y → Z ⟹ X → Z\nThese rules are sound and complete."
+        },
+        {
+          "front": "What is X⁺_F (closure of attribute set X under F)?",
+          "back": "X⁺_F = { A | F implies X → A } — all attributes determined by X given F. Computed by the closure algorithm: start with X⁺ = X, then for each FD Y → Z in F with Y ⊆ X⁺ add Z to X⁺, repeat until stable."
+        },
+        {
+          "front": "How do you verify whether X is a superkey using the closure algorithm?",
+          "back": "Compute X⁺_F. X is a superkey for R iff X⁺_F = U (the full attribute set of R)."
+        },
+        {
+          "front": "How do you verify whether F implies X → Y using closure?",
+          "back": "Compute X⁺_F. F implies X → Y iff Y ⊆ X⁺_F."
+        },
+        {
+          "front": "What makes two FD sets F₁ and F₂ equivalent?",
+          "back": "F₁ and F₂ are equivalent iff F₁⁺ = F₂⁺ — they have the same closure. Practically: F₁ covers F₂ (every FD of F₂ is implied by F₁) AND F₂ covers F₁."
+        },
+        {
+          "front": "What are the three conditions for a minimal (canonical) FD set?",
+          "back": "1. Canonical form — every FD has a single RHS attribute.\n2. No extraneous LHS attributes — no attribute can be removed from any LHS without changing the closure.\n3. No redundant FDs — no FD is implied by the rest."
+        },
+        {
+          "front": "When is a decomposition of R into R₁, R₂ guaranteed to be lossless?",
+          "back": "When the shared attributes R₁ ∩ R₂ form a superkey in at least one of R₁ or R₂. Without this, rejoining may produce spurious tuples not in the original relation."
+        }
+      ]
+    }
   ]
 }
