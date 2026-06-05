@@ -10,7 +10,7 @@ function loginRedirect(req: NextRequest): URL {
   return loginUrl
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value
   if (!token) return NextResponse.redirect(loginRedirect(req))
 
