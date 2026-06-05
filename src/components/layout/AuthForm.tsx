@@ -35,7 +35,7 @@ export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
     if (onSuccess) {
       onSuccess()
     } else {
-      router.push('/dashboard')
+      router.push('/')
     }
   }
 

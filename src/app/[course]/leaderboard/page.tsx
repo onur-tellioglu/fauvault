@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getLeaderboardByCourse } from '@/lib/leaderboard'
 import { isValidCourse, COURSES, type Course } from '@/lib/courses'
@@ -15,6 +15,7 @@ export default async function CourseLeaderboardPage({ params }: { params: Promis
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
+  if (!session) redirect('/login')
 
   const rows = await getLeaderboardByCourse(course as Course)
   const totalLectures = COURSES[course as Course].content.lectures.length
