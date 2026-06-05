@@ -1,0 +1,40 @@
+// src/app/login/page.tsx
+import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { getSession } from '@/lib/auth'
+import { AuthForm } from '@/components/layout/AuthForm'
+
+export const metadata: Metadata = { title: 'Sign In' }
+
+export default async function LoginPage() {
+  const session = await getSession()
+  // Already logged in — send to authenticated home
+  if (session) redirect('/')
+
+  return (
+    <main style={{
+      minHeight: '100vh', background: 'var(--bg-base)',
+      display: 'flex', flexDirection: 'column', alignItems: 'stretch',
+    }}>
+      <div style={{
+        flex: 1, display: 'flex', alignItems: 'center',
+        justifyContent: 'center', padding: '2rem',
+      }}>
+        <div style={{ animation: 'fadeSlideUp 300ms ease forwards' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <h1 style={{
+              fontFamily: 'var(--font-fraunces)', fontSize: '1.6rem',
+              fontWeight: 400, color: 'var(--text-primary)', marginBottom: 6,
+            }}>
+              Study App
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              AI Perspectives · Renewable Energies
+            </p>
+          </div>
+          <AuthForm />
+        </div>
+      </div>
+    </main>
+  )
+}
