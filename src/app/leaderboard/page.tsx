@@ -80,9 +80,9 @@ export default async function LeaderboardPage() {
                       }}
                     >
                       <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontFamily: 'var(--font-geist-mono)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                        {i === 0 ? <span aria-label="Gold medal — 1st place">🥇</span>
-                          : i === 1 ? <span aria-label="Silver medal — 2nd place">🥈</span>
-                          : i === 2 ? <span aria-label="Bronze medal — 3rd place">🥉</span>
+                        {i === 0 ? <span role="img" aria-label="Gold medal — 1st place">🥇</span>
+                          : i === 1 ? <span role="img" aria-label="Silver medal — 2nd place">🥈</span>
+                          : i === 2 ? <span role="img" aria-label="Bronze medal — 3rd place">🥉</span>
                           : i + 1}
                       </td>
                       <td style={{ padding: '0.75rem 1rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: isMe ? 600 : 400 }}>
