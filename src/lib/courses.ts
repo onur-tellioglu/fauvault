@@ -57,7 +57,7 @@ export const COURSES: Record<Course, {
   ads: {
     label: 'Applied Data Science in Medicine & Psychology',
     shortLabel: 'ADS',
-    description: 'FAU · 5 Lectures',
+    description: 'FAU · 7 Lectures',
     examDate: '2026-07-13T14:00:00',
     content: adsContent,
   },
