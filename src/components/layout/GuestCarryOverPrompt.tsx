@@ -18,6 +18,8 @@ export function GuestCarryOverPrompt() {
     setError(false)
     try {
       const entries: Array<{ course: Course; lectureId: number; patch: object }> = []
+      // COURSE_SLUGS includes all 6 courses (incl. bio, ads) — confirmed accepted
+      // by /api/progress, which validates the course via isValidCourse().
       for (const course of COURSE_SLUGS) {
         for (const row of getGuestProgress(course)) {
           entries.push({
