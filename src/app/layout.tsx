@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Fraunces } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { SITE_NAME, SITE_TAGLINE } from '@/lib/constants'
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
@@ -10,21 +11,21 @@ const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', axe
 
 export const metadata: Metadata = {
   title: {
-    template: '%s · FAUVault',
-    default: 'FAUVault',
+    template: `%s · ${SITE_NAME}`,
+    default: SITE_NAME,
   },
-  description: 'FAU exam prep platform prepared by students — AI Perspectives, Renewable Energies & Data Engineering 1',
+  description: SITE_TAGLINE,
   openGraph: {
-    title: 'FAUVault',
-    description: 'FAU exam prep platform prepared by students — AI Perspectives, Renewable Energies & Data Engineering 1',
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
     url: 'https://fauvault.space',
-    siteName: 'FAUVault',
+    siteName: SITE_NAME,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FAUVault',
-    description: 'FAU exam prep platform prepared by students — AI Perspectives, Renewable Energies & Data Engineering 1',
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
   },
 }
 
