@@ -747,7 +747,7 @@ export const content: Content = {
           "text": "Given U = {A, B, C, D} and F = {A → B, B → C, A → D}, is {A, B} a superkey for R?",
           "options": [
             "Yes — because {A, B}⁺ = {A, B, C, D} = U",
-            "No — because A alone already determines all attributes, so {A, B} is not minimal",
+            "No — {A, B} is not a candidate key because A alone is sufficient, so {A, B} is redundant",
             "Yes — but only if A and B together uniquely identify all attributes",
             "No — because B → C does not include D"
           ],
