@@ -5,6 +5,134 @@ import type { Content } from './types'
 export const content: Content = {
   "lectures": [
     {
+      "id": 1,
+      "title": "Course Introduction — Applied Programming at FAU",
+      "speaker": "Daniel Fenzel, Annika Ritter",
+      "concepts": [
+        {
+          "heading": "What Is Applied Programming?",
+          "body": "Applied Programming sits at the intersection of **neuroscience**, **signal processing**, and **software engineering**. The course follows a four-pillar pipeline that mirrors any real biomedical system:\n\n| Pillar | What happens | Typical tools |\n|--------|-------------|---------------|\n| **Physiology / Signal Generation** | Biological source — motor neurons fire, muscles contract, EMG is generated | Anatomy, neurophysiology |\n| **Signal Acquisition** | Hardware interface — electrodes, ADC boards, Arduino / DFRobot sensors capture the signal | Electronics, microcontrollers |\n| **Signal Processing** | Algorithms applied in software — filtering, feature extraction, FFT, ML | Python (NumPy, SciPy), MATLAB |\n| **Systems Control** | Output — prosthetic hands, exoskeletons, rehabilitation devices respond | Robotics, closed-loop control |\n\nThe goal is to understand the **full chain** from muscle contraction to robot command — not just one stage in isolation. Every lecture maps to one or more of these four pillars."
+        },
+        {
+          "heading": "Meet the Research Group — NsquaredLab",
+          "body": "The course is delivered by [NsquaredLab](https://github.com/NsquaredLab) at FAU AIBE (Institute for Artificial Intelligence in Biomedical Engineering). The research group specialises in **Neuromuscular Physiology and Neural Interfacing** under the direction of Prof. Dr. Alessandro Del Vecchio.\n\n**PhD researchers presenting the introductory session:**\n\n- **Daniel Fenzel** — researches *motor unit decomposition across muscles*. His work focuses on the Vastus Lateralis / Vastus Medialis muscle split during leg extension, tracking which motor units are shared and which are unique to each muscle.\n- **Annika Ritter** — researches *myocontrol* (gesture decoding from wrist EMG). She develops machine-learning pipelines that decode intended hand movements from surface electrodes placed on the forearm.\n\n**State-of-the-art application:** The lab's flagship demo is ML-driven prosthetic hand control — a user with upper-limb amputation can intuitively open/close a robotic hand by contracting their forearm muscles. The same technology is relevant for patients with ALS (like Stephen Hawking) or spinal cord injury (like Christopher Reeve), where restoring voluntary movement via neural interfacing can transform quality of life."
+        },
+        {
+          "heading": "Course Structure and Assessment",
+          "body": "**Schedule:**\n- **Lectures:** Wednesdays 10:15–11:45, Seminarraum 1\n- **Exercises:** Fridays 12:15–13:45, Seminarraum 2 (no exercise on 01.05 and 05.06)\n\n**Course components:**\n\n| Component | Count | Mandatory? |\n|-----------|-------|------------|\n| Weekly exercises | 5 | ❌ Non-mandatory |\n| Group project | 1 (groups of 3) | ✅ **Mandatory** |\n| Oral exam | 1 | ✅ **Mandatory** |\n\n**Oral exam format (20 minutes total):**\n1. **10 minutes** — theoretical Q&A (any topic from lectures)\n2. **5 minutes** — project design discussion (explain your group's approach, defend design choices)\n\nThe group project contributes to the exam grade — it is not just pass/fail. Students who skip the project cannot earn a full grade. Exercises are strongly encouraged as preparation but attendance is not recorded."
+        },
+        {
+          "heading": "Development Environment Setup",
+          "body": "The course uses an entirely **open-source, reproducible Python stack**. Set up once at the start and every exercise works without further configuration.\n\n**Required tools:**\n\n| Tool | Purpose | Install |\n|------|---------|--------|\n| Git | Version control | Pre-installed on macOS/Linux; `winget install git` on Windows |\n| GitHub account | Access to the exercise repo | Free at github.com |\n| Python 3.13 | Course language | python.org |\n| `uv` | Dependency manager (fast, modern pip replacement) | `curl -sSf https://astral.sh/uv/install.sh \\| bash` |\n| IDE | Code editing | PyCharm (recommended) or VS Code |\n\n**Exercise repository:** [https://github.com/NsquaredLab/Applied-Programming-2026](https://github.com/NsquaredLab/Applied-Programming-2026)\n\nAfter cloning, run:\n```bash\nuv sync\n```\nThis reads `pyproject.toml`, resolves all dependencies, and installs them into an isolated virtual environment automatically — no `pip install`, no conda environment, no manual venv activation needed."
+        },
+        {
+          "heading": "The Signal Processing Pipeline in Detail",
+          "body": "Every biomedical signal system can be decomposed into the same four-stage view. Understanding where you are in the pipeline determines which tools and concepts apply.\n\n```\n[BIOLOGY] ──→ [ACQUISITION] ──→ [PROCESSING] ──→ [CONTROL]\n   EMG             ADC             Filtering        Prosthetic\n   EEG           Electrodes           FFT           Exoskeleton\nNeural spike      Arduino          ML model        Rehabilitation\n```\n\n**Stage 1 — Physiology:** The biological source generates a signal. For this course: alpha motor neurons fire, action potentials propagate along muscle fibres, creating the extracellular field we call EMG.\n\n**Stage 2 — Signal Acquisition:** Hardware captures the analog signal and digitises it. Electrodes detect surface potentials; an ADC (Analog-to-Digital Converter) samples the continuous voltage at discrete time points (e.g., 2000 samples per second).\n\n**Stage 3 — Signal Processing:** Python or MATLAB algorithms transform the raw digital array into useful features: band-pass filtering (20–450 Hz for EMG), FFT for frequency analysis, RMS for amplitude, ML classifiers for gesture recognition.\n\n**Stage 4 — Systems Control:** The output stage — a decoded command drives a robotic actuator, adjusts exoskeleton assistance level, or triggers a neurostimulator."
+        },
+        {
+          "heading": "Myocontrol and Why This Course Matters",
+          "body": "**Surface EMG for gesture decoding:** Placing electrodes on the forearm picks up the combined electrical activity of dozens of motor units. A trained ML classifier can decode the *intended* gesture from this pattern — even before the hand moves (or when the hand is absent, as in amputation).\n\n**[MyoGestic](https://github.com/NsquaredLab/MyoGestic)** is the n-squared lab's open-source Python framework built for exactly this purpose. It provides:\n- **Live LSL signal ingest** — reads streaming biosignals from any Lab Streaming Layer source\n- **On-disk recording** — saves sessions in Zarr format for offline analysis\n- **ML lifecycle management** — training and prediction run on separate threads so the UI stays responsive\n- **Dear ImGui widgets** — lightweight, immediate-mode GUI for real-time visualisation\n\n> MyoGestic does *not* provide DSP algorithms or ML models — the user brings their own SciPy filters and scikit-learn / PyTorch models. This modularity is by design.\n\n**Why it matters beyond prosthetics:** The same pipeline — acquire a biosignal, process it, decode intent, drive an actuator — appears in brain-computer interfaces, rehabilitation robotics, gaming peripherals, and human-robot collaboration. Mastering the full stack in this course gives you the vocabulary to work in any of these fields."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L1Q1",
+          "text": "Which sequence correctly represents the four-pillar pipeline of the Applied Programming course?",
+          "options": [
+            "Signal Processing → Signal Acquisition → Physiology → Systems Control",
+            "Physiology → Signal Acquisition → Signal Processing → Systems Control",
+            "Signal Acquisition → Physiology → Systems Control → Signal Processing",
+            "Systems Control → Signal Processing → Signal Acquisition → Physiology"
+          ],
+          "correct": [1],
+          "explanation": "The pipeline flows from biology to technology: (1) Physiology/Signal Generation — the biological source (motor neurons, muscles) produces the signal; (2) Signal Acquisition — hardware (electrodes, ADC) captures and digitises it; (3) Signal Processing — algorithms (filtering, FFT, ML) extract meaning; (4) Systems Control — the decoded command drives an actuator (prosthetic hand, exoskeleton). Option A starts with processing, which is impossible before acquisition. Option C reverses physiology and acquisition. Option D runs the pipeline backwards.",
+          "type": "single"
+        },
+        {
+          "id": "L1Q2",
+          "text": "Which component of the Applied Programming course is MANDATORY and contributes to the exam grade?",
+          "options": [
+            "Weekly exercise attendance",
+            "Individual homework submissions",
+            "The group project",
+            "Lecture attendance"
+          ],
+          "correct": [2],
+          "explanation": "The group project (groups of 3 students) is the only non-exam component that is explicitly mandatory and directly influences the exam grade — the project design is discussed in the 5-minute project segment of the oral exam. The five weekly exercises are non-mandatory, there are no individual homework submissions, and lecture attendance is not recorded. Students who skip the project cannot receive a complete grade.",
+          "type": "single"
+        },
+        {
+          "id": "L1Q3",
+          "text": "What does MyoGestic provide out of the box? Select ALL that apply.",
+          "options": [
+            "Live LSL biosignal ingest and on-disk recording",
+            "A built-in DSP filter library (bandpass, notch, Welch)",
+            "ML pipeline lifecycle — training and prediction on separate threads",
+            "Pre-trained gesture recognition models"
+          ],
+          "correct": [0, 2],
+          "explanation": "MyoGestic provides the infrastructure for a real-time biosignal experiment: live LSL ingest (reads streaming data from any Lab Streaming Layer source) and on-disk recording (Zarr format), plus ML lifecycle management (training and prediction threads run concurrently so the GUI stays responsive). It deliberately does NOT provide DSP algorithms — the user brings SciPy filters — and it does NOT include pre-trained models — the user trains their own with scikit-learn or PyTorch. This modularity lets researchers plug in any algorithm without modifying the framework.",
+          "type": "multiple"
+        },
+        {
+          "id": "L1Q4",
+          "text": "Which Python package manager does the Applied Programming 2026 course use for dependency management?",
+          "options": [
+            "pip",
+            "conda",
+            "poetry",
+            "uv"
+          ],
+          "correct": [3],
+          "explanation": "The course uses `uv`, a modern, fast Python package manager written in Rust. After cloning the exercise repo, `uv sync` reads `pyproject.toml`, resolves all dependencies, and creates an isolated virtual environment automatically. `pip` is the traditional package manager but lacks automatic virtual-environment management and is slower. `conda` is a separate ecosystem with its own environment format. `poetry` is a popular alternative, but the course tooling is standardised on `uv`.",
+          "type": "single"
+        },
+        {
+          "id": "L1Q5",
+          "text": "The oral exam in Applied Programming is 20 minutes long. What are its two segments?",
+          "options": [
+            "10 min written test + 10 min oral defence",
+            "15 min theoretical Q&A + 5 min project design discussion",
+            "10 min theoretical Q&A + 5 min project design discussion",
+            "10 min exercise review + 10 min theoretical Q&A"
+          ],
+          "correct": [2],
+          "explanation": "The 20-minute oral exam is split into two distinct parts: (1) 10 minutes of theoretical Q&A covering any topic from the lectures, and (2) 5 minutes of project design discussion where the student explains their group project approach and defends design choices. Option B has the correct content but wrong time allocation (15+5=20 but the theory portion is 10 min, not 15). Option A introduces a 'written test' which does not exist. Option D describes exercises, which are not part of the exam format.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What are the four pillars of the Applied Programming course pipeline?",
+          "back": "1. Physiology / Signal Generation — biological source (motor neurons, muscles, EMG)\n2. Signal Acquisition — hardware (electrodes, ADC, Arduino)\n3. Signal Processing — algorithms (Python/MATLAB: filtering, FFT, ML)\n4. Systems Control — output (prosthetic hands, exoskeletons, rehabilitation devices)"
+        },
+        {
+          "front": "What is MyoGestic?",
+          "back": "An open-source Python framework by NsquaredLab for real-time biosignal experiments. Provides: live LSL ingest, Zarr recording, ML lifecycle management (train/predict threads), Dear ImGui visualisation. Does NOT provide DSP or ML models — user brings their own. Repo: https://github.com/NsquaredLab/MyoGestic"
+        },
+        {
+          "front": "What is the Applied-Programming-2026 GitHub repo used for?",
+          "back": "The official exercise repository for the FAU Applied Programming course (Summer 2026). Contains all 5 exercise sessions. Clone it and run `uv sync` to install all dependencies. URL: https://github.com/NsquaredLab/Applied-Programming-2026"
+        },
+        {
+          "front": "Assessment breakdown: what is mandatory vs optional in Applied Programming?",
+          "back": "Mandatory: (1) Group project (groups of 3) — contributes to exam grade. (2) Oral exam (20 min). Optional: 5 weekly exercise sessions — non-mandatory but strongly recommended as exam preparation."
+        },
+        {
+          "front": "Who are the two PhD researchers presenting the Applied Programming intro, and what does each research?",
+          "back": "Daniel Fenzel — motor unit decomposition across muscles (Vastus Lateralis/Medialis split during leg extension). Annika Ritter — myocontrol (gesture decoding from wrist surface EMG using ML pipelines). Both are from NsquaredLab at FAU AIBE under Prof. Dr. Alessandro Del Vecchio."
+        },
+        {
+          "front": "What does `uv sync` do?",
+          "back": "Reads `pyproject.toml` in the current project, resolves all declared dependencies, and installs them into an isolated virtual environment. Equivalent to `pip install -r requirements.txt` + `python -m venv`, but fully automatic and significantly faster (written in Rust)."
+        },
+        {
+          "front": "What does 'closed-loop experiment' mean in myocontrol?",
+          "back": "The system continuously reads biosignals (EMG), decodes an intent (e.g., 'close hand'), sends a command to an actuator, and the actuator's response provides sensory feedback that influences the next muscle contraction. The signal flows in a loop: biology → acquisition → processing → control → biology. Contrast with open-loop: commands are sent without feedback from the device's state."
+        }
+      ]
+    },
+    {
       "id": 2,
       "title": "Foundations in Mechanics & Biomechanics",
       "speaker": "Prof. Dr. Alessandro Del Vecchio",
