@@ -107,7 +107,8 @@ Never commit copyrighted source lecture slides or PDFs to this repository.
 
 ## License
 
-- **Source code:** [MIT](LICENSE)
+- **Source code:** [AGPL-3.0](LICENSE) — copyleft; distributed or network-hosted
+  forks must release their full source under the same license.
 - **Course content** (`src/lib/content-*.ts`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
 See [LICENSE](LICENSE) for details.
