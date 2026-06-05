@@ -512,12 +512,12 @@ export const content: Content = {
           "text": "Relation Emp(EmpID, Name, Phone, Position) has tuples: (E0045, Smith, 1234, Clerk), (E1847, Jones, 9876, Salesrep), (E1111, Smith, 9876, Salesrep), (E9999, Brown, 1234, Lawyer). Which FD does this instance satisfy?",
           "options": [
             "Name → Position",
-            "Phone → Position",
+            "Position → Phone",
             "Position → Name",
             "Name → Phone"
           ],
           "correct": [1],
-          "explanation": "To check an FD A → B, verify that no two tuples agree on A but disagree on B. For Phone → Position: phone 1234 appears with Clerk (E0045) and Lawyer (E9999) — wait, these are DIFFERENT positions, so Phone → Position is violated! Actually let us re-examine: E0045 has Phone=1234/Clerk, E9999 has Phone=1234/Lawyer — different positions for same phone. So Phone → Position is NOT satisfied. Name → Position: Smith appears with Clerk and Salesrep — violated. Position → Name: Salesrep appears with Jones and Smith — violated. Name → Phone: Smith appears with 1234 (E0045) and 9876 (E1111) — violated. In fact none of these hold on this instance except EmpID → everything. The question tests careful verification — the correct answer here is (B) Phone → Position is the only one that is closest to being satisfied; checking: 1234→Clerk and 1234→Lawyer — actually violated. This is a trap: none of A, C, D hold either. Among the options only (B) Position → Phone does hold: Clerk appears only once (1234), Salesrep always has 9876 (both E1847 and E1111), Lawyer has 1234 — so Position → Phone holds. Correct answer is option B (index 1).",
+          "explanation": "To check an FD A → B, verify that no two tuples agree on A but disagree on B. Check each option: Name → Position: Smith appears with Clerk (E0045) and Salesrep (E1111) — different positions, violated. Position → Phone (option B): Clerk→1234 (only E0045), Salesrep→9876 (E1847 and E1111 both have 9876), Lawyer→1234 (only E9999) — every position maps to exactly one phone number, so Position → Phone holds ✓. Position → Name: Salesrep appears with Jones and Smith — violated. Name → Phone: Smith appears with 1234 (E0045) and 9876 (E1111) — violated. The only FD satisfied by this instance among the four options is Position → Phone (index 1).",
           "type": "single"
         },
         {
