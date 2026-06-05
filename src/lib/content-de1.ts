@@ -442,5 +442,1323 @@ export const content: Content = {
         }
       ]
     }
+    ,{
+      "id": 2,
+      "title": "The Relational Data Model",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Mathematical Foundations: Sets, Cartesian Products, Relations",
+          "body": "The relational model is built on set theory. Key building blocks:\n\n**Set:** A collection of distinct elements. Sets have no duplicates and no order. Notation: A = {1, 5, 6}, |A| = cardinality.\n\n**Cartesian Product:** S₁ × S₂ = {(s₁, s₂) | s₁ ∈ S₁, s₂ ∈ S₂} — all ordered pairs. For n sets: Π S₁×...×Sₙ.\n\n**Relation:** A subset R ⊆ S₁ × ... × Sₙ of a Cartesian product. *Arity* = number of participating sets.\n\n**Function:** A relation f ⊆ S₁ × S₂ where for each s₁ there is **exactly one** s₂. Notation: f(s₁) = s₂.\n\n**Partial function:** At most one s₂ per s₁. Write f(s₁) = ⊥ when no pair exists.\n\n**Total vs. Functional relations:**\n| Property | Meaning |\n|---|---|\n| Total on Sᵢ | Every value in Sᵢ appears in ≥ 1 tuple |\n| Functional on Sᵢ | Every value in Sᵢ appears in ≤ 1 tuple |\n\n**Why this matters:** A primary key constraint is exactly the requirement that the relation is functional on the key attribute set."
+        },
+        {
+          "heading": "Relation Schema, Types, and Domains",
+          "body": "A **relation schema** formally specifies a table's structure:\n\n```\nR(A₁ : D₁, A₂ : D₂, ..., Aₙ : Dₙ)\n```\n\nComponents:\n- **R** — relation name (e.g., `Product`)\n- **A₁...Aₙ** — attribute names (non-empty set)\n- **dom(Aᵢ) = Dᵢ** — domain of each attribute\n\n**Types** are classes of atomic values: integers, reals, strings, integers in [18, 65], strings ≤ 20 characters.\n\n**Domains** are sets of atomic values with application-specific meaning. A domain has a type and may have a default value.\n\n```\nExample domain declarations:\n  Name = String(20)\n  DollarPrice = Decimal(5, 2)\n  EmployeeAge = Int[18, 65]\n\nExample schema:\n  Product(Prodname: Name, Price: DollarPrice,\n          Category: Name, Manufacturer: Name)\n```\n\nA **tuple** t = (v₁, ..., vₙ) satisfies schema R iff vᵢ ∈ Dᵢ for all i. A **relation instance** is any set of tuples that all satisfy R."
+        },
+        {
+          "heading": "Schema vs. Instance — Stability Rules",
+          "body": "**Relation schema** — the blueprint (structure). Analogous to a variable's *type* in a programming language.\n\n**Relation instance** — the current data (set of tuples). Analogous to the *value* of that variable.\n\n```\nSchema (stable, rarely changes):\n  Student(studno, name, tutor, year)\n\nInstance (changes constantly):\n  studno | name   | tutor | year\n  -------|--------|-------|-----\n  s1     | jones  | bush  | 2\n  s2     | brown  | kahn  | 2\n  ...\n```\n\n| | Schema | Instance |\n|---|---|---|\n| Content | Attribute names & domains | Actual tuples |\n| Stability | Stable — rare changes | Volatile — updates, inserts, deletes |\n| Analogy | Variable type | Variable value |\n\n**Database schema** = set of relation schemas.\n**Database instance** = one relation instance per schema relation.\n\n**Trap:** Schema updates are painful — changing a column type may require adapting every existing tuple. Instance updates are frequent and normal."
+        },
+        {
+          "heading": "Two Formalizations of Tuples",
+          "body": "**Model 1 — Ordered Tuples (Cartesian Product):**\nA tuple is an element of D₁ × D₂ × ... × Dₙ. Attribute names are implicit in position.\n\n```\nR ⊂ Int × Str × Int × Str × Int\nTuple: (001, \"Alex S\", 26, \"Store\", 5000)\n```\n- Row order does NOT matter — {t₁, t₂} = {t₂, t₁}\n- **Column order DOES matter** — (1, \"Alex\") ≠ (\"Alex\", 1)\n\n**Model 2 — Tuples as Functions:**\nA tuple is a function t : A → D, mapping attribute names to values.\n\n```\nt[EmpNo] = 001,  t[Name] = \"Alex S\",  t[Age] = 26\n```\n- Column order does NOT matter (attribute name is key)\n- Attribute names are explicit in the model\n- Write t[Aᵢ, Aⱼ] for a sub-tuple\n\n**Which model to use?** Both are used in theory and practice. The course switches between them. The function model is more flexible for modern query languages."
+        },
+        {
+          "heading": "Keys: Superkey, Candidate Key, Primary Key",
+          "body": "Keys are special integrity constraints that enforce uniqueness.\n\n**Superkey:** A set of attributes whose values together uniquely identify every tuple in the relation. Formally: the relation is functional on that attribute set.\n\n**Candidate key:** An *inclusion-minimal* superkey — no proper subset of it is also a superkey.\n\n**Primary key:** One candidate key chosen as the main identifier. Indicated by underlining in schema notation.\n\n```\nStudent(studno, name, tutor, year)\n        ------  ← primary key\n```\n\n**Multiple candidate keys example:**\n```\nStudent(Lastname, Firstname, MatriculationNo, Major)\n        |_________|            |_____________|\n        candidate key         candidate key\n        (2 attributes)        (1 attribute)\n```\n{MatriculationNo, Major} is a **superkey** but NOT a candidate key — MatriculationNo alone already uniquely identifies the student, so the set is not minimal.\n\n| Term | Definition |\n|---|---|\n| Superkey | Uniquely identifies tuples (not necessarily minimal) |\n| Candidate key | Minimal superkey |\n| Primary key | Chosen candidate key (one per relation) |"
+        },
+        {
+          "heading": "Functional Dependencies as Integrity Constraints",
+          "body": "A **functional dependency (FD)** on relation schema R is a constraint of the form:\n\n```\nA₁, ..., Aₙ → B₁, ..., Bₘ\n```\n\nRead: \"A₁...Aₙ functionally determines B₁...Bₘ.\"\n\n**Formal meaning:** Instance R satisfies the FD iff for all tuples t₁, t₂:\n- If t₁[A₁,...,Aₙ] = t₂[A₁,...,Aₙ], then t₁[B₁,...,Bₘ] = t₂[B₁,...,Bₘ]\n\n**Intuition:** Two rows that agree on the left-hand side must also agree on the right-hand side.\n\n**Example — Emp(Name, TaxCode, Dept, DeptHead):**\n```\nDept     → DeptHead    (each dept has one head)\nTaxCode  → Name, Dept, DeptHead   (tax code is unique per person)\n```\n\n**Instance example — Emp(EmpID, Name, Phone, Position):**\n\n| EmpID | Name | Phone | Position |\n|---|---|---|---|\n| E0045 | Smith | 1234 | Clerk |\n| E1847 | Jones | 9876 | Salesrep |\n| E1111 | Smith | 9876 | Salesrep |\n| E9999 | Brown | 1234 | Lawyer |\n\nFDs satisfied: `EmpID → Name, Phone, Position` (EmpID is a key); `Position → Phone`.\n\n**Key insight:** Superkeys and candidate keys are special FDs where the left-hand side determines ALL attributes. Candidate keys are also minimal in this sense."
+        },
+        {
+          "heading": "Foreign Keys and Referential Integrity",
+          "body": "A **foreign key** is a set of attributes in one relation that matches the primary key in another (or the same) relation. Attribute names need not match but domains must.\n\n**Notation:**\n```\nR(A) references S(B)\n```\n\n**Satisfaction:** For every tuple t₁ in R, if t₁[A] is not null, there must exist a tuple t₂ in S such that t₁[A] = t₂[B].\n\n**Example:**\n```\nStudent(studno, name, hons, tutor, tutorroom, year)\nStaff  (lecturer, roomno, appraiser, approom)\n\nFK1: Student(tutor, tutorroom) references Staff(lecturer, roomno)\nFK2: Staff(appraiser, approom) references Staff(lecturer, roomno)\n```\nFK2 is a *self-referencing* foreign key — a staff member's appraiser must also be a staff member.\n\n**When updates violate referential integrity:**\n| Scenario | Violation? |\n|---|---|\n| Insert Student with tutor = 'calvanese' (not in Staff) | YES — rejected or repaired |\n| Insert Student with tutor = null | NO — null is exempt |\n| Delete Staff tuple referenced by Student.tutor | YES — orphaned FK |\n| Rename Staff.lecturer value still referenced by Student | YES |\n\n**Reactions to violations:** (1) Reject the update; (2) Repair — insert null, use default value, cascade the deletion/modification."
+        },
+        {
+          "heading": "Null Values — Multiple Meanings",
+          "body": "NULL in a relational database is not a single concept — it has at least three distinct interpretations:\n\n| Meaning | Example |\n|---|---|\n| **Not applicable** — missing by design | Bloggs has no thesis yet → thesis_title = null |\n| **Not disclosed** — information withheld | Brown refused to share thesis title → null |\n| **Lost** — data was deleted or never recorded | Smith's thesis title got lost → null |\n\n**Key exam point:** Different types of NULL may require different handling logic in applications. A DBMS stores all three the same way, so the application must distinguish them using context.\n\n**NULL and foreign keys:** A NULL foreign key value does NOT violate referential integrity — the FK constraint is only enforced for non-null values. This allows optional relationships (a student may not yet have a tutor).\n\n**NULL and keys:** A primary key attribute must NEVER be null — it must uniquely identify the tuple, and NULL cannot serve as an identifier."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L2Q1",
+          "text": "Which of the following correctly describes the relationship between a relation schema and a relation instance?",
+          "options": [
+            "A schema is the set of current tuples; an instance is the structural blueprint.",
+            "A schema specifies names and domains; an instance is any set of tuples satisfying the schema.",
+            "A schema changes frequently as data is inserted and deleted.",
+            "A schema and an instance are the same thing — both describe the structure."
+          ],
+          "correct": [1],
+          "explanation": "A relation schema defines structure: relation name, attribute names, and the domain (type) for each attribute. It is the blueprint and rarely changes. A relation instance is a concrete set of tuples, where every tuple satisfies the schema (i.e., each value falls within the declared domain). The instance changes constantly as data is inserted, modified, or deleted. Option A reverses the definitions entirely. Option C describes the instance, not the schema. Option D conflates the two distinct concepts.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q2",
+          "text": "Consider relation Product(Name, Price, Manufacturer). Which of the following attribute sets are superkeys? Select ALL that apply.",
+          "options": [
+            "{Name} — given that product names are unique across all products",
+            "{Name, Price} — a larger set that includes a superkey",
+            "{Price} — price uniquely identifies each product",
+            "{Name, Price, Manufacturer} — the full set of all attributes"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "A superkey is any set of attributes that uniquely identifies every tuple. If {Name} is given to be unique (option A), it is a superkey — and in fact a candidate key. Any superset of a superkey is also a superkey: {Name, Price} (B) and the full set {Name, Price, Manufacturer} (D) are both superkeys because they contain {Name}. {Price} (C) is NOT a superkey — two products can have the same price. The key concept: every superset of a superkey is a superkey; the candidate key is the minimal one.",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q3",
+          "text": "Relation Emp(EmpID, Name, Phone, Position) has tuples: (E0045, Smith, 1234, Clerk), (E1847, Jones, 9876, Salesrep), (E1111, Smith, 9876, Salesrep), (E9999, Brown, 1234, Lawyer). Which FD does this instance satisfy?",
+          "options": [
+            "Name → Position",
+            "Position → Phone",
+            "Position → Name",
+            "Name → Phone"
+          ],
+          "correct": [1],
+          "explanation": "To check an FD A → B, verify that no two tuples agree on A but disagree on B. Check each option: Name → Position: Smith appears with Clerk (E0045) and Salesrep (E1111) — different positions, violated. Position → Phone (option B): Clerk→1234 (only E0045), Salesrep→9876 (E1847 and E1111 both have 9876), Lawyer→1234 (only E9999) — every position maps to exactly one phone number, so Position → Phone holds ✓. Position → Name: Salesrep appears with Jones and Smith — violated. Name → Phone: Smith appears with 1234 (E0045) and 9876 (E1111) — violated. The only FD satisfied by this instance among the four options is Position → Phone (index 1).",
+          "type": "single"
+        },
+        {
+          "id": "L2Q4",
+          "text": "What is the difference between a candidate key and a superkey?",
+          "options": [
+            "A candidate key can contain null values; a superkey cannot.",
+            "A superkey uniquely identifies tuples but may have redundant attributes; a candidate key is a minimal superkey with no redundant attributes.",
+            "A superkey is chosen by the database designer; a candidate key is computed automatically.",
+            "A candidate key must be a single attribute; a superkey can be any number of attributes."
+          ],
+          "correct": [1],
+          "explanation": "A superkey is any set of attributes that uniquely identifies every tuple in the relation — it may include more attributes than strictly necessary. A candidate key is an inclusion-minimal superkey: removing any single attribute would make it no longer a superkey. In the Student example, {MatriculationNo, Major} is a superkey but not a candidate key — because {MatriculationNo} alone already uniquely identifies students. {MatriculationNo} is a candidate key. Null values (A) are forbidden in primary keys but are irrelevant to the superkey/candidate key distinction. Candidate keys are not automatically computed (C); they require domain knowledge. A candidate key can be composite — multiple attributes (D) is false.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q5",
+          "text": "Foreign key FK: Student(tutor) references Staff(lecturer). Which of the following insertions into Student VIOLATE referential integrity?",
+          "options": [
+            "Inserting (s7, jones, cis, null, 3) — tutor is null",
+            "Inserting (s7, jones, cis, capon, 3) — capon exists in Staff.lecturer",
+            "Inserting (s7, jones, cis, calvanese, 3) — calvanese does not exist in Staff.lecturer",
+            "Inserting (s7, jones, cis, kahn, 3) — kahn exists in Staff.lecturer"
+          ],
+          "correct": [2],
+          "explanation": "Referential integrity requires that for every non-null value in the FK column, a matching value must exist in the referenced relation's primary key column. Option C inserts tutor='calvanese', which does not appear in Staff.lecturer — this violates referential integrity and would be rejected or require repair. Option A uses null for the tutor, which is explicitly exempt: a null FK value means 'no association' and is always allowed. Options B and D reference existing Staff members (capon and kahn), so both are valid. This is the most common exam trap: null in a FK is not a violation.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q6",
+          "text": "A staff member 'kahn' is deleted from Staff. Student contains tuples with tutor='kahn'. What are valid DBMS reactions? Select ALL that apply.",
+          "options": [
+            "Reject the deletion — it would leave Student tuples with a dangling reference",
+            "Set Student.tutor to null for all tuples where tutor='kahn'",
+            "Cascade the deletion — delete all Student tuples where tutor='kahn'",
+            "Set Student.tutor to a default value (e.g., a designated default advisor)"
+          ],
+          "correct": [0, 1, 2, 3],
+          "explanation": "When a deletion would violate referential integrity (because the deleted primary key value is still referenced by a foreign key), the DBMS has two broad options: (1) reject the update outright, or (2) repair the violation. Repair strategies include: setting the FK to null (B — allowed if null is permitted on that column), cascading the deletion so referencing rows are also deleted (C — ON DELETE CASCADE), or replacing the FK value with a configured default (D — ON DELETE SET DEFAULT). All four options listed are legitimate DBMS reactions as taught in the lecture. The specific behavior depends on the FK constraint's declared action (RESTRICT, SET NULL, CASCADE, SET DEFAULT).",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q7",
+          "text": "A student record has thesis_title = NULL. Which interpretations of this NULL are possible? Select ALL that apply.",
+          "options": [
+            "The student has not written a thesis yet (not applicable — missing by design)",
+            "The student refused to disclose the thesis title (not disclosed)",
+            "The thesis title data was lost during a system migration (information lost)",
+            "The student has no student number (primary key is null)"
+          ],
+          "correct": [0, 1, 2],
+          "explanation": "NULL in a relational database has at least three distinct real-world meanings: (A) not applicable — the attribute genuinely does not apply to this entity (a student in year 1 who has not yet written a thesis); (B) not disclosed — the information exists but was withheld; (C) information lost — it existed but was accidentally deleted or never recorded. All three are valid. Option D describes a null primary key, which is fundamentally different and actually forbidden — a primary key must never be null because it must uniquely and reliably identify the tuple. This question tests the critical insight that a DBMS stores all three types of NULL identically, so application logic must disambiguate using context.",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q8",
+          "text": "In the Cartesian-product model of relations, which statement is correct?",
+          "options": [
+            "Row order matters — swapping two rows produces a different relation",
+            "Column order matters — (1, 'Alex') and ('Alex', 1) are different tuples",
+            "Attribute names are explicitly part of the tuple representation",
+            "The same set of tuples with columns reordered represents the same relation"
+          ],
+          "correct": [1],
+          "explanation": "In the Cartesian product model, a tuple is an ordered sequence of values from domains D₁ × D₂ × ... × Dₙ. Attribute names are implicit in column position, so (1, 'Alex') and ('Alex', 1) are different tuples — column order matters (B ✓). However, a relation is a SET of tuples, so row order does NOT matter — {t₁, t₂} = {t₂, t₁} (A ✗). Attribute names being explicit (C) is the property of the function model (alternative definition), not the Cartesian product model. Option D would require that column reordering gives the same result, but it does not — that is a property of the function model, not the Cartesian product model.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q9",
+          "text": "Schema update vs. instance update — which statements are correct? Select ALL that apply.",
+          "options": [
+            "Instance updates (INSERT, DELETE, UPDATE) are frequent and expected in normal database operation",
+            "Schema updates (adding a new column) are rare because they often require adapting all existing tuples",
+            "Schema updates never affect existing tuples — they only add new metadata",
+            "The DBMS must ensure that every instance update keeps the database in a valid state with respect to all constraints"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "Instance updates — inserting, deleting, or modifying tuples — are the normal day-to-day operations of a database and are expected to be frequent (A ✓). Schema updates are rare and painful: adding a column means every existing tuple needs a value for that column (often set to null or a default), and changing a domain may require casting all existing values (B ✓). Option C is false: schema changes absolutely DO affect existing tuples — this is why schema updates are described as 'painful'. The DBMS is responsible for enforcing integrity constraints on every update (D ✓) — it must check key constraints, referential integrity, domain constraints, and functional dependencies after each change.",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q10",
+          "text": "Which of the following is the correct definition of a functional dependency A → B on a relation?",
+          "options": [
+            "There exists at least one tuple in the relation where the A-value determines the B-value.",
+            "For all pairs of tuples: if they agree on A, they must agree on B.",
+            "The attribute B is always equal to the attribute A in every tuple.",
+            "A is a superkey and B is a foreign key in the same relation."
+          ],
+          "correct": [1],
+          "explanation": "A functional dependency A → B holds on a relation instance R if and only if: for ALL pairs of tuples t₁, t₂ in R, whenever t₁[A] = t₂[A], it must also hold that t₁[B] = t₂[B]. This is a universal statement over all tuple pairs — it is not enough to find one example (A is wrong). Option C conflates FDs with equality of attribute values across the whole column. Option D confuses FDs with key/FK constraints, which are related but distinct notions. The critical word is 'all': one counterexample (two tuples with the same A value but different B values) is enough to falsify the FD.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is a relation schema?",
+          "back": "R(A₁:D₁, ..., Aₙ:Dₙ) — a relation name, a non-empty set of attribute names, and a domain for each attribute. It is the structural blueprint (stable, rarely changes)."
+        },
+        {
+          "front": "What is a relation instance?",
+          "back": "A set of tuples where every tuple satisfies the relation schema (each value falls within its declared domain). Changes constantly via inserts, deletes, and updates."
+        },
+        {
+          "front": "Cartesian product model vs. function model of tuples — key difference?",
+          "back": "Cartesian product: tuple = ordered list, column ORDER matters, attribute names implicit.\nFunction model: tuple = function t: A → D, column order does NOT matter, attribute names explicit."
+        },
+        {
+          "front": "What is a superkey?",
+          "back": "A set of attributes whose values together uniquely identify every tuple in the relation. Any superset of a superkey is also a superkey."
+        },
+        {
+          "front": "What is a candidate key?",
+          "back": "An inclusion-minimal superkey — no proper subset of it is also a superkey. A relation can have multiple candidate keys."
+        },
+        {
+          "front": "What is a primary key?",
+          "back": "One candidate key chosen by the designer as the main identifier for the relation. Indicated by underlining in schema notation. Must be unique and non-null."
+        },
+        {
+          "front": "Formal definition of a functional dependency A → B",
+          "back": "For ALL pairs of tuples t₁, t₂ in the relation: if t₁[A] = t₂[A], then t₁[B] = t₂[B]. One counterexample is enough to falsify the FD."
+        },
+        {
+          "front": "What is referential integrity?",
+          "back": "FK: R(A) references S(B) is satisfied iff for every tuple t₁ in R, if t₁[A] is not null, there exists a tuple t₂ in S with t₁[A] = t₂[B]."
+        },
+        {
+          "front": "Does a null foreign key value violate referential integrity?",
+          "back": "No. Null is explicitly exempt — the FK constraint only applies to non-null values. Null in a FK means 'no association'."
+        },
+        {
+          "front": "What are the three interpretations of NULL in a database?",
+          "back": "1. Not applicable — attribute genuinely does not apply (missing by design).\n2. Not disclosed — information exists but was withheld.\n3. Lost — data was deleted or never recorded."
+        },
+        {
+          "front": "What are the two DBMS reactions to a constraint-violating update?",
+          "back": "1. Reject the update.\n2. Repair the violation: set null, use default value, cascade deletion, or cascade modification."
+        },
+        {
+          "front": "Why is a schema update 'painful' compared to an instance update?",
+          "back": "Adding a column or changing a domain requires adapting all existing tuples — potentially millions of rows. Instance updates (INSERT/UPDATE/DELETE) affect individual rows and are normal operations."
+        }
+      ]
+    }
+    ,{
+      "id": 3,
+      "title": "Functional Dependencies",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Why Good Schema Design Matters: Update Anomalies",
+          "body": "Combining attributes from distinct real-world entities into a single relation causes three classes of problems, all rooted in data redundancy.\n\n**The EMP_DEPT anti-pattern** — employee and department attributes crammed into one table:\n\n| Ename | Ssn | Bdate | Dnumber | Dname | Dmgr_ssn |\n|-------|-----|-------|---------|-------|----------|\n| Smith | 123 | 1965  | 5 | Research | 333 |\n| Wong  | 333 | 1955  | 5 | Research | 333 |\n| Zelaya| 999 | 1968  | 4 | Admin    | 987 |\n\nDepartment info (Dname, Dmgr_ssn) is repeated for every employee in that department — this is the redundancy.\n\n**Insert anomaly (new employee):** Must correctly copy all department attribute values or risk inconsistency. If no department is assigned yet, must use NULL for every department column.\n\n**Insert anomaly (new department):** Cannot insert a department with no employees without NULL-ing out the primary key (Ssn) — violates entity integrity.\n\n**Deletion anomaly:** Deleting the last employee in a department destroys all knowledge of that department.\n\n**Modification anomaly:** Renaming a department requires updating every employee tuple in that department — miss one and the database becomes inconsistent.\n\n**Root cause:** The schema mixes two independent concepts (employees and departments) into one relation. The fix is normalization — guided by functional dependencies."
+        },
+        {
+          "heading": "Functional Dependency: Definition and Semantics",
+          "body": "A **functional dependency (FD)** on a relation R is a constraint written X → Y, where X and Y are sets of attributes in R.\n\n**Formal definition:** Relation instance r satisfies X → Y iff for all pairs of tuples t₁, t₂ in r:\n```\nIf t₁[X] = t₂[X], then t₁[Y] = t₂[Y]\n```\nIn plain English: knowing the X-value pinpoints the Y-value — two rows that match on X cannot disagree on Y.\n\n**Critical rule:** FDs express semantic constraints from the real world. They **cannot** be inferred mechanically from a single instance — you could get lucky and see no violation in one snapshot while the FD is semantically false. FDs must be defined by the database designer based on domain knowledge.\n\n**Keys as special FDs:**\n- **Superkey:** A set X is a superkey iff X → U (where U = all attributes of R).\n- **Candidate key:** A minimal superkey — no proper subset of it is also a superkey.\n- **Prime attribute:** An attribute that belongs to some candidate key.\n- **Nonprime attribute:** An attribute not in any candidate key.\n\n**EMP_DEPT example FDs:**\n```\nSsn      → Ename, Bdate, Address, Dnumber, Dname, Dmgr_ssn\nDnumber  → Dname, Dmgr_ssn\n```\nThe second FD is the problem: Dname and Dmgr_ssn are determined by Dnumber alone, yet they appear repeatedly in a relation keyed by Ssn — causing redundancy."
+        },
+        {
+          "heading": "Trivial, Full, and Partial Dependencies",
+          "body": "Three important classifications of FDs:\n\n**Trivial FD:** X → Y is trivial if Y ⊆ X. It always holds and conveys no new information.\n```\nExamples: {Ssn, Pnumber} → Ssn   (trivial — right side ⊆ left side)\n          A → A                    (always trivially true)\n```\nA nontrivial FD is one where Y ⊄ X — it actually constrains the data.\n\n**Full functional dependency:** X → Y is a **full FD** if removing any single attribute from X makes the dependency fail. Every attribute in X is genuinely needed.\n\n**Partial dependency:** X → Y is **partial** if some attribute A ∈ X can be removed and the dependency still holds — i.e., (X − {A}) → Y also holds.\n\n**EMP_PROJ example** (composite key {Ssn, Pnumber}):\n```\nFD1: {Ssn, Pnumber} → Hours       FULL — neither Ssn alone nor Pnumber\n                                         alone determines Hours\nFD2: {Ssn, Pnumber} → Ename       PARTIAL — Ssn → Ename holds alone\nFD3: {Ssn, Pnumber} → Pname       PARTIAL — Pnumber → Pname holds alone\nFD4: {Ssn, Pnumber} → Plocation   PARTIAL — Pnumber → Plocation holds alone\n```\nPartial dependencies are a problem because non-key attributes depend on only part of the key — causing redundancy (each project name is stored for every employee on that project).\n\n**Transitive dependency:** X → Y is transitive in R if there is a set Z of non-prime attributes where X → Z and Z → Y both hold (and Z is neither a candidate key nor a subset of any key).\n```\nEMP_DEPT: Ssn → Dnumber   and   Dnumber → Dname\n⟹ Ssn → Dname is a transitive dependency (through Dnumber)\n```\nTransitive dependencies also cause redundancy — they are the target of 3NF and BCNF normalization."
+        },
+        {
+          "heading": "Armstrong's Axioms and Derived Rules",
+          "body": "Armstrong's axioms (1974) are a **sound and complete** inference system for FDs — any FD implied by a set F can be derived using these rules, and every derivable FD is genuinely implied.\n\n**Three primary axioms:**\n\n| Rule | Name | Statement |\n|------|------|-----------|\n| IR1 | Reflexivity | If Y ⊆ X, then X → Y |\n| IR2 | Augmentation | If X → Y, then XZ → YZ |\n| IR3 | Transitivity | If X → Y and Y → Z, then X → Z |\n\n**Three derived rules** (provable from the three axioms):\n\n| Rule | Name | Statement |\n|------|------|-----------|\n| IR4 | Decomposition | If X → YZ, then X → Y and X → Z |\n| IR5 | Union | If X → Y and X → Z, then X → YZ |\n| IR6 | Pseudotransitivity | If X → Y and WY → Z, then WX → Z |\n\n**Why sound and complete?**\n- **Sound:** Every FD derivable by these rules actually holds in any relation satisfying F.\n- **Complete:** Every FD that holds in every relation satisfying F can be derived by these rules.\n\n**Worked derivation using IR4 (decomposition):**\n```\nGiven: A → BC\nStep 1: BC ⊇ B, so by IR1: BC → B\nStep 2: A → BC (given) and BC → B, so by IR3: A → B  ✓\nSimilarly derive A → C\n```"
+        },
+        {
+          "heading": "Closure of an Attribute Set (X⁺)",
+          "body": "The **closure of X under F**, written X⁺_F (or just X⁺), is the set of all attributes that are functionally determined by X given F:\n```\nX⁺_F = { A | F implies X → A }\n```\n\n**Closure algorithm:**\n```\nInitialize: X⁺ := X\nRepeat until no change:\n  For each FD Y → Z in F:\n    If Y ⊆ X⁺ and Z ⊄ X⁺:\n      X⁺ := X⁺ ∪ Z\nOutput: X⁺\n```\n\n**Two key uses of attribute closure:**\n\n1. **Verify if F implies X → Y:** Compute X⁺; F implies X → Y iff Y ⊆ X⁺.\n\n2. **Verify if X is a superkey:** X is a superkey for R iff X⁺ = U (all attributes of R).\n\n**Worked example:** R = (A, B, C, D, E), F = {A → B, BC → D, B → E, E → C}\n```\nCompute A⁺:\n  Start: {A}\n  A → B:   {A, B}\n  B → E:   {A, B, E}\n  E → C:   {A, B, E, C}\n  BC → D:  B ⊆ {A,B,E,C} and C ⊆ {A,B,E,C} → add D\n  Result: A⁺ = {A, B, C, D, E} = U\n```\nSince A⁺ = U, the single attribute {A} is a superkey (and in fact a candidate key — it is minimal)."
+        },
+        {
+          "heading": "Finding Candidate Keys via Closure",
+          "body": "Because a superkey is any attribute set X with X⁺ = U, we can find candidate keys algorithmically by starting from the full attribute set and greedily removing attributes that are not needed.\n\n**Candidate key finding algorithm:**\n```\nInitialize K := U  (all attributes)\nRepeat until no change:\n  For each attribute A in K:\n    Compute (K − {A})⁺\n    If (K − {A})⁺ = U:\n      K := K − {A}   (A is redundant — remove it)\nReturn K  (a candidate key)\n```\n\n**Worked example:** U = {A, B, C, D, E}, F = {A → E, B → C, C → D, A → D}\n```\nStart: K = {A, B, C, D, E}\nTry removing C: {A,B,D,E}⁺ = {A,B,C,D,E} = U  → remove C, K = {A,B,D,E}\nTry removing D: {A,B,E}⁺   = {A,B,C,D,E} = U  → remove D, K = {A,B,E}\nTry removing E: {A,B}⁺     = {A,B,C,D,E} = U  → remove E, K = {A,B}\nTry removing A: {B}⁺       = {B,C,D} ≠ U      → A is needed\nTry removing B: {A}⁺       = {A,D,E} ≠ U      → B is needed\nResult: {A, B} is a candidate key\n```\n\n**Important:** This algorithm finds one candidate key. A relation may have multiple distinct candidate keys — each must be checked independently.\n\n**Prime vs nonprime:** An attribute is prime if it belongs to at least one candidate key. All others are nonprime. This distinction drives 2NF and 3NF definitions."
+        },
+        {
+          "heading": "Equivalence of FD Sets and Minimal Cover",
+          "body": "Two FD sets F₁ and F₂ are **equivalent** if they have the same closure: F₁⁺ = F₂⁺. Equivalently, F₁ covers F₂ (F₁⁺ ⊇ F₂) and F₂ covers F₁ (F₂⁺ ⊇ F₁).\n\nTo verify F₁ covers F₂: for each FD X → Y in F₂, check that Y ⊆ X⁺_F₁.\n\n**Minimal (canonical) cover:** A set F is **minimal** iff:\n1. **Canonical form:** Every FD in F has a single attribute on the right-hand side (X → A, not X → AB).\n2. **No extraneous attributes:** No attribute in any LHS can be removed while keeping F equivalent.\n3. **No redundant FDs:** No FD can be removed while keeping F equivalent.\n\n**Algorithm to compute a minimal cover (three steps):**\n\n```\nStep 1 — Canonicalize:\n  Replace X → {A₁, A₂, …, Aₙ} with n separate FDs:\n  X → A₁, X → A₂, …, X → Aₙ\n\nStep 2 — Remove extraneous LHS attributes:\n  For each FD XA → B with |X| ≥ 1:\n    If B ⊆ X⁺_F: replace XA → B with X → B\n\nStep 3 — Remove redundant FDs:\n  For each FD f = X → A:\n    If A ⊆ X⁺_{F−{f}}: remove f from F\n```\n\n**Worked example (condensed):**\n```\nInput:  F = {A → {B,C,D},  B → C,  AB → E,  C → D}\nStep 1: F' = {A→B, A→C, A→D, B→C, AB→E, C→D}\nStep 2: In AB→E, test if A is extraneous: B⁺ = {B,C,D} ∌ E → A not extraneous.\n        Test if B is extraneous: A⁺ = {A,B,C,D,E} ∋ E → B IS extraneous → replace AB→E with A→E\n        F'' = {A→B, A→C, A→D, B→C, A→E, C→D}\nStep 3: A→C redundant? Under F''−{A→C}: A⁺ includes C via A→B, B→C. Yes → remove.\n        A→D redundant? Under F'''−{A→D}: A⁺ includes D via A→B, B→C, C→D. Yes → remove.\n        Final: F̂ = {A→B, B→C, A→E, C→D}\n```\nF̂ is equivalent to F and is minimal."
+        },
+        {
+          "heading": "Spurious Tuples and Lossless Decomposition",
+          "body": "When normalizing, a relation is split into multiple smaller relations. A **lossless-join decomposition** guarantees that rejoining the pieces via natural join reconstructs exactly the original relation — no extra (spurious) tuples appear.\n\n**Spurious tuples occur when** the join is performed on attributes that do not form a proper foreign-key/primary-key link.\n\n**Illustration:** Relation R(A, B, C) with tuples:\n```\n(a₁, b₁, c₁)\n(a₁, b₂, c₂)\n```\nDecompose on {A, B} and {A, C}:\n```\n{A,B}: (a₁,b₁), (a₁,b₂)     {A,C}: (a₁,c₁), (a₁,c₂)\n```\nRejoining on A produces **4 tuples** — including 2 spurious ones (a₁, b₁, c₂) and (a₁, b₂, c₁) that were never in R.\n\nDecompose instead on {A, B} and {B, C} where B is the join attribute with a proper FD:\n```\nRejoining on B yields exactly the original 2 tuples — no spurious tuples.\n```\n\n**Why this matters for normalization:** Functional dependencies guide which decompositions are lossless. A decomposition of R into R₁ and R₂ is lossless iff the shared attributes form a superkey in at least one of R₁ or R₂. Getting the FDs right is the prerequisite for safe decomposition."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L3Q1",
+          "text": "Which of the following correctly states when a relation instance satisfies the FD X → Y?",
+          "options": [
+            "There exists at least one tuple where the X-value determines the Y-value.",
+            "For every pair of tuples: if they agree on X, they must agree on Y.",
+            "X and Y have equal values in every tuple of the relation.",
+            "Y is a subset of X in every tuple."
+          ],
+          "correct": [1],
+          "explanation": "A functional dependency X → Y is satisfied by a relation instance r if and only if: for ALL pairs of tuples t₁, t₂ in r, whenever t₁[X] = t₂[X] it also holds that t₁[Y] = t₂[Y]. This is a universal statement — one counterexample (two tuples matching on X but differing on Y) falsifies the FD. Option A describes existential verification, which is insufficient. Option C conflates FDs with equality of column values. Option D describes trivial reflexivity (Y ⊆ X), not the general FD definition.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q2",
+          "text": "Relation EMP_PROJ has composite primary key {Ssn, Pnumber} and attributes Ename, Pname, Plocation, Hours. Which FDs are PARTIAL dependencies on this key? Select ALL that apply.",
+          "options": [
+            "{Ssn, Pnumber} → Hours",
+            "{Ssn, Pnumber} → Ename",
+            "{Ssn, Pnumber} → Pname",
+            "{Ssn, Pnumber} → Plocation"
+          ],
+          "correct": [1, 2, 3],
+          "explanation": "A partial dependency exists when a proper subset of the key already determines the dependent attribute. Hours (A) depends on the full combination of Ssn and Pnumber — neither alone determines how many hours a specific employee works on a specific project. So {Ssn,Pnumber} → Hours is a FULL dependency. Ename (B) depends only on Ssn (Ssn → Ename), so it is partial. Pname (C) and Plocation (D) depend only on Pnumber (Pnumber → Pname and Pnumber → Plocation), so both are partial. Partial dependencies are problematic because project names and employee names are stored redundantly for each assignment row.",
+          "type": "multiple"
+        },
+        {
+          "id": "L3Q3",
+          "text": "Given R = (A, B, C, D, E) and F = {A → B, BC → D, B → E, E → C}, compute A⁺ (closure of A under F). Which result is correct?",
+          "options": [
+            "{A, B}",
+            "{A, B, E}",
+            "{A, B, E, C}",
+            "{A, B, C, D, E}"
+          ],
+          "correct": [3],
+          "explanation": "Apply the closure algorithm step by step: Start with A⁺ = {A}. Apply A → B: A⁺ = {A, B}. Apply B → E: A⁺ = {A, B, E}. Apply E → C: A⁺ = {A, B, E, C}. Now BC → D: B ∈ A⁺ and C ∈ A⁺, so add D: A⁺ = {A, B, C, D, E}. No further FDs fire. Final result: A⁺ = {A, B, C, D, E} = U. Since A⁺ equals the entire attribute set, A alone is a superkey — and in fact a candidate key because no proper subset of {A} is also a superkey.",
+          "shuffle": false,
+          "type": "single"
+        },
+        {
+          "id": "L3Q4",
+          "text": "Given U = {A, B, C, D} and F = {A → B, B → C, A → D}, is {A, B} a superkey for R?",
+          "options": [
+            "Yes — because {A, B}⁺ = {A, B, C, D} = U",
+            "No — {A, B} is not a candidate key because A alone is sufficient, so {A, B} is redundant",
+            "Yes — but only if A and B together uniquely identify all attributes",
+            "No — because B → C does not include D"
+          ],
+          "correct": [0],
+          "explanation": "To check if {A, B} is a superkey, compute {A,B}⁺: Start {A, B}. A → B: already in set. B → C: add C → {A, B, C}. A → D: add D → {A, B, C, D} = U. Since {A,B}⁺ = U, {A,B} IS a superkey. Option B correctly identifies that A alone is also a superkey (A⁺ = {A,B,C,D} = U), which means {A,B} is a superkey but NOT a candidate key — it is not minimal. However, the question asks only whether {A,B} is a superkey, and the answer is yes. The wording of option A is the correct factual statement.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q5",
+          "text": "Which of Armstrong's three primary axioms states: 'If X → Y, then XZ → YZ'?",
+          "options": [
+            "IR1 — Reflexivity",
+            "IR2 — Augmentation",
+            "IR3 — Transitivity",
+            "IR4 — Decomposition"
+          ],
+          "correct": [1],
+          "explanation": "IR2 (Augmentation): if X → Y holds, then adding the same set Z to both sides preserves the dependency — XZ → YZ. Intuitively, if X uniquely determines Y, then knowing X and Z together still uniquely determines Y and Z. IR1 (Reflexivity) says if Y ⊆ X then X → Y — no precondition needed. IR3 (Transitivity) says if X → Y and Y → Z then X → Z — chaining. IR4 (Decomposition) is a derived rule, not a primary axiom: if X → YZ then X → Y.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q6",
+          "text": "Ssn → Dname holds in EMP_DEPT. Why is this a transitive dependency rather than a direct one?",
+          "options": [
+            "Because Ssn and Dname are in different tables",
+            "Because there is a non-prime attribute set (Dnumber) such that Ssn → Dnumber and Dnumber → Dname both hold, and Dnumber is not a key",
+            "Because Dname is a multivalued attribute of the employee",
+            "Because the FD Ssn → Dname is trivial"
+          ],
+          "correct": [1],
+          "explanation": "A transitive dependency X → Y exists when there is a set Z of non-prime attributes where X → Z and Z → Y both hold. Here: Ssn → Dnumber (direct — each employee belongs to one department) and Dnumber → Dname (each department has one name). Dnumber is a non-prime attribute (not part of any candidate key in EMP_DEPT). So Ssn → Dname is transitive through Dnumber. The department name is not directly tied to the employee — it is tied to the department number, which in turn is tied to the employee. This indirection causes the redundancy: department names are repeated for every employee in that department.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q7",
+          "text": "Given F = {A → B, B → C, AC → D, A → D}, is the FD A → D redundant in F?",
+          "options": [
+            "Yes — D is already reachable from A via A → B, B → C, and AC → D without using A → D",
+            "No — A → D is the only way to derive D from A",
+            "Yes — but only because A → D is trivial",
+            "No — removing A → D would break the FD B → C"
+          ],
+          "correct": [0],
+          "explanation": "To check if A → D is redundant, compute A⁺ under G = F − {A → D} = {A → B, B → C, AC → D}. Start: {A}. A → B: {A, B}. B → C: {A, B, C}. AC → D: A ⊆ closure and C ⊆ closure → add D: {A, B, C, D}. Since D ∈ A⁺_G, the FD A → D is implied by G even without itself — it is redundant and can be removed. Option B is wrong: D is reachable via the chain A→B, B→C, then (AC)→D. Option C is wrong: A → D is not trivial (D ⊄ {A}). Option D is wrong: removing A→D has no effect on B→C.",
+          "type": "single"
+        },
+        {
+          "id": "L3Q8",
+          "text": "A set of FDs F is minimal (canonical). Which of the following properties must it satisfy? Select ALL that apply.",
+          "options": [
+            "Every FD in F has exactly one attribute on the right-hand side",
+            "No FD in F has more than two attributes on the left-hand side",
+            "No attribute in any LHS can be removed while keeping F equivalent to the original",
+            "No FD can be removed from F while keeping F equivalent to the original"
+          ],
+          "correct": [0, 2, 3],
+          "explanation": "A minimal (canonical) set of FDs must satisfy exactly three conditions: (A) Canonical form — every FD has a single RHS attribute, e.g. X → A not X → AB. (C) No extraneous attributes — no LHS attribute is redundant (removing it would change the closure). (D) No redundant FDs — no FD is derivable from the remaining ones. Option B is false: canonical FDs can have any number of LHS attributes (e.g. AB → C is fine as long as neither A nor B is extraneous). The cardinality of the LHS is not directly constrained — only redundancy and extraneous attributes are eliminated.",
+          "type": "multiple"
+        },
+        {
+          "id": "L3Q9",
+          "text": "Relation R has U = {A, B, C, D, E} and F = {A → E, B → C, C → D, A → D}. Using the candidate key finding algorithm starting from K = {A, B, C, D, E}, what is a candidate key?",
+          "options": [
+            "{A, B, C, D, E}",
+            "{A, B, C}",
+            "{A, B}",
+            "{A}"
+          ],
+          "correct": [2],
+          "explanation": "Apply the algorithm: Start K = {A,B,C,D,E}. Test removing C: (K−C)⁺ = {A,B,D,E}⁺. A→E: {A,B,D,E}. A→D: already in. B→C: {A,B,C,D,E} = U → C is not needed. K = {A,B,D,E}. Test removing D: (K−D)⁺ = {A,B,E}⁺. A→E: {A,B,E}. A→D: {A,B,D,E}. B→C: {A,B,C,D,E} = U → D not needed. K = {A,B,E}. Test removing E: (K−E)⁺ = {A,B}⁺. A→E: {A,B,E}. A→D: {A,B,D,E}. B→C: {A,B,C,D,E} = U → E not needed. K = {A,B}. Test removing A: {B}⁺ = {B,C,D} ≠ U → A needed. Test removing B: {A}⁺ = {A,D,E} ≠ U → B needed. Result: {A, B} is a candidate key.",
+          "shuffle": false,
+          "type": "single"
+        },
+        {
+          "id": "L3Q10",
+          "text": "Which of the following correctly describes when a decomposition of R into R₁ and R₂ is guaranteed to be lossless?",
+          "options": [
+            "When R₁ ∪ R₂ = R (all attributes are preserved between the two pieces)",
+            "When the attributes shared between R₁ and R₂ form a superkey in at least one of R₁ or R₂",
+            "When the number of tuples in R₁ times the number in R₂ equals the number in R",
+            "When R₁ and R₂ have no attributes in common"
+          ],
+          "correct": [1],
+          "explanation": "A decomposition of R into R₁ and R₂ is lossless-join iff the set of shared attributes (R₁ ∩ R₂) is a superkey in R₁ or in R₂. This means the join can always reconstruct R exactly without spurious tuples. Option A describes attribute preservation (which is necessary for information preservation but is not sufficient to prevent spurious tuples). Option C describes cardinality of a Cartesian product — unrelated to losslessness. Option D (no shared attributes) would mean the join is a full Cartesian product and would produce many spurious tuples — it is the worst case, not a safe condition. Functional dependencies guide which attributes to share, ensuring the shared set forms a key.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is a functional dependency X → Y?",
+          "back": "A constraint on relation R: for all pairs of tuples t₁, t₂, if t₁[X] = t₂[X] then t₁[Y] = t₂[Y]. Two rows that agree on X must agree on Y. One counterexample falsifies it."
+        },
+        {
+          "front": "Can FDs be inferred automatically from a relation instance?",
+          "back": "No. An instance is a snapshot — it may satisfy an FD by coincidence. FDs must be defined by the database designer based on domain semantics."
+        },
+        {
+          "front": "What are the three update anomalies caused by redundancy?",
+          "back": "1. Insertion anomaly — must copy all dependent attribute values correctly, or use NULLs that violate entity integrity.\n2. Deletion anomaly — deleting the last tuple referencing an entity erases that entity's data.\n3. Modification anomaly — updating one fact requires changing many rows; missing one causes inconsistency."
+        },
+        {
+          "front": "What is the difference between a full and a partial FD?",
+          "back": "Full FD X → Y: removing any attribute from X breaks the dependency — every attribute in X is necessary.\nPartial FD X → Y: some attribute A ∈ X can be removed and (X − {A}) → Y still holds."
+        },
+        {
+          "front": "What is a transitive dependency?",
+          "back": "X → Y is transitive in R if there exists a set Z of non-prime attributes where X → Z and Z → Y both hold (Z is not a key or subset of any key). Example: Ssn → Dname is transitive via Dnumber."
+        },
+        {
+          "front": "State Armstrong's three primary axioms.",
+          "back": "IR1 Reflexivity: Y ⊆ X ⟹ X → Y\nIR2 Augmentation: X → Y ⟹ XZ → YZ\nIR3 Transitivity: X → Y and Y → Z ⟹ X → Z\nThese rules are sound and complete."
+        },
+        {
+          "front": "What is X⁺_F (closure of attribute set X under F)?",
+          "back": "X⁺_F = { A | F implies X → A } — all attributes determined by X given F. Computed by the closure algorithm: start with X⁺ = X, then for each FD Y → Z in F with Y ⊆ X⁺ add Z to X⁺, repeat until stable."
+        },
+        {
+          "front": "How do you verify whether X is a superkey using the closure algorithm?",
+          "back": "Compute X⁺_F. X is a superkey for R iff X⁺_F = U (the full attribute set of R)."
+        },
+        {
+          "front": "How do you verify whether F implies X → Y using closure?",
+          "back": "Compute X⁺_F. F implies X → Y iff Y ⊆ X⁺_F."
+        },
+        {
+          "front": "What makes two FD sets F₁ and F₂ equivalent?",
+          "back": "F₁ and F₂ are equivalent iff F₁⁺ = F₂⁺ — they have the same closure. Practically: F₁ covers F₂ (every FD of F₂ is implied by F₁) AND F₂ covers F₁."
+        },
+        {
+          "front": "What are the three conditions for a minimal (canonical) FD set?",
+          "back": "1. Canonical form — every FD has a single RHS attribute.\n2. No extraneous LHS attributes — no attribute can be removed from any LHS without changing the closure.\n3. No redundant FDs — no FD is implied by the rest."
+        },
+        {
+          "front": "When is a decomposition of R into R₁, R₂ guaranteed to be lossless?",
+          "back": "When the shared attributes R₁ ∩ R₂ form a superkey in at least one of R₁ or R₂. Without this, rejoining may produce spurious tuples not in the original relation."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Relational Algebra and SQL Queries",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Relational Algebra: Purpose and Structure",
+          "body": "Relational algebra is a formal query language whose operands are relations and whose operators produce new relations. It serves two roles: it is the theoretical foundation for how DBMSs process queries, and many of its ideas are directly incorporated into SQL.\n\nEvaluating an expression yields two things:\n- **Result schema** — determined by the schemas of the input relations and the operators applied\n- **Result instance** — the actual set of tuples obtained by running the operations\n\nThe complete set `{σ, π, ∪, ρ, −, ×}` is sufficient to express every other operator; joins, intersection, and renaming can all be derived from these six primitives.\n\n| Category | Operators |\n|----------|-----------|\n| Set operators (union-compatible) | ∪, ∩, − |\n| Cartesian product | × |\n| Unary relation operators | σ (select), π (project), ρ (rename) |\n| Inner joins | Natural ⋈, Equi ⋈=, Theta ⋈_θ |\n| Outer joins | Left ⟕, Right ⟖, Full ⟗ |"
+        },
+        {
+          "heading": "Set Operators: Union, Intersection, Difference",
+          "body": "All three operators require **union-compatible** input relations: same number of attributes and matching domains at every position.\n\n**Union** r₁ ∪ r₂ — tuples in r₁, r₂, or both; duplicates removed.\n**Intersection** r₁ ∩ r₂ — tuples that appear in both; |result| ≤ min(|r₁|, |r₂|).\n**Difference** r₁ − r₂ — tuples in r₁ but not in r₂; |result| ≤ |r₁|.\n\nKey properties:\n- Union and intersection are **commutative and associative**: R ∪ S = S ∪ R\n- Set difference is **neither commutative nor associative**: R − S ≠ S − R\n\n**SQL equivalents:**\n```sql\n-- Union (eliminates duplicates)\nSELECT * FROM A  UNION  SELECT * FROM B;\n-- Intersection\nSELECT * FROM A  INTERSECT  SELECT * FROM B;\n-- Difference\nSELECT * FROM A  EXCEPT  SELECT * FROM B;\n-- ALL variants keep duplicates (multiset semantics)\nSELECT * FROM A  UNION ALL  SELECT * FROM B;\n```\n\n**Cartesian product** r₁ × r₂ combines every tuple of r₁ with every tuple of r₂ — relations need not be union-compatible. Result size = |r₁| × |r₂|. SQL: `CROSS JOIN`."
+        },
+        {
+          "heading": "Selection σ and Projection π — Orthogonal Unary Operators",
+          "body": "**Selection σ_C(r)** — keeps rows that satisfy condition C; think horizontal cut.\n- Result schema = R (unchanged)\n- Result size ≤ |r|\n- Condition C is a conjunction/disjunction of predicates A θ B or A θ c, where θ ∈ {=, <, ≤, >, ≥, ≠} for ordered domains\n- Cascading selections can be merged: σ_{C1}(σ_{C2}(R)) ≡ σ_{C1∧C2}(R)\n- SQL equivalent: **WHERE clause**\n\n```sql\n-- σ_{Dno=4 ∧ Salary>25000}(EMPLOYEE)\nSELECT * FROM Employee\nWHERE Dno = 4 AND Salary > 25000;\n```\n\n**Projection π_Y(r)** — keeps only the listed attributes; think vertical cut.\n- Result schema = Y (a subset of R)\n- Removes duplicate tuples — if Y is not a superkey, result may be smaller than |r|\n- π is **idempotent**: π_Y(π_Y(r)) = π_Y(r)\n- SQL equivalent: **SELECT DISTINCT**\n\n```sql\n-- π_{Sex,Salary}(EMPLOYEE)\nSELECT DISTINCT Sex, Salary FROM Employee;\n```\n\n**Order matters:** Apply selection before projection (σ then π) when the condition references attributes not in the final output list."
+        },
+        {
+          "heading": "The Rename Operator ρ",
+          "body": "The rename operator changes attribute names in the schema **without altering the data**. This is essential for making two union-compatible relations share the same attribute names, or for disambiguating attributes when the same relation appears twice in a query.\n\n**Notation:** ρ_{(B₁,B₂,...,Bₘ ← A₁,A₂,...,Aₘ)}(R) renames attribute A₁ to B₁, A₂ to B₂, etc.\n\n**Example use case — ancestors query:**\n```\n-- Father-Child and Mother-Child share domain but differ in attribute names\n-- ρ_{Parent←Father}(Father-Child) makes them union-compatible with Mother-Child\n```\n\n**SQL equivalent: AS**\n```sql\nSELECT E.Fname AS FirstName, E.Lname AS LastName\nFROM Employee AS E;\n```\nTable aliases (`FROM Employee AS E`) also serve as the SQL form of relation renaming, needed in self-joins."
+        },
+        {
+          "heading": "Inner Joins: Theta, Equi, and Natural",
+          "body": "All three inner join variants are shorthand for selecting from a Cartesian product.\n\n| Join type | Condition | Duplicate columns? | SQL syntax |\n|-----------|-----------|-------------------|------------|\n| Theta-join ⋈_C | Arbitrary Boolean on attributes from both sides | Yes (R₁ ∪ R₂) | `JOIN ... ON C` |\n| Equi-join ⋈= | Only equality predicates | Yes (both join columns kept) | `JOIN ... ON A=B` |\n| Natural join ⋈ | Equality on **all** common attributes; shared columns kept once | No | `NATURAL JOIN` |\n\n**Theta-join definition:**\n```\nr₁ ⋈_C r₂ = σ_C(r₁ × r₂)\n```\n\n**Natural join definition:**\n```\nr₁ ⋈ r₂ = π_{X,R₁.Y,Z}(σ_{R₁.Y₁=R₂.Y₁∧...}(r₁ × r₂))\n```\nwhere Y is the set of common attributes, X belongs only to R₁, Z only to R₂.\n\n**Result size of natural join:** 0 ≤ |r₁ ⋈ r₂| ≤ |r₁| × |r₂|. When Y is a superkey in R₂, |r₁ ⋈ r₂| ≤ |r₁|.\n\n```sql\n-- Theta join: employees earning more than their department's bonus threshold\nSELECT * FROM Employee E\nJOIN Bonus B ON E.Salary > B.Threshold;\n\n-- Natural join: projects with department info, matching on Dnum\nSELECT * FROM Project NATURAL JOIN Department;\n```"
+        },
+        {
+          "heading": "Outer Joins — Preserving Unmatched Tuples",
+          "body": "Inner joins drop tuples with no match on the other side. Outer joins preserve them by padding with NULLs.\n\n| Variant | Which side preserved | SQL |\n|---------|---------------------|-----|\n| Left outer join R ⟕ S | All tuples from R; unmatched get NULL for S columns | `LEFT OUTER JOIN` |\n| Right outer join R ⟖ S | All tuples from S; unmatched get NULL for R columns | `RIGHT OUTER JOIN` |\n| Full outer join R ⟗ S | All tuples from both sides | `FULL OUTER JOIN` |\n\n**Properties:** Outer joins are **neither associative nor commutative** — unlike natural join.\nResult size ≥ max(|R|, |S|).\n\n```sql\n-- All departments, even those with no employees\nSELECT D.Dname, E.Fname\nFROM Department D\nLEFT OUTER JOIN Employee E ON D.Dnumber = E.Dno;\n```\n\n**NULL handling:** A NULL in a comparison (e.g., `NULL > 25000`) evaluates to **unknown** in SQL's three-valued logic (TRUE / FALSE / UNKNOWN), so the tuple is excluded from WHERE results."
+        },
+        {
+          "heading": "Operator Composition and Query Trees",
+          "body": "Because every RA operator returns a relation, operators can be freely composed. The execution order is depicted by a **query tree** (query evaluation tree):\n- **Leaf nodes** = input base relations\n- **Internal nodes** = RA operators\n- **Root** = final result\n- Execution flows **leaves → root**; each operator fires as soon as its inputs are ready.\n\n**Example:** For every project in Stafford, retrieve project number, controlling department number, and manager's last name, address, and birth date.\n\n```\nπ_{Pnumber, Dnum, Lname, Address, Bdate}(\n  ( (σ_{Plocation='Stafford'}(PROJECT)) ⋈_{Dnum=Dnumber} DEPARTMENT )\n  ⋈_{Mgr_ssn=Ssn} EMPLOYEE\n)\n```\n\n**Query optimisation** rewrites the tree to reduce intermediate result sizes:\n1. **Selection atomisation** — split σ_{C1∧C2} into two stacked selections\n2. **Push selections down** — apply σ before ×/⋈ to shrink operands early\n3. **Inline selections into joins** — convert σ(R × S) to R ⋈_C S directly\n4. **Push projections down** — project early to eliminate unused columns\n\nThese transformations preserve query equivalence while reducing work."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L4Q1",
+          "text": "Which set of relational algebra operators is considered a complete set — meaning all other RA operators can be derived from them?",
+          "options": [
+            "{σ, π, ∪, ρ, −, ×}",
+            "{σ, π, ⋈, ∪, ∩}",
+            "{σ, π, ⋈, ∪, −}",
+            "{σ, π, ρ, ⋈, ∩, ×}"
+          ],
+          "correct": [0],
+          "explanation": "The complete set is {σ, π, ∪, ρ, −, ×}. From these six primitives every other operator can be expressed: intersection via union and difference (R ∩ S ≡ (R ∪ S) − ((R − S) ∪ (S − R))), theta-join via Cartesian product and selection (R ⋈_C S ≡ σ_C(R × S)), and natural join via Cartesian product, selection, and projection. Option B includes ⋈ and ∩ as primitives — they are derived operators, not part of the minimal complete set. Options C and D have similar issues.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q2",
+          "text": "Consider tables A(X, Y) and B(X, Y) below.\n\nA: {(1, a), (2, b)}\nB: {(1, a), (3, c)}\n\nWhat does A − B return?",
+          "options": [
+            "{(1, a), (2, b), (3, c)}",
+            "{(1, a)}",
+            "{(2, b)}",
+            "{(2, b), (3, c)}"
+          ],
+          "correct": [2],
+          "explanation": "Set difference A − B returns all tuples that are in A but NOT in B. The tuple (1, a) is in both A and B, so it is excluded. The tuple (2, b) is only in A, so it survives. The tuple (3, c) is only in B, so it does not appear in A − B at all. The answer is {(2, b)}. A ∪ B would give option A; A ∩ B would give option B; neither of those is the difference.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q3",
+          "text": "Which SQL query is the correct translation of the relational algebra expression π_{Fname, Lname}(σ_{Salary > 40000}(EMPLOYEE))?",
+          "options": [
+            "SELECT Fname, Lname FROM Employee;",
+            "SELECT DISTINCT Fname, Lname FROM Employee WHERE Salary > 40000;",
+            "SELECT * FROM Employee WHERE Salary > 40000;",
+            "SELECT Fname, Lname FROM Employee GROUP BY Salary HAVING Salary > 40000;"
+          ],
+          "correct": [1],
+          "explanation": "The expression first applies selection σ_{Salary>40000} — which maps to a WHERE clause — then projection π_{Fname,Lname} — which maps to SELECT DISTINCT (projection removes duplicates). Option A is missing the WHERE filter. Option C projects all columns (*) rather than only Fname and Lname, and misses DISTINCT. Option D uses GROUP BY/HAVING, which is an aggregation construct, not a plain filter. DISTINCT is needed because projection in RA always eliminates duplicate tuples.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q4",
+          "text": "You have EMPLOYEE(Ssn, Fname, Dno) and DEPARTMENT(Dnumber, Dname). Which relational algebra expression correctly retrieves the first name and department name for every employee?",
+          "options": [
+            "π_{Fname, Dname}(EMPLOYEE × DEPARTMENT)",
+            "π_{Fname, Dname}(σ_{Dno=Dnumber}(EMPLOYEE × DEPARTMENT))",
+            "σ_{Dno=Dnumber}(EMPLOYEE × DEPARTMENT)",
+            "π_{Fname, Dname}(EMPLOYEE ∪ DEPARTMENT)"
+          ],
+          "correct": [1],
+          "explanation": "To combine EMPLOYEE and DEPARTMENT we need a Cartesian product first, then a selection that enforces the join condition Dno = Dnumber, then projection to keep only Fname and Dname. This is exactly the theta/equi-join definition: π_{Fname,Dname}(σ_{Dno=Dnumber}(EMPLOYEE × DEPARTMENT)). Option A does the Cartesian product without filtering, producing every employee paired with every department — garbage. Option C correctly filters but omits projection. Option D uses union, which requires union-compatible schemas — EMPLOYEE and DEPARTMENT have different attributes and so are not union-compatible.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q5",
+          "text": "Which statements about the natural join R ⋈ S are correct? Select ALL that apply.",
+          "options": [
+            "It matches tuples on all attributes whose names appear in both R and S",
+            "Each shared attribute column appears twice in the result",
+            "It is commutative: R ⋈ S = S ⋈ R (up to column order)",
+            "If R and S share no attributes, R ⋈ S equals the Cartesian product R × S"
+          ],
+          "correct": [0, 2, 3],
+          "explanation": "Statement A is the definition of natural join — equality is enforced on all attributes common to both schemas. Statement B is false: the natural join keeps only ONE copy of each shared attribute, which distinguishes it from an equi-join (where both columns are retained). Statement C is correct — natural join is commutative (up to column reordering) and also associative, unlike outer joins. Statement D is correct: when the common attribute set Y = ∅, the natural join degenerates into the Cartesian product because there is no join condition to filter on.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q6",
+          "text": "Given the following SQL query, which relational algebra expression does it correspond to?\n\n```sql\nSELECT E.Fname, E.Salary\nFROM Employee E\nJOIN Bonus B ON E.Salary > B.Threshold;\n```",
+          "options": [
+            "π_{Fname,Salary}(EMPLOYEE ⋈ BONUS)",
+            "π_{Fname,Salary}(σ_{Salary>Threshold}(EMPLOYEE × BONUS))",
+            "σ_{Salary>Threshold}(π_{Fname,Salary}(EMPLOYEE) × BONUS)",
+            "π_{Fname,Salary}(EMPLOYEE ∪ BONUS)"
+          ],
+          "correct": [1],
+          "explanation": "The SQL uses a JOIN ON with a non-equality condition (>), which is a theta-join. The theta-join is defined as σ_C(R × S). Therefore the expression is: first form the Cartesian product of EMPLOYEE and BONUS, then select pairs where E.Salary > B.Threshold, then project onto Fname and Salary. Option A uses a natural join — incorrect, since natural join only uses equality on common attributes. Option C applies projection before the Cartesian product, which would lose the Threshold column needed for the selection condition. Option D uses union, which is entirely wrong here.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q7",
+          "text": "A database has STUDENT(StudentID, Name) and ENROLLMENT(StudentID, CourseID). Which query retrieves ALL students, including those enrolled in no courses, along with any courses they may be taking?",
+          "options": [
+            "SELECT S.Name, E.CourseID FROM Student S INNER JOIN Enrollment E ON S.StudentID = E.StudentID;",
+            "SELECT S.Name, E.CourseID FROM Student S LEFT OUTER JOIN Enrollment E ON S.StudentID = E.StudentID;",
+            "SELECT S.Name, E.CourseID FROM Student S RIGHT OUTER JOIN Enrollment E ON S.StudentID = E.StudentID;",
+            "SELECT S.Name, E.CourseID FROM Student S CROSS JOIN Enrollment E;"
+          ],
+          "correct": [1],
+          "explanation": "The goal is to keep ALL students, even those with no enrollment records. This requires a left outer join (S ⟕ E): every tuple in the left relation (STUDENT) is preserved; for students with no matching ENROLLMENT row, CourseID is filled with NULL. INNER JOIN (A) drops students with no enrollment, which is the opposite of what we want. RIGHT OUTER JOIN (C) would preserve all enrollment records instead of all students. CROSS JOIN (D) produces every combination of student and course, including invalid pairings.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q8",
+          "text": "The selection operator σ distributes over set operators. Which of the following equivalences are correct? Select ALL that apply.",
+          "options": [
+            "σ_C(R ∪ S) ≡ σ_C(R) ∪ σ_C(S)",
+            "σ_C(R ∩ S) ≡ σ_C(R) ∩ σ_C(S)",
+            "π_Y(R ∩ S) ≡ π_Y(R) ∩ π_Y(S)",
+            "π_Y(R ∪ S) ≡ π_Y(R) ∪ π_Y(S)"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "Selection distributes over union, intersection, and difference: σ_C(R ∪ S) ≡ σ_C(R) ∪ σ_C(S) and σ_C(R ∩ S) ≡ σ_C(R) ∩ σ_C(S), so A and B are correct. Projection distributes over union (D is correct): π_Y(R ∪ S) ≡ π_Y(R) ∪ π_Y(S). However, projection does NOT distribute over intersection (C is false): π_Y(R ∩ S) ≢ π_Y(R) ∩ π_Y(S). The reason: projection can hide attributes on which tuples differ, so π_Y(R) ∩ π_Y(S) may include tuples whose full originals were not in R ∩ S. The same issue applies to set difference.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q9",
+          "text": "In query optimisation, which of the following transformations reduce the size of intermediate results and are therefore generally beneficial? Select ALL that apply.",
+          "options": [
+            "Pushing selection operations closer to the leaf (base relation) nodes in the query tree",
+            "Performing Cartesian products before applying selection conditions",
+            "Pushing projection operations below joins to eliminate unneeded columns early",
+            "Replacing a sequence σ_{C1}(σ_{C2}(R)) with σ_{C1∧C2}(R) to merge selections"
+          ],
+          "correct": [0, 2, 3],
+          "explanation": "Pushing selections down (A) reduces the number of tuples that participate in joins — smaller operands mean faster and cheaper join evaluation. Pushing projections down (C) reduces the width (number of columns) of intermediate relations, cutting memory and I/O cost. Merging cascaded selections into a single selection (D) reduces the number of operator passes over the data. Option B is the opposite of good practice: performing a Cartesian product before selection produces a result of size |R| × |S| that must then be filtered; it is always better to push the selection before (or into) the join to avoid building the large intermediate result.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q10",
+          "text": "Consider the query: find the names of all departments that have at least one project located in Houston.\n\nDEPARTMENT(Dnumber, Dname) and PROJECT(Pnumber, Plocation, Dnum).\n\nWhich relational algebra expression is correct?",
+          "options": [
+            "π_{Dname}(DEPARTMENT ⋈_{Dnumber=Dnum} σ_{Plocation='Houston'}(PROJECT))",
+            "π_{Dname}(σ_{Plocation='Houston'}(DEPARTMENT))",
+            "π_{Dname}(DEPARTMENT) ⋈ π_{Dnum}(σ_{Plocation='Houston'}(PROJECT))",
+            "σ_{Plocation='Houston'}(π_{Dname}(DEPARTMENT ⋈_{Dnumber=Dnum} PROJECT))"
+          ],
+          "correct": [0],
+          "explanation": "We need to: (1) filter projects to only those in Houston — σ_{Plocation='Houston'}(PROJECT); (2) join with DEPARTMENT on the department number link — ⋈_{Dnumber=Dnum}; (3) project out only the department name — π_{Dname}. Option A does exactly this in the optimal order (select then join then project). Option B incorrectly applies selection to DEPARTMENT, which has no Plocation attribute. Option C uses projection before the join and relies on natural join, but the projected relations share no common attributes (Dname vs Dnum), so the natural join degenerates to a Cartesian product — wrong. Option D applies the selection on Plocation to the join result, which is correct logically but syntactically broken because after the join the Plocation attribute does exist — however, the projection π_{Dname} has already discarded it, so D evaluates to σ on a relation that no longer has Plocation.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What does relational algebra provide, and why does it matter for SQL?",
+          "back": "Relational algebra is a formal, closed language where every operator takes relations as input and returns a relation. It provides the theoretical foundation for DBMS query processing and optimisation. SQL's SELECT/FROM/WHERE, joins, and set operations are all direct implementations of RA operators."
+        },
+        {
+          "front": "What is union compatibility, and which RA operators require it?",
+          "back": "Two relations are union-compatible iff they have the same number of attributes and each pair of corresponding attributes has the same domain. The operators ∪ (union), ∩ (intersection), and − (difference) all require union-compatible operands. The Cartesian product × does not."
+        },
+        {
+          "front": "What does σ_C(R) return, and what is its SQL equivalent?",
+          "back": "Selection σ_C(R) returns all tuples of R that satisfy the Boolean condition C — a horizontal slice of the table. Result schema = R, result size ≤ |R|. SQL equivalent: the WHERE clause. Multiple selections merge: σ_{C1}(σ_{C2}(R)) ≡ σ_{C1∧C2}(R)."
+        },
+        {
+          "front": "What does π_Y(R) return, and what is its SQL equivalent?",
+          "back": "Projection π_Y(R) extracts only the columns in attribute set Y from R — a vertical slice that removes duplicates. Result schema = Y, result size ≤ |R| (equal only if Y is a superkey). SQL equivalent: SELECT DISTINCT with listed columns. Projection is idempotent: π_Y(π_Y(R)) = π_Y(R)."
+        },
+        {
+          "front": "What does the rename operator ρ do, and when do you need it?",
+          "back": "ρ_{(B←A)}(R) renames attribute A to B without changing the data. You need it to: (1) make two schemas union-compatible when attribute names differ; (2) disambiguate attributes in a self-join (joining a relation with itself). SQL equivalent: the AS keyword for column or table aliases."
+        },
+        {
+          "front": "How is the theta-join defined in terms of more primitive operators?",
+          "back": "Theta-join: R ⋈_C S = σ_C(R × S). Form the Cartesian product of R and S, then select only the pairs satisfying condition C. The equi-join is the special case where C uses only equality predicates. The natural join further removes duplicate copies of the common attributes."
+        },
+        {
+          "front": "How does a natural join differ from an equi-join?",
+          "back": "An equi-join R ⋈_{A=B} S keeps BOTH join columns in the result (schema = R ∪ S, including both A and B). A natural join automatically joins on ALL common attribute names and keeps only ONE copy of each shared attribute. Natural join is commutative and associative; it degenerates to a Cartesian product when the schemas share no attributes."
+        },
+        {
+          "front": "What are the three outer join variants, and how do they handle unmatched tuples?",
+          "back": "Left outer join R ⟕ S: all tuples of R preserved; unmatched get NULL for S-columns.\nRight outer join R ⟖ S: all tuples of S preserved; unmatched get NULL for R-columns.\nFull outer join R ⟗ S: all tuples from both sides preserved; unmatched padded with NULLs on the missing side.\nAll outer joins are neither commutative nor associative."
+        },
+        {
+          "front": "How does three-valued logic affect NULL comparisons in SQL WHERE clauses?",
+          "back": "SQL uses TRUE / FALSE / UNKNOWN. Any comparison involving NULL evaluates to UNKNOWN (e.g., NULL > 25000 = UNKNOWN). WHERE only passes rows where the condition is TRUE — UNKNOWN is treated as FALSE, so NULL comparisons silently exclude rows. Use IS NULL / IS NOT NULL to explicitly test for NULLs."
+        },
+        {
+          "front": "What is a query tree and how does execution proceed through it?",
+          "back": "A query tree (query evaluation tree) is a data structure representing a relational algebra expression. Leaf nodes hold input base relations. Internal nodes represent RA operators. The root holds the final result. Execution flows from leaves to root: each operator executes as soon as both its inputs are available. Query optimisers rewrite trees to reduce intermediate result sizes."
+        },
+        {
+          "front": "Why does projection NOT distribute over intersection, even though it distributes over union?",
+          "back": "π_Y(R ∪ S) ≡ π_Y(R) ∪ π_Y(S) — TRUE.\nπ_Y(R ∩ S) ≢ π_Y(R) ∩ π_Y(S) — FALSE in general.\nThe reason: projection hides attributes outside Y. Two full tuples in R and S may disagree on a hidden attribute (not in Y), so they would not be in R ∩ S, yet their Y-projections are identical and would appear in π_Y(R) ∩ π_Y(S). Thus the RHS can contain tuples absent from the LHS."
+        },
+        {
+          "front": "What is the key query optimisation heuristic for combining selection and Cartesian product?",
+          "back": "Push selections as close to the base relations as possible, before forming Cartesian products or joins. Instead of σ_C(R × S), evaluate σ_C(R) × S (if C only involves R's attributes) or directly R ⋈_C S. This reduces the size of the operands fed into the expensive join operation, dramatically cutting execution time and memory usage."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Normal Forms",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Why Normalization? Anomalies and Redundancy",
+          "body": "When a relation schema bundles together facts about different entities, storing the same information in multiple tuples causes three classic problems:\n\n| Anomaly | What goes wrong |\n|---------|-----------------|\n| **Redundancy** | The same fact (e.g. a department name) appears in every employee tuple — wastes space, risks inconsistency |\n| **Update anomaly** | Changing one fact requires touching every tuple that contains it; a missed update leaves the database in an inconsistent state |\n| **Insertion anomaly** | A new fact (e.g. a new department) cannot be recorded until at least one related entity (an employee) also exists |\n| **Deletion anomaly** | Deleting the last tuple for some entity (e.g. the last employee in a department) silently destroys facts about the other entity (the department) |\n\n**Goal of normalization:** Decompose a large relation schema R(A) with FDs F into smaller schemas Rᵢ(Aᵢ) such that:\n- redundancy is minimized\n- information is not lost (**lossless-join**)\n- all constraints remain enforceable (**dependency-preserving**)\n\nThe *normal form* of a relation is the highest-level normalization condition it satisfies. 1NF is independent of FDs; 2NF, 3NF, and BCNF are defined in terms of FDs."
+        },
+        {
+          "heading": "Lossless-Join and Dependency-Preserving Decomposition",
+          "body": "Given R(A, B, C) and FDs F, a decomposition into R₁(A, B) and R₂(B, C) must satisfy two properties:\n\n**Lossless-join:** r = Π_{A,B}(r) ⋈ Π_{B,C}(r) for every valid instance r — no spurious tuples are created when joining the pieces back together.\n\n**Key test (binary decomposition):** R(A, B, C) → R₁(A, B), R₂(B, C) is lossless-join **iff B is a superkey in R₁ or R₂**, i.e. iff F⁺ contains B → C or B → A.\n\n```\nExample — R(Employee, Level, Salary)\nF = {Employee→Level, Employee→Salary, Level→Salary}\n\nLossy split:   R₁(Employee, Salary)  R₂(Level, Salary)\n  Salary is NOT a superkey in either → lossy (spurious tuples possible)\n\nLossless split: R₁(Employee, Level)  R₂(Level, Salary)\n  Level is a key in R₂ (Level→Salary ∈ F) → lossless ✓\n  But: dependency Level→Salary is now local to R₂; Employee→Salary\n       is only implied transitively — dependency still preserved ✓\n```\n\n**Dependency-preserving:** The union of FDs derived from each piece (F₁ ∪ F₂ … ∪ Fₖ) is equivalent to F. Every original FD must be checkable within a single decomposed relation — no cross-table join needed to enforce the constraint.\n\nFor decompositions into more than two schemas: lossless-join means the natural join of all projections recovers r exactly; dependency preservation means each FD in F is covered by some Fᵢ restricted to Sᵢ."
+        },
+        {
+          "heading": "First Normal Form (1NF)",
+          "body": "**Definition:** A relation schema is in 1NF iff every attribute's domain contains only **atomic (indivisible) values**, and each attribute in each tuple holds exactly one value from its domain.\n\nThis rules out:\n- Multi-valued attributes (e.g. a `Dlocations` column storing `{Bellaire, Sugarland, Houston}` as a set)\n- Nested relations / tuples as attribute values\n\n**Fix:** Expand multi-valued attributes into separate rows, one value per row:\n\n```\nBefore (violates 1NF):\nDname        | Dnumber | Dlocations\n-------------|---------|---------------------------\nResearch     | 5       | {Bellaire, Sugarland, Houston}\n\nAfter (1NF satisfied):\nDname        | Dnumber | Dlocation\n-------------|---------|----------\nResearch     | 5       | Bellaire\nResearch     | 5       | Sugarland\nResearch     | 5       | Houston\n```\n\n**Note:** The relational model formally requires 1NF — a table with non-atomic values is not a valid relation. 1NF is therefore considered part of the basic definition of a relation, independent of any FDs or keys."
+        },
+        {
+          "heading": "Second Normal Form (2NF) — No Partial Dependencies",
+          "body": "**Prime vs. non-prime attributes:** An attribute is *prime* if it belongs to at least one candidate key; otherwise it is *non-prime*.\n\n**Definition:** R with FDs F is in 2NF iff it is in 1NF and there is no non-prime attribute A such that (Y → A) ∈ F⁺ for some **proper subset Y of a candidate key** K.\n\nIn plain terms: every non-prime attribute must be **fully** functionally dependent on the whole key — not just on part of it.\n\n**Shortcut:** If every candidate key is a single attribute, 2NF is automatically satisfied (no proper subset of a single-attribute key can exist).\n\n**Worked example — EMP_PROJ with key {Ssn, Pnumber}:**\n```\nEMP_PROJ(Ssn, Pnumber, Hours, Ename, Pname, Plocation)\n  FD1: {Ssn, Pnumber} → Hours         (full dependency — OK)\n  FD2: Ssn            → Ename         (partial — Ename depends on Ssn alone)\n  FD3: Pnumber        → Pname, Plocation (partial — depends on Pnumber alone)\n\n2NF decomposition:\n  EP1(Ssn, Pnumber, Hours)   — FD1\n  EP2(Ssn, Ename)            — FD2\n  EP3(Pnumber, Pname, Plocation) — FD3\n```\nNow every non-prime attribute is fully dependent on its table's key.\n\n**Anomalies caused by 2NF violation:** Ename is repeated for every project Paris works on; deleting all of Paris's projects loses her name; we can't store Pname until at least one employee is assigned."
+        },
+        {
+          "heading": "Third Normal Form (3NF) — No Transitive Dependencies",
+          "body": "**Definition:** R with FDs F is in 3NF iff for **every** FD (X → Y) ∈ F, at least one of the following holds:\n1. X → Y is **trivial** (Y ⊆ X)\n2. X is a **superkey** of R\n3. Every attribute A ∈ Y − X is a **prime attribute**\n\nCondition 3 is the relaxation that distinguishes 3NF from BCNF. 3NF forbids a non-prime attribute from being transitionally dependent on a key via another non-prime attribute.\n\n**3NF implies 2NF:** A 2NF violation (partial dependency Y → A, Y ⊊ K, A non-prime) also violates 3NF — Y is not a superkey, the FD is non-trivial, and A is non-prime.\n\n**Worked example — EMP_DEPT:**\n```\nEMP_DEPT(Ename, Ssn, Bdate, Address, Dnumber, Dname, Dmgr_ssn)\n  Key: Ssn\n  FD: Dnumber → Dname, Dmgr_ssn   (violates 3NF: Dnumber is not a superkey,\n                                    Dname and Dmgr_ssn are non-prime)\n\n3NF decomposition:\n  ED1(Ename, Ssn, Bdate, Address, Dnumber)\n  ED2(Dnumber, Dname, Dmgr_ssn)\n```\nNow Dname and Dmgr_ssn are directly determined by the key of their own table.\n\n**Quick check checklist for any FD X → A:**\n```\nIs X → A trivial?   → YES → OK\nIs X a superkey?    → YES → OK\nIs A prime?         → YES → OK (3NF only, not BCNF)\nNone of the above?  → VIOLATION\n```"
+        },
+        {
+          "heading": "Boyce-Codd Normal Form (BCNF) — Stricter Than 3NF",
+          "body": "**Definition:** R with FDs F is in BCNF iff for every FD (X → Y) ∈ F, one of the following holds:\n1. X → Y is **trivial** (Y ⊆ X)\n2. X is a **superkey** of R\n\nBCNF removes condition 3 from the 3NF definition — it never allows a non-trivial FD whose left-hand side is not a superkey, even if the right-hand side contains only prime attributes.\n\n**The LOTS1A example (3NF but not BCNF):**\n```\nLOTS1A(Property_id#, County_name, Lot#, Area)\n  FD1: Property_id#          → County_name, Lot#, Area  (superkey → OK)\n  FD2: County_name, Lot#     → Property_id#, Area       (superkey → OK)\n  FD5: Area                  → County_name              (Area NOT a superkey → BCNF violation)\n\n  But LOTS1A is in 3NF: in FD5, County_name IS prime ({County_name, Lot#} is a candidate key)\n```\n\n**BCNF decomposition along FD5:**\n```\nLOTS1AX(Property_id#, Area, Lot#)   — lossless, in BCNF\nLOTS1AY(Area, County_name)          — in BCNF\n\nProblem: FD2 (County_name, Lot# → Property_id#, Area) is lost — not dependency-preserving\n```\n\n**The BCNF tradeoff:**\n\n| Property | 3NF algorithm | BCNF algorithm |\n|----------|---------------|----------------|\n| All schemas in target NF | Yes | Yes |\n| Lossless-join | Yes | Yes |\n| Dependency-preserving | **Yes** (by construction) | **Not guaranteed** |\n\nWhen a schema cannot be decomposed into BCNF while preserving all dependencies, 3NF is the practical target."
+        },
+        {
+          "heading": "3NF Synthesis Algorithm",
+          "body": "The 3NF synthesis algorithm guarantees a lossless-join, dependency-preserving decomposition where every output schema is in 3NF.\n\n**Steps:**\n```\nInput:  R(A), set of FDs F\nOutput: Database schema D, all schemas in 3NF\n\n1. Compute minimal cover G of F\n   (canonical form: single RHS, remove extraneous LHS attributes,\n    remove redundant FDs)\n\n2. For each distinct LHS X in G, create a relation schema:\n   R_X = X ∪ {A₁, A₂, …, Aₖ}  where X → A₁, …, X → Aₖ are all FDs in G with LHS = X\n   D = {R_X | X is an LHS in G}\n\n3. Key relation (if needed):\n   If no schema in D already contains a candidate key of R,\n   add one schema consisting only of the attributes of a candidate key.\n\n4. Eliminate redundant schemas:\n   If R_X ⊆ R_Y for some pair, remove R_X from D.\n```\n\n**Why it works:**\n- **Dependency-preserving:** Every FD in G (and therefore F) acts within exactly one R_X ∈ D, and G ≡ F.\n- **Lossless-join:** The key relation (step 3) ensures a tuple of R can always be identified; compositions of lossless decompositions remain lossless.\n- **All schemas in 3NF:** The minimality of G guarantees no violations exist within any R_X.\n\n**Worked example:**\n```\nR(A, B, C, D),  F = {A→B, B→C, C→D}\nMinimal cover G = F (already minimal)\n\nStep 2 creates:\n  R_A = (A, B),  R_B = (B, C),  R_C = (C, D)\n\nStep 3: Does any schema contain a key of R?  A⁺ = {A,B,C,D} = all → A is a key.\n  R_A = (A, B) contains A → key relation already present, no extra schema needed.\n\nResult: D = {(A,B), (B,C), (C,D)}  — lossless-join, dep.-preserving, all in 3NF\n```"
+        }
+      ],
+      "questions": [
+        {
+          "id": "L5Q1",
+          "text": "Which of the following correctly describes an update anomaly in an unnormalized relation?",
+          "options": [
+            "Adding a new entity requires a separate INSERT statement for each attribute",
+            "Changing a single fact stored in multiple tuples may leave the database inconsistent if only some tuples are updated",
+            "Querying the relation requires a full table scan instead of an index lookup",
+            "NULL values appear in non-key attributes when a new tuple is inserted"
+          ],
+          "correct": [1],
+          "explanation": "An update anomaly occurs because the same real-world fact (e.g. a department name) is physically stored in multiple rows. If only a subset of those rows is updated — perhaps due to a partial update transaction — different rows now show different values for the same fact, creating inconsistency. Option A describes an insertion operation, not an anomaly. Option C is a query-performance concern unrelated to normalization. Option D describes an insertion anomaly (specifically the case of a partial key), not an update anomaly.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q2",
+          "text": "A decomposition of R(A, B, C) into R₁(A, B) and R₂(B, C) is lossless-join iff:",
+          "options": [
+            "A is a superkey of R₁ or R₂",
+            "B is a superkey of R₁ or R₂",
+            "C is a superkey of R₁ or R₂",
+            "The FD set F contains A → C or C → A"
+          ],
+          "correct": [1],
+          "explanation": "The necessary and sufficient condition for a binary lossless-join decomposition on the shared attribute set B is that B forms a superkey in at least one of the two resulting schemas. This means F⁺ contains either B → A (making B a superkey of R₁(A,B)) or B → C (making B a superkey of R₂(B,C)). Options A and C pick the wrong shared attribute. Option D describes a condition that is unrelated to the lossless-join criterion — what matters is the relationship between the join attribute and the other attributes.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q3",
+          "text": "Consider R(Ssn, Pnumber, Hours, Ename, Pname, Plocation) with candidate key {Ssn, Pnumber} and FDs: {Ssn,Pnumber}→Hours, Ssn→Ename, Pnumber→{Pname,Plocation}. What is the highest normal form of R?",
+          "options": [
+            "1NF — because all attribute values are atomic",
+            "2NF — because all non-prime attributes are fully dependent on the key",
+            "3NF — because there are no transitive dependencies among non-prime attributes",
+            "BCNF — because every FD has a superkey on the left-hand side"
+          ],
+          "correct": [0],
+          "explanation": "The relation is in 1NF (atomic values) but violates 2NF. The non-prime attribute Ename depends on Ssn alone — a proper subset of the composite key {Ssn, Pnumber}. This is a partial dependency, which 2NF forbids. Similarly, Pname and Plocation depend only on Pnumber. Because 2NF is violated, the highest normal form R satisfies is 1NF. Options B, C, D are all higher than 1NF and therefore incorrect.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q4",
+          "text": "R(Employee, Level, Salary) has FDs F = {Employee→Level, Employee→Salary, Level→Salary}. Consider decomposition D1: R₁(Employee, Level), R₂(Level, Salary). Which properties does D1 have? Select ALL that apply.",
+          "options": [
+            "Lossless-join",
+            "Dependency-preserving",
+            "All schemas in BCNF",
+            "All schemas in 3NF"
+          ],
+          "correct": [0, 1, 2, 3],
+          "explanation": "Lossless-join: Level is a key of R₂ (Level→Salary ∈ F), so the shared attribute Level is a superkey of R₂ — the binary lossless-join condition is satisfied. Dependency-preserving: F₁ = {Employee→Level} covers FD1; F₂ = {Level→Salary} covers FD3; Employee→Salary is derivable by transitivity from F₁ ∪ F₂ — all FDs are preserved. BCNF: In R₁, Employee is the sole key, so Employee→Level has a superkey on the left — BCNF. In R₂, Level is the sole key, so Level→Salary is fine — BCNF. 3NF: BCNF implies 3NF. All four properties hold.",
+          "type": "multiple"
+        },
+        {
+          "id": "L5Q5",
+          "text": "A relation schema R is in 3NF. Which of the following can we conclude? Select ALL that apply.",
+          "options": [
+            "R is in 2NF",
+            "R is in BCNF",
+            "No non-prime attribute is transitively dependent on any candidate key via a non-prime attribute",
+            "Every non-trivial FD has a superkey on the left-hand side"
+          ],
+          "correct": [0, 2],
+          "explanation": "3NF implies 2NF (option A is true): a 2NF violation would be a partial dependency Y→A where Y is a proper key-subset and A is non-prime. Such a FD fails all three 3NF conditions — Y is not a superkey (it's a proper key-subset), the FD is non-trivial, and A is non-prime — so the relation wouldn't be in 3NF either. Option C is true: 3NF directly prohibits transitive dependencies through non-prime attributes. Option B is false: BCNF is strictly stronger than 3NF — a relation can be in 3NF without being in BCNF (e.g. LOTS1A). Option D describes BCNF, not 3NF — 3NF allows non-superkey LHS as long as the RHS is prime.",
+          "type": "multiple"
+        },
+        {
+          "id": "L5Q6",
+          "text": "LOTS1A(Property_id#, County_name, Lot#, Area) has FDs: FD1: Property_id#→{County_name,Lot#,Area}; FD2: {County_name,Lot#}→{Property_id#,Area}; FD5: Area→County_name. What is the highest normal form of LOTS1A?",
+          "options": [
+            "1NF",
+            "2NF",
+            "3NF",
+            "BCNF"
+          ],
+          "correct": [2],
+          "explanation": "LOTS1A has two candidate keys: Property_id# (from FD1) and {County_name, Lot#} (from FD2). All four attributes are therefore prime. For FD5 (Area→County_name): it is non-trivial; Area is not a superkey; but County_name IS a prime attribute — so condition 3 of 3NF is satisfied and 3NF is not violated. However, BCNF requires that every non-trivial FD has a superkey on the left. Area is not a superkey, so FD5 violates BCNF. Thus LOTS1A is in 3NF but not BCNF — the highest normal form it satisfies is 3NF.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q7",
+          "text": "The 3NF synthesis algorithm guarantees which of the following properties? Select ALL that apply.",
+          "options": [
+            "Lossless-join decomposition",
+            "Dependency-preserving decomposition",
+            "All output schemas are in BCNF",
+            "All output schemas are in 3NF"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "The 3NF synthesis algorithm constructs schemas from a minimal cover G and always adds a key relation if needed — this guarantees lossless-join (option A). Because every FD in G is represented in exactly one output schema and G is equivalent to F, the decomposition is dependency-preserving (option B). The output schemas are guaranteed to be in 3NF (option D) — this follows from the minimality of G. Option C is false: the algorithm targets 3NF, not BCNF. BCNF may not be achievable while preserving dependencies, and the 3NF algorithm does not attempt it.",
+          "type": "multiple"
+        },
+        {
+          "id": "L5Q8",
+          "text": "When should you prefer a 3NF decomposition over a BCNF decomposition?",
+          "options": [
+            "When storage space is a primary concern, since 3NF leaves more redundancy",
+            "When dependency preservation is required and the schema cannot be decomposed into BCNF while preserving all FDs",
+            "When the relation has a single-attribute candidate key, which prevents BCNF from being achieved",
+            "When query performance is more important than data integrity"
+          ],
+          "correct": [1],
+          "explanation": "The key practical tradeoff: BCNF provides stronger redundancy elimination but does not guarantee dependency preservation. When a BCNF decomposition would lose an FD — meaning that FD can no longer be enforced by local constraints on a single table — the designer must fall back to 3NF, which always achieves both lossless-join and dependency preservation. Option A is backwards: less redundancy is a benefit of higher normal forms, not a reason to prefer a lower one. Option C is false: a single-attribute key schema is already in BCNF. Option D confuses normalization concerns with query optimization.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q9",
+          "text": "R(A, B, C, D) has FDs F = {A→B, B→C, C→D}. Apply the 3NF synthesis algorithm. Which database schema D does the algorithm produce (assuming no redundant schemas)?",
+          "options": [
+            "{(A,B,C,D)} — the original relation is already in 3NF",
+            "{(A,B), (B,C), (C,D)} — one schema per distinct LHS in the minimal cover",
+            "{(A,B,C), (C,D)} — grouping FDs with overlapping LHS attributes",
+            "{(A,B,C,D), (A)} — adding a key relation to the original"
+          ],
+          "correct": [1],
+          "explanation": "Step 1: F = {A→B, B→C, C→D} is already a minimal cover G — all FDs have single RHS attributes, no extraneous LHS attributes, and no FD is redundant. Step 2: Distinct LHS values are A, B, C — so create R_A=(A,B), R_B=(B,C), R_C=(C,D). Step 3: Check if any schema contains a key of R. A⁺ = {A,B,C,D} = all attributes, so A is a candidate key. R_A=(A,B) contains A — key relation already present. Step 4: No schema is a subset of another. Result: D = {(A,B),(B,C),(C,D)}. The original relation is NOT in 3NF: B→C and C→D both have a non-superkey on the left (B and C are not keys) and non-prime attributes on the right, ruling out option A.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q10",
+          "text": "Consider decomposing LOTS1A(Property_id#, County_name, Lot#, Area) into LOTS1AX(Property_id#, Area, Lot#) and LOTS1AY(Area, County_name) to eliminate the BCNF violation Area→County_name. Which statement is correct?",
+          "options": [
+            "The decomposition is lossy because Area is not a superkey of either schema",
+            "The decomposition is lossless-join because Area is the shared attribute and Area→County_name makes Area a superkey of LOTS1AY",
+            "The decomposition is dependency-preserving because all original FDs are captured within LOTS1AX or LOTS1AY",
+            "The decomposition achieves 3NF but not BCNF in both output schemas"
+          ],
+          "correct": [1],
+          "explanation": "The shared attribute between LOTS1AX and LOTS1AY is Area. The FD Area→County_name means Area is a superkey of LOTS1AY (Area determines all other attributes in that schema). By the binary lossless-join criterion, the decomposition is lossless-join — option B is correct. Option A is false: Area IS a superkey of LOTS1AY. Option C is false: FD2 (County_name,Lot#→Property_id#,Area) spans attributes of LOTS1AX and LOTS1AY and cannot be checked in either schema alone — it is lost. Option D is false: both LOTS1AX and LOTS1AY are in BCNF (each non-trivial FD within them has a superkey as its left-hand side).",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What are the three update/insertion/deletion anomalies caused by poor schema design?",
+          "back": "Update anomaly: changing a repeated fact requires updating many tuples — missing one leaves inconsistency. Insertion anomaly: a new fact cannot be stored unless a related entity also exists. Deletion anomaly: deleting the last tuple for one entity silently destroys facts about another entity. All three stem from one relation encoding facts about multiple distinct entities."
+        },
+        {
+          "front": "What is the lossless-join condition for a binary decomposition of R(A,B,C) into R₁(A,B) and R₂(B,C)?",
+          "back": "The decomposition is lossless-join iff the shared attribute set B is a superkey in R₁ or R₂, i.e. F⁺ contains B→A or B→C. Equivalently, no 'spurious' tuples appear when the two projected relations are natural-joined back together."
+        },
+        {
+          "front": "What does it mean for a decomposition to be dependency-preserving?",
+          "back": "Each functional dependency in F can be enforced by local constraints on a single decomposed relation — no cross-table join is needed to check any FD. Formally, F and the union of FD sets Fᵢ (each restricted to schema Sᵢ) must be equivalent: (F₁ ∪ … ∪ Fₖ)⁺ ⊇ F⁺."
+        },
+        {
+          "front": "What does First Normal Form (1NF) require?",
+          "back": "Every attribute domain must consist of atomic (indivisible) values, and each tuple must have exactly one value per attribute. Multi-valued attributes (sets, lists) and nested relations are forbidden. 1NF is part of the basic definition of a relation and is independent of FDs."
+        },
+        {
+          "front": "What is the difference between a prime and a non-prime attribute?",
+          "back": "A prime attribute belongs to at least one candidate key of the relation. A non-prime (non-key) attribute belongs to no candidate key. The distinction matters for 2NF and 3NF: these normal forms impose constraints specifically on non-prime attributes."
+        },
+        {
+          "front": "What does Second Normal Form (2NF) forbid?",
+          "back": "Partial dependencies: a non-prime attribute A must not be functionally determined by a proper subset Y of any candidate key K (Y ⊊ K → A is forbidden when A is non-prime). Every non-prime attribute must be fully functionally dependent on every candidate key. 2NF is automatically satisfied when all candidate keys are single-attribute."
+        },
+        {
+          "front": "State the three conditions that let an FD X→Y pass the 3NF test.",
+          "back": "For R to be in 3NF, every FD X→Y in F must satisfy at least one of: (1) the FD is trivial (Y ⊆ X); (2) X is a superkey of R; (3) every attribute in Y−X is a prime attribute. Condition 3 is the relaxation that distinguishes 3NF from BCNF — it allows non-superkey determinants whose right-hand side is prime."
+        },
+        {
+          "front": "What does BCNF require, and how does it differ from 3NF?",
+          "back": "BCNF requires that for every non-trivial FD X→Y, X must be a superkey. It drops the 3NF exception for prime RHS attributes. Consequence: BCNF is strictly stronger than 3NF — every BCNF schema is also in 3NF, but not vice versa. A schema can be in 3NF yet violate BCNF when a non-superkey determines a prime attribute."
+        },
+        {
+          "front": "What are the four steps of the 3NF synthesis algorithm?",
+          "back": "1. Compute a minimal cover G of F (canonical form, no extraneous attributes, no redundant FDs). 2. For each distinct LHS X in G, create schema Rₓ = X ∪ {all attributes determined by X in G}. 3. If no schema in D contains a candidate key of R, add one schema with only key attributes. 4. Remove redundant schemas (any Rₓ ⊆ Rᵧ). Output: lossless-join, dependency-preserving decomposition, all schemas in 3NF."
+        },
+        {
+          "front": "Why does BCNF decomposition not guarantee dependency preservation?",
+          "back": "BCNF forces every non-trivial FD to have a superkey on the left. When an FD X→Y has X as a non-superkey, the BCNF decomposition splits those attributes across two schemas. The FD that connects attributes in the two pieces can no longer be enforced within either single schema — it is 'lost'. The LOTS1A example: BCNF decomposition along Area→County_name loses FD2 (County_name,Lot#→Property_id#,Area)."
+        },
+        {
+          "front": "How does the Chase test verify lossless-join for a multi-way decomposition?",
+          "back": "Build table T with one row per sub-schema and one column per attribute of R. Initialise cells: T[i,X] = t[X] (the actual value) if X ∈ Sᵢ, else a distinct placeholder xⱼ. Repeatedly apply each FD Y→X ∈ F: if two rows agree on all Y-columns, set their X-values equal (use the real value if either has it). The decomposition is lossless-join iff some row becomes the all-real-values tuple t = (a,b,…,z)."
+        },
+        {
+          "front": "What is the practical guideline for choosing between BCNF and 3NF as a target normal form?",
+          "back": "Prefer BCNF when eliminating all redundancy is the priority and losing some FDs is acceptable (they can be enforced at the application layer). Prefer 3NF when all FDs must be enforceable by the DBMS through local constraints — the 3NF synthesis algorithm always produces a lossless-join and dependency-preserving decomposition. When in doubt: try BCNF first; fall back to 3NF if a required FD is lost."
+        }
+      ]
+    }
+    ,{
+      "id": 6,
+      "title": "Graph Databases & Cypher",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "What Is a Graph Database?",
+          "body": "A graph database stores and queries data modeled as a network of nodes and edges. The formal definition is G = (V, E, λ_V, λ_E), where V is the node set, E is the edge set (directed or undirected), λ_V assigns attributes to nodes, and λ_E assigns attributes to edges.\n\n**Three core building blocks:**\n- **Nodes:** entities (e.g., persons, movies, proteins)\n- **Edges:** directed relationships between nodes (e.g., FOLLOWS, ACTED_IN)\n- **Properties:** key-value pairs attached to nodes or edges (e.g., `name: 'Alice'`, `since: 2020`)\n\nAdditionally, **node labels** (tags identifying the entity type, like `Person` or `Movie`) and **edge names** (the relationship type, like `KNOWS`) are first-class metadata.\n\n**Key difference from relational databases:** In a relational DB, relationships are represented by foreign-key joins computed at query time. In a graph DB, joins are *implicit in the schema* — related nodes point to each other directly in the underlying storage, making traversals constant-time per hop.\n\n```\n(Ruth:User)-[:FOLLOWS]->(Harry:User)\n(Harry:User)-[:FOLLOWS]->(Billy:User)\n```\n\nFinding all of Ruth's followers' followers is a breadth-first search from the \"Ruth\" node — no recursive SQL join needed."
+        },
+        {
+          "heading": "Graph Databases vs Relational Databases",
+          "body": "Graph databases were developed to handle highly interconnected data — social networks, recommendation engines, biological networks — where relational schemas and recursive joins are awkward and slow.\n\n| Dimension | Relational | Graph |\n|-----------|-----------|-------|\n| Data model | Tables, rows, columns | Nodes, edges, properties |\n| Relationships | Foreign keys + JOINs at query time | First-class edges, navigated at storage time |\n| Schema | Rigid, must be defined upfront | Flexible; can populate without prior schema |\n| Multi-hop queries | Recursive joins, expensive | Breadth/depth-first traversal, efficient |\n| Best for | Complex aggregations, uniform structure | Highly connected data, traversal-heavy queries |\n\n**When graph databases win:**\n1. **Traversal-heavy queries:** finding friends-of-friends, computing shortest paths, ranking in a citation network — each hop is O(1) with native storage.\n2. **Schema evolution:** adding a new node type or edge type does not break existing data.\n3. **Natural modeling:** relationships are real-world facts, not a side-effect of a join table.\n\n**When relational databases win:** complex aggregation (GROUP BY, HAVING, window functions), highly uniform data with many bulk operations."
+        },
+        {
+          "heading": "Native Graph Storage & Index-Free Adjacency",
+          "body": "Graph databases can use either **native** or **non-native** storage internally.\n\n**Native graph storage** uses data structures specifically designed for graphs — an adjacency-list-like layout where each node holds direct pointers to its neighbours. This is also called **index-free adjacency**: to traverse an edge, you follow a pointer rather than looking up an index.\n\n```\nNode A  →  [ptr to edge AB, ptr to edge AC]\nNode B  →  [ptr to edge AB, ptr to edge BD]\n```\n\n- **Advantage:** traversal queries are very fast — each hop is O(1).\n- **Disadvantage:** attribute-only queries (e.g., find all nodes where `age > 30`) must scan all nodes and can be slower or more memory-intensive than in a relational engine.\n\n**Non-native graph storage** stores the graph internally as a relational database, while still exposing a graph data model to the user.\n\n**Key definition:** A graph database is defined by what it *exposes to the user* (a graph data model and a graph query language), not necessarily by how it stores data internally. Neo4j uses native storage; some other graph databases do not."
+        },
+        {
+          "heading": "Mapping an ER Diagram to a Graph Schema",
+          "body": "The ER model from relational design maps cleanly onto a graph schema using two primary rules:\n\n**Rule A — Entity Types become Vertex Types:**\n- The entity type name becomes the **node label**.\n- The entity's attributes become **node properties**.\n\n```\nER: User(name, login) → Graph: (:User {name: String, login: String})\n```\n\n**Rule B — Binary Relationship Types become Edge Types:**\n- The relationship name becomes the **edge label**.\n- Relationship attributes become **edge properties**.\n- The two participating entity types become the **source and target node labels**.\n\n```\nER: User --Owns(1:N)--> Page  →  (:User)-[:owns {# = 1:N}]->(:Page)\n```\n\n**Higher-order (N-ary) relationships become Vertex Types:**\nAn N-ary relationship (degree ≥ 3) cannot be directly represented as a single edge (edges connect exactly two nodes). Instead, the relationship itself becomes a new node type, and each participating entity type gets an edge to/from that new node.\n\n```\nER: Invites(User-inviter, User-invitee, Page, allowComments)\n→\n(:Invitation {allowComments: Boolean})\n  -[:inviter]->(:User),  -[:invitee]->(:User),  -[:page]->(:Page)\n```\n\nUnlike relational databases, a graph database **can be populated without prior schema specification** — the schema is optional, and data can be inserted freely."
+        },
+        {
+          "heading": "Graph Schema Transformation Rules",
+          "body": "Graph schemas can be restructured using equivalence-preserving transformations. Two schemas are **equivalent** if there is a bijection between their graph universes (every database valid in one can be ported to the other and back).\n\n**The 7 main transformation rules:**\n\n| Rule | What it does |\n|------|--------------|\n| **1. Renaming** | Rename a vertex label, edge label, or property — as long as the new name is not already in use |\n| **2. Reversing edges** | Flip edge direction (and reverse cardinality constraints). Allowed for self-loops always; for non-self-loops only if no edge already exists in the other direction |\n| **3. Property displacement** | Move a property from an edge to an adjacent vertex (or vice versa), when the look-across cardinality of the edge is 1 |\n| **4. Specialization/Generalization** | Split a vertex type into two disjoint subtypes (specialization) or merge two types into one (generalization) |\n| **5. Edge promotion** | Promote an edge type to a vertex type by adding two new edge types from the new vertex to the original endpoints |\n| **6. Property promotion** | Promote a group of properties to a new vertex type with edges connecting it to all vertex types that had those properties |\n| **7. Multivalued property expansion** | Move a list-valued property to a separate vertex type with a 1:N in-edge |\n\n**General simplification rule:** Deleting a *derived* vertex type, edge type, or property from schema S yields an equivalent schema S' — the removed element can be reconstructed from the remaining schema.\n\n**General complexification rule:** Adding a new element T such that T is derived in S' = S + T yields an equivalent schema."
+        },
+        {
+          "heading": "Cypher: Pattern Matching with ASCII Art",
+          "body": "Cypher is the declarative query language for Neo4j. Its core idea: describe the **graph pattern** you want to find using ASCII-art notation, then state what you want to retrieve.\n\n**Syntax at a glance:**\n\n| Element | Cypher syntax | Example |\n|---------|---------------|---------|\n| Node | `(variable:Label {prop: val})` | `(p:Person {name: 'Anna'})` |\n| Directed edge | `-[:TYPE]->` | `-[:ACTED_IN]->` |\n| Undirected edge | `-[:TYPE]-` | `-[:KNOWS]-` |\n| Edge with variable | `[r:TYPE]` | `[r:KNOWS WHERE r.since < 2020]` |\n| Multi-hop path | `-[:TYPE*min..max]-` | `-[:KNOWS*1..5]-` |\n\n**Basic query structure:**\n```cypher\nMATCH (actor:Actor)-[:ACTED_IN]->(movie:Movie {title: 'The Matrix'})\nRETURN actor.name\n```\n\nCompare with SQL — Cypher says *what pattern exists in the graph*, SQL says *which columns to select then which rows to keep*.\n\n**Filtering with WHERE:**\n```cypher\nMATCH (n:Person {name: 'Anna'})-[r:KNOWS WHERE r.since < 2020]->(friend:Person)\nRETURN count(r) AS numberOfFriends\n```\n\n**Important:** Nodes can carry multiple labels (`n:Person:Actor`), but edges can only have **one type** — `[r:KNOWS:LOVES]` is invalid syntax. Neo4j allows parallel edges of the same type."
+        },
+        {
+          "heading": "Cypher: Writing and Modifying Data",
+          "body": "Beyond reading, Cypher supports full CRUD operations.\n\n**CREATE — add nodes and edges:**\n```cypher\n-- Create two nodes with multiple labels\nCREATE (charlie:Person:Actor {name: 'Charlie Sheen'}),\n       (oliver:Person:Director {name: 'Oliver Stone'})\n\n-- Match existing nodes, then create edges and an inline new node\nMATCH (charlie:Person {name: 'Charlie Sheen'}),\n      (oliver:Person {name: 'Oliver Stone'})\nCREATE (charlie)-[:ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})\n       <-[:DIRECTED]-(oliver)\n```\n\n**SET — update properties:**\n```cypher\nMATCH (n {name: 'Andy'})\nSET n.surname = 'Taylor'\nRETURN n.name, n.surname\n```\n\n**DELETE — remove nodes and edges:**\n```cypher\n-- Delete isolated node (must have no edges)\nMATCH (n:Person {name: 'Tom Hanks'}) DELETE n\n\n-- Delete edges only (node survives)\nMATCH (n:Person {name: 'Laurence Fishburne'})-[r:ACTED_IN]->() DELETE r\n\n-- Delete node together with all its incident edges\nMATCH (n:Person {name: 'Carrie-Anne Moss'}) DETACH DELETE n\n```\n\n**MERGE — create-or-match (upsert):** Checks if the pattern exists; creates it only if it does not. Essential for avoiding duplicates when loading data incrementally."
+        },
+        {
+          "heading": "Cypher: Schema Constraints",
+          "body": "Cypher only partially enforces schema — it **cannot** constrain which node labels an edge may connect, enforce cardinality constraints, or enforce total participation. This trade-off gives flexibility but puts data-integrity responsibility on the user.\n\n**What Cypher CAN enforce:**\n\n**1. Property uniqueness constraint** — no two nodes (or edges) of the same label/type share the same property value:\n```cypher\nCREATE CONSTRAINT book_title_year\nFOR (book:Book) REQUIRE (book.title, book.publicationYear) IS UNIQUE\n```\n\n**2. Property existence constraint** — a property must not be NULL:\n```cypher\nCREATE CONSTRAINT wrote_year\nFOR ()-[wrote:WROTE]-() REQUIRE wrote.year IS NOT NULL\n```\n\n**3. Property type constraint** — a property must be of a given Cypher type:\n```cypher\nCREATE CONSTRAINT movie_tagline\nFOR (movie:Movie) REQUIRE movie.tagline IS :: STRING | LIST<STRING NOT NULL>\n```\n\n**4. Key constraint** — combines uniqueness + existence (shorthand for both at once):\n```cypher\nCREATE CONSTRAINT actor_fullname\nFOR (actor:Actor) REQUIRE (actor.firstname, actor.surname) IS NODE KEY\n```\n\nThe schema flexibility of graph databases is simultaneously their **strength** (easy evolution, no rigid upfront design) and **weakness** (the application must validate data integrity that the DBMS cannot enforce)."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L6Q1",
+          "text": "What is the key architectural difference between how relational and native graph databases handle relationships?",
+          "options": [
+            "Relational databases store edges as first-class objects; graph databases compute joins at query time",
+            "Native graph databases use index-free adjacency — related nodes point directly to each other — while relational databases compute joins at query time",
+            "Native graph databases use B-tree indexes on every relationship; relational databases do not",
+            "Relational databases traverse relationships in O(1) per hop; graph databases require O(log n) index lookups"
+          ],
+          "correct": [1],
+          "explanation": "In a native graph database, each node stores direct pointers to its neighbouring nodes — this is called index-free adjacency. Traversing one hop is O(1): follow the pointer, no index lookup needed. In a relational database, relationships are encoded as foreign keys and must be joined at query time, which does not benefit from this pointer-following shortcut. Options A and D reverse the facts, and C is incorrect — native storage avoids the B-tree index for traversal.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q2",
+          "text": "The formal definition of a graph in this course is G = (V, E, λ_V, λ_E). What do λ_V and λ_E represent?",
+          "options": [
+            "λ_V is the set of vertex labels; λ_E is the set of edge labels",
+            "λ_V is a function assigning attributes to nodes; λ_E is a function assigning attributes to edges",
+            "λ_V is the number of vertices; λ_E is the number of edges",
+            "λ_V and λ_E are the adjacency functions used by native storage"
+          ],
+          "correct": [1],
+          "explanation": "In the formal definition G = (V, E, λ_V, λ_E): V is the node set, E is the edge set, λ_V is a function that assigns attribute key-value pairs to each node u ∈ V, and λ_E is a function that assigns attribute key-value pairs to each edge e ∈ E. These attribute functions are what distinguish a property graph from a simple mathematical graph. Options A, C, and D each misrepresent the formal role of these functions.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q3",
+          "text": "Which of the following Cypher snippets correctly creates a directed ACTED_IN edge with a role property from a matched Person node to a new Movie node?",
+          "options": [
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[:ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})",
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)<-[:ACTED_IN {role: 'Bud Fox'}]-(ws:Movie {title: 'Wall Street'})",
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})",
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[:ACTED_IN role: 'Bud Fox']->(ws:Movie {title: 'Wall Street'})"
+          ],
+          "correct": [0],
+          "explanation": "Option A is correct: edge type in brackets with colon [:ACTED_IN], edge properties in curly braces {role: 'Bud Fox'}, arrow pointing right to indicate the direction from actor to movie. Option B points the arrow backward (person receives the edge). Option C omits the colon before the edge type, which is required syntax. Option D puts edge properties outside the brackets, which is invalid syntax.",
+          "shuffle": false,
+          "type": "single"
+        },
+        {
+          "id": "L6Q4",
+          "text": "Consider this Cypher query:\n```\nMATCH (n:Person {name: 'Anna'})-[:KNOWS*1..5]-(friend:Person WHERE n.born < friend.born)\nRETURN DISTINCT friend.name\n```\nWhat does this query return?",
+          "options": [
+            "The names of all Person nodes exactly 1 to 5 hops from Anna via KNOWS edges, where the friend was born after Anna — duplicates removed",
+            "The names of all Person nodes exactly 1 to 5 hops from Anna via directed KNOWS edges only, where Anna was born after the friend",
+            "The names of all Person nodes connected to Anna by exactly 5 KNOWS edges, regardless of birth year",
+            "An error — the undirected edge pattern -[:KNOWS]- is not valid Cypher"
+          ],
+          "correct": [0],
+          "explanation": "The pattern -[:KNOWS*1..5]- (no arrowhead) means the traversal follows KNOWS edges in either direction — the relationship is treated as undirected for this query. The range *1..5 means between 1 and 5 hops. The WHERE clause n.born < friend.born keeps only friends born after Anna (higher birth year = born later). RETURN DISTINCT removes duplicate names. Option B incorrectly says 'directed only' and reverses the birth-year condition. Options C and D are both wrong.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q5",
+          "text": "In an ER diagram, you have a ternary relationship type SUPPLY connecting SUPPLIER, PART, and PROJECT with an attribute 'quantity'. How should this be mapped to a graph schema?",
+          "options": [
+            "Create three binary edge types: SUPPLIER-[:SUPPLIES]->PART, SUPPLIER-[:SUPPLIES]->PROJECT, PART-[:USED_IN]->PROJECT",
+            "Create a new SUPPLY vertex type with a quantity property and three edge types connecting it to SUPPLIER, PART, and PROJECT nodes",
+            "Create a single edge type from SUPPLIER to PROJECT with PART and quantity as edge properties",
+            "N-ary relationships cannot be represented in graph databases"
+          ],
+          "correct": [1],
+          "explanation": "N-ary (higher-order) relationships with degree ≥ 3 cannot be represented as a single edge, because edges in a property graph connect exactly two nodes. The standard transformation is: the relationship type itself becomes a new vertex type (SUPPLY node), and the participating entity types each get an edge type connecting them to the new vertex. Properties of the relationship (quantity) become properties of the new SUPPLY vertex. Option A loses information — three binary edges cannot express which specific supplier-part-project combination occurred. Options C and D are incorrect.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q6",
+          "text": "Which of the following statements about Cypher's schema enforcement are correct? Select ALL that apply.",
+          "options": [
+            "Cypher can enforce that a property value is unique across all nodes with a given label",
+            "Cypher can enforce cardinality constraints (e.g., that a Person node has at most one BORN_IN edge)",
+            "Cypher can enforce that a property must not be NULL for all relationships of a given type",
+            "Cypher can enforce that edges of type ACTED_IN may only connect Actor nodes to Movie nodes"
+          ],
+          "correct": [0, 2],
+          "explanation": "Cypher supports property uniqueness constraints (A ✓) via CREATE CONSTRAINT ... IS UNIQUE, and property existence constraints (C ✓) via CREATE CONSTRAINT ... IS NOT NULL. It cannot enforce cardinality constraints (B ✗) — the max number of edges per node is not enforceable through Cypher schema. It also cannot restrict which node labels an edge type may connect (D ✗). This is a known limitation and a source of both flexibility and data-integrity risk.",
+          "type": "multiple"
+        },
+        {
+          "id": "L6Q7",
+          "text": "Consider this Cypher query:\n```\nMATCH (:Person {name: 'Anna'})-[r:KNOWS WHERE r.since < 2020]->(friend:Person)\nRETURN count(r) AS numberOfFriends\n```\nDoes the result variable `numberOfFriends` accurately count Anna's friends? Why or why not?",
+          "options": [
+            "Yes — it counts all outgoing KNOWS edges from Anna, which equals her friend count",
+            "No — it counts KNOWS relationships established before 2020, not all current friends; also, if Anna and a friend have multiple KNOWS edges, each is counted separately",
+            "No — count(r) counts nodes, not relationships",
+            "Yes — the WHERE clause on the edge filters correctly and count(r) counts unique friends"
+          ],
+          "correct": [1],
+          "explanation": "The query only matches KNOWS edges where r.since < 2020 — friendships formed in 2020 or later are excluded. Additionally, Neo4j allows parallel edges of the same type between the same two nodes (unless prevented by a schema constraint), so if Anna and a friend have two KNOWS edges both before 2020, count(r) counts 2 for that friend. The result is the count of matching edge instances, not unique friends. Option A ignores the since filter. Option C is wrong — count(r) counts relationship bindings, not nodes.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q8",
+          "text": "You want to apply graph schema transformation Rule 3 (Property Displacement) to move a property from edge (:T1)-[:E]->(:T2) to vertex type T1. What condition must hold?",
+          "options": [
+            "The edge E must have an M:N cardinality constraint",
+            "T1's look-across cardinality with respect to E must be 1 (i.e., each T1 node has at most one E edge)",
+            "T2's look-across cardinality with respect to E must be 1",
+            "The edge E must be a self-loop"
+          ],
+          "correct": [1],
+          "explanation": "Property displacement from an edge to vertex T1 is valid only if T1's look-across cardinality w.r.t. E is 1 — meaning each T1 node is connected to at most one T2 node via E. Under this condition, each T1 node is associated with exactly one edge instance, so the property can be unambiguously moved to T1 without information loss. If T1 could have multiple E edges (M:N), each edge might have a different property value, so moving the property to T1 would lose which value corresponds to which edge. Options A, C, and D describe incorrect conditions.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q9",
+          "text": "Which of the following correctly apply the Cypher DETACH DELETE vs DELETE distinction? Select ALL that apply.",
+          "options": [
+            "DETACH DELETE n removes node n along with all its incident edges",
+            "DELETE n on a node that still has incident edges will fail — Neo4j raises an error",
+            "DELETE r where r is a relationship variable removes only the relationship, not the connected nodes",
+            "DETACH DELETE n removes only the node's properties, leaving the node itself in the graph"
+          ],
+          "correct": [0, 1, 2],
+          "explanation": "DETACH DELETE n (A ✓) first removes all edges attached to n, then deletes n itself. Plain DELETE n (B ✓) on a node with incident edges raises a runtime error in Neo4j — you must either manually delete edges first or use DETACH DELETE. DELETE r where r is bound to a relationship (C ✓) removes only that relationship; the connected nodes remain. Option D is wrong — DETACH DELETE removes the entire node (and its edges), not just its properties.",
+          "type": "multiple"
+        },
+        {
+          "id": "L6Q10",
+          "text": "A social network stores FOLLOWS edges between Person nodes. A query needs to find all accounts reachable from 'Ruth' by following between 2 and 4 FOLLOWS edges. Which Cypher MATCH clause is correct?",
+          "options": [
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS*2..4]->(reachable:Person)",
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS]->(reachable:Person) WHERE length = 4",
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS{2,4}]->(reachable:Person)",
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS]->()-[:FOLLOWS]->()-[:FOLLOWS]->(reachable:Person)"
+          ],
+          "correct": [0],
+          "explanation": "Variable-length path syntax in Cypher uses *min..max inside the relationship brackets: -[:FOLLOWS*2..4]-> means between 2 and 4 directed FOLLOWS hops. Option B uses invalid syntax — there is no bare 'length' keyword in this context. Option C uses an incorrect {2,4} notation (that is not valid Cypher path syntax). Option D hard-codes exactly 3 hops, not 2–4, and misses the 2-hop and 4-hop cases.",
+          "shuffle": false,
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What are the four components of the formal graph definition G = (V, E, λ_V, λ_E)?",
+          "back": "V = set of nodes, E = set of edges (directed or undirected), λ_V = function assigning attributes to nodes, λ_E = function assigning attributes to edges."
+        },
+        {
+          "front": "What is index-free adjacency and why does it matter?",
+          "back": "Each node holds direct pointers to its neighbours — traversing one hop is O(1), no index lookup needed. It is the key performance advantage of native graph storage for traversal-heavy queries."
+        },
+        {
+          "front": "In Cypher, how do you write a directed edge pattern vs an undirected one?",
+          "back": "Directed: (a)-[:REL]->(b)  or  (a)<-[:REL]-(b)\nUndirected: (a)-[:REL]-(b)  — no arrowhead, traversal in either direction."
+        },
+        {
+          "front": "How many labels can a node have in Neo4j? How many types can an edge have?",
+          "back": "Nodes: multiple labels (e.g., n:Person:Actor). Edges: exactly one type — [r:KNOWS:LOVES] is invalid syntax."
+        },
+        {
+          "front": "What is the graph schema transformation rule for mapping an N-ary ER relationship?",
+          "back": "The relationship type becomes a new vertex type. Each participating entity type gets an edge type connecting it to the new vertex. Relationship attributes become properties of the new vertex."
+        },
+        {
+          "front": "What does DETACH DELETE do in Cypher, and how does it differ from DELETE?",
+          "back": "DETACH DELETE n removes the node and all its incident edges. Plain DELETE n fails if the node still has incident edges — you must remove edges manually first."
+        },
+        {
+          "front": "What Cypher clause upserts a pattern (creates it only if it does not exist)?",
+          "back": "MERGE — it checks whether the pattern already exists in the database; if yes, it matches it; if no, it creates it. Essential for deduplication during incremental data loading."
+        },
+        {
+          "front": "What are the four types of schema constraints Cypher supports?",
+          "back": "1. Property uniqueness (IS UNIQUE)\n2. Property existence (IS NOT NULL)\n3. Property type (IS :: <TYPE>)\n4. Key constraint (IS NODE KEY / IS RELATIONSHIP KEY) — shorthand for uniqueness + existence combined."
+        },
+        {
+          "front": "When is Property Displacement (Rule 3) valid?",
+          "back": "A property on edge (:T1)-[:E]->(:T2) can move to T1 if T1's look-across cardinality w.r.t. E is 1 (each T1 node has at most one E edge). It can move to T2 if T2's look-across cardinality is 1."
+        },
+        {
+          "front": "What is the main reason graph databases outperform relational databases on deep multi-hop queries?",
+          "back": "Graph databases use index-free adjacency — each hop follows a pointer in O(1). Relational databases must compute recursive JOINs, which grow exponentially with depth and cannot exploit direct pointer navigation."
+        },
+        {
+          "front": "What does the Cypher path pattern -[:KNOWS*1..5]- mean?",
+          "back": "Match any path following KNOWS edges between 1 and 5 hops, in either direction (no arrowhead = undirected). Equivalent to allowing the traversal to go both along and against the KNOWS edge direction."
+        },
+        {
+          "front": "Name the two 'meta-rules' that generalise all 7 graph schema transformation rules.",
+          "back": "Simplification: deleting a derived vertex type, edge type, or property from S yields an equivalent schema S'.\nComplexification: adding a vertex type, edge type, or property T such that T is derived in S' = S + T yields an equivalent schema S'."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Descriptive Statistics and Data Normalization",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Why Descriptive Statistics Matter",
+          "body": "Before building any model or running any analysis, the very first step is to characterize your data with descriptive statistics. These summaries capture the overall shape and behavior of a dataset, guiding downstream decisions about cleaning, feature engineering, and algorithm selection.\n\n**Four families of measures:**\n\n| Family | Examples |\n|--------|---------|\n| Central tendency | Mean, median, mode |\n| Dispersion | Range, IQR, variance, standard deviation |\n| Shape | Skewness, kurtosis |\n| Correlation | Pearson, Spearman |\n\n**Practical rule:** Always visualize data before and after any transformation — histograms, box plots, and scatter plots reveal patterns that summary numbers alone can miss."
+        },
+        {
+          "heading": "Measures of Central Tendency: Mean, Median, Mode",
+          "body": "Given n values x₁, …, xₙ:\n\n```\nMean:    μ = (1/n) Σ xᵢ          (arithmetic average)\nMedian:  minimizes Σ |x − xᵢ|   (middle value when sorted)\nMode:    most frequent value(s)\n```\n\n**Finding the median:**\n- n odd → middle element x_{(n+1)/2} in sorted order\n- n even → convention: average the two middle elements (x_{n/2} + x_{n/2+1}) / 2\n\n**When to use which:**\n\n| Measure | Best for | Weakness |\n|---------|----------|----------|\n| Mean | Symmetric distributions, no outliers | Pulled by extreme values |\n| Median | Skewed data or outliers present | Ignores magnitude of values |\n| Mode | Categorical data; most-frequent answer | Can be non-unique (multimodal) |\n\n**Classic trap:** For household income (right-skewed, billionaires as outliers), the median gives a far more representative center than the mean."
+        },
+        {
+          "heading": "Measures of Dispersion: Range, IQR, Variance, Standard Deviation",
+          "body": "Dispersion measures describe how spread out values are around the center.\n\n```\nRange:   max(xᵢ) − min(xᵢ)          — full spread, sensitive to outliers\nIQR:     Q3 − Q1                      — spread of middle 50 %, robust\nVariance: σ² = (1/n) Σ (xᵢ − μ)²   — average squared deviation\nStd dev:  σ = √σ²                    — same unit as data\n```\n\n**Coefficient of Variation (CV):** CV = (σ / μ) × 100% — relative dispersion, unit-free. Only valid on ratio scales (where zero is meaningful and ratios make sense). Temperature in °C is not a ratio scale, so CV of °C data is meaningless.\n\n**Choosing between IQR and σ:**\n- Data with outliers or heavy skew → prefer IQR (median-based, not affected by extremes)\n- Data approximately normal → σ is more informative and widely used by statistical methods"
+        },
+        {
+          "heading": "Quantiles, Percentiles, and the Box Plot",
+          "body": "Quantiles divide a sorted dataset into equal-sized groups. Quartiles split into four groups:\n\n```\nQ1 = 25th percentile  (lower quartile)\nQ2 = 50th percentile  (median)\nQ3 = 75th percentile  (upper quartile)\nIQR = Q3 − Q1\n```\n\n**Box plot anatomy:**\n```\n|--whisker--|  [Q1====median====Q3]  |--whisker--|\n           ● outlier                         ● outlier\n```\n- Box spans Q1 to Q3 (the IQR)\n- Thick line inside box = median\n- Whiskers (most common convention): extend to the furthest point within Q1 − 1.5·IQR and Q3 + 1.5·IQR\n- Points beyond whiskers are plotted individually as outliers\n\nBox plots compactly show center, spread, symmetry, and outliers simultaneously — making them ideal for comparing distributions side by side."
+        },
+        {
+          "heading": "Skewness and Distribution Shape",
+          "body": "Skewness quantifies asymmetry in a distribution:\n\n```\nskewness = [ n⁻¹ Σ (xᵢ − μ)³ ] / σ³\n```\n\nCubing preserves the sign of deviations — positive deviations inflate the numerator for right-skewed data and negative deviations dominate for left-skewed data.\n\n**Interpreting skewness:**\n\n| Value | Shape | Ordering |\n|-------|-------|----------|\n| ≈ 0 | Symmetric | mode ≈ median ≈ mean |\n| > 0 (positive) | Long right tail | mode ≤ median ≤ mean |\n| < 0 (negative) | Long left tail | mode ≥ median ≥ mean |\n\n**Important caveat:** The inequalities above hold *often*, not always. Skewness ≠ the non-parametric skewness formula (median − μ)/σ — these are different quantities.\n\n**Multimodal data:** A dataset with multiple peaks (modes) often indicates that the data originates from a mixture of distinct subpopulations, such as income data from a university hospital where nurses, residents, and senior physicians form separate clusters."
+        },
+        {
+          "heading": "Pearson and Spearman Correlation",
+          "body": "**Pearson's r** measures linear association between two variables x and y:\n\n```\nr = [n⁻¹ Σ (xᵢ − μₓ)(yᵢ − μᵧ)] / (σₓ · σᵧ)\n```\n\nRange: −1 (perfect negative) to +1 (perfect positive); 0 = no linear relationship.\n\n**Weaknesses of Pearson:**\n1. Sensitive to outliers — a single extreme point can dominate r\n2. Only captures *linear* relationships — a perfectly curved monotone relationship can still give r ≈ 0\n\n**Spearman's rank correlation** fixes both issues: transform x and y into fractional ranks, then compute Pearson's r on those ranks.\n\n```\nStep 1: Replace each xᵢ with its fractional rank xᵢᴿ\n        (ties get the average of their ordinal positions)\nStep 2: ρ = Pearson(xᴿ, yᴿ)\n```\n\nSpearman captures any monotone relationship and is robust to outliers because ranks compress extreme values. Trade-off: loses information about the exact magnitude of differences."
+        },
+        {
+          "heading": "Data Normalization: Rescaling Feature Values",
+          "body": "Data normalization (in the machine-learning sense) rescales numerical features to a standard range so that features with large magnitudes do not dominate distance-based or gradient-based algorithms.\n\n**Four techniques compared:**\n\n| Technique | Formula | Output range | Robust to outliers? |\n|-----------|---------|-------------|---------------------|\n| Min-max scaling | (xᵢ − min) / (max − min) | [0, 1] | No |\n| Z-score | (xᵢ − μ) / σ | unbounded, μ=0, σ=1 | Moderate |\n| Robust scaling | (xᵢ − median) / IQR | unbounded | Yes |\n| Decimal scaling | xᵢ / 10ᵏ | [−1, 1] | No |\n| Log transform | log(xᵢ + 1) | unbounded | N/A |\n\n**Decision guide:**\n- Bounded output needed → min-max or decimal scaling\n- Data normally distributed → Z-score (scaled data is standard normal)\n- Outliers present → robust scaling (uses median and IQR, not mean and σ)\n- Right-skewed data → log transform (compresses large values, improves normality)\n\nNo single technique fits every situation — inspect the data distribution first."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L7Q1",
+          "text": "Given the dataset [3, 7, 7, 9, 11], what are the mean, median, and mode?",
+          "options": [
+            "Mean = 7.4, Median = 7, Mode = 7",
+            "Mean = 7, Median = 7.4, Mode = 9",
+            "Mean = 7.4, Median = 9, Mode = 7",
+            "Mean = 7, Median = 7, Mode = 3"
+          ],
+          "correct": [0],
+          "explanation": "Sum = 3+7+7+9+11 = 37; mean = 37/5 = 7.4. Sorted: [3,7,7,9,11] — n=5 (odd), so median = middle element = 7 (3rd position). Mode = 7, which appears twice. Options B, C, D all swap the values incorrectly.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q2",
+          "text": "For the dataset [2, 4, 4, 6, 6, 8], compute the IQR.",
+          "options": [
+            "IQR = 2",
+            "IQR = 3",
+            "IQR = 4",
+            "IQR = 6"
+          ],
+          "correct": [0],
+          "explanation": "This course uses the median-of-halves (inclusive) convention. Sorted: [2, 4, 4, 6, 6, 8], n=6. Split into lower half [2, 4, 4] and upper half [6, 6, 8]. Q1 = median of lower half = 4. Q3 = median of upper half = 6. IQR = Q3 − Q1 = 6 − 4 = 2. (Note: some textbooks use linear interpolation instead, which gives Q1=3.5, Q3=6.5, IQR=3 — but this course applies the median-of-halves method.)",
+          "type": "single"
+        },
+        {
+          "id": "L7Q3",
+          "text": "A dataset has mean μ = 50 and standard deviation σ = 10. What is the z-score for the value x = 35?",
+          "options": [
+            "z = −1.5",
+            "z = 1.5",
+            "z = −0.15",
+            "z = 15"
+          ],
+          "correct": [0],
+          "explanation": "Z-score formula: z = (x − μ) / σ = (35 − 50) / 10 = −15 / 10 = −1.5. A negative z-score means the value lies below the mean. Specifically, x=35 is 1.5 standard deviations below the mean of 50. Option B has the wrong sign. Option C divides by 100 instead of 10. Option D forgets to divide by σ.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q4",
+          "text": "Apply min-max scaling to x = 40 given a dataset with min = 20 and max = 60.",
+          "options": [
+            "0.25",
+            "0.5",
+            "0.75",
+            "0.667"
+          ],
+          "correct": [1],
+          "explanation": "Min-max formula: x' = (x − min) / (max − min) = (40 − 20) / (60 − 20) = 20 / 40 = 0.5. The value 40 sits exactly halfway between min and max, so it correctly maps to 0.5. Option A would correspond to (25−20)/40=0.125 or similar; option C to (50−20)/40=0.75 (x=50); option D is incorrect.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q5",
+          "text": "Which normalization technique is MOST robust to outliers?",
+          "options": [
+            "Min-max scaling, because it bounds all values to [0, 1]",
+            "Z-score normalization, because it centers data at zero",
+            "Robust scaling, because it uses the median and IQR instead of mean and standard deviation",
+            "Decimal scaling, because it divides by a power of 10"
+          ],
+          "correct": [2],
+          "explanation": "Robust scaling uses the median and IQR — both of which are resistant to extreme values. The median ignores how far outliers are from the center, and IQR only considers the middle 50% of the data. Min-max scaling is the most outlier-sensitive: a single extreme value reshapes the entire [0,1] range. Z-score uses mean and σ, which are both influenced by outliers, though less severely than min-max. Decimal scaling is also not outlier-aware.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q6",
+          "text": "A distribution has positive skewness. Which ordering of mean, median, and mode is generally expected?",
+          "options": [
+            "mean < median < mode",
+            "mode < median < mean",
+            "mean = median = mode",
+            "mode > median > mean"
+          ],
+          "correct": [1],
+          "explanation": "In a positively skewed (right-tailed) distribution, the long tail pulls the mean to the right. The general ordering is mode ≤ median ≤ mean. This is a tendency, not a law — it holds for many common distributions but not universally. Symmetric data (option C) has zero skewness. Options A and D describe negative skewness.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q7",
+          "text": "Which statements about Pearson's correlation coefficient r are correct? Select ALL that apply.",
+          "options": [
+            "r can detect non-linear monotone relationships",
+            "r ranges from −1 to +1",
+            "r is sensitive to outliers",
+            "r = 0 guarantees there is no relationship between two variables"
+          ],
+          "correct": [1, 2],
+          "explanation": "r ranges from −1 to +1 (B is correct). r is sensitive to outliers because it uses means and standard deviations in its computation; a single extreme point can push r substantially toward ±1 or toward 0 (C is correct). r only captures *linear* relationships — a perfect parabola y = x² gives r ≈ 0, so A is wrong. r = 0 means no *linear* relationship, but a strong non-linear relationship may still exist (D is wrong).",
+          "type": "multiple"
+        },
+        {
+          "id": "L7Q8",
+          "text": "What is the key advantage of Spearman's rank correlation over Pearson's?",
+          "options": [
+            "Spearman's coefficient always has a larger absolute value than Pearson's",
+            "Spearman's coefficient can detect monotone non-linear relationships and is more robust to outliers",
+            "Spearman's coefficient measures causation, while Pearson's only measures correlation",
+            "Spearman's coefficient requires normally distributed data"
+          ],
+          "correct": [1],
+          "explanation": "Spearman rank-transforms the data first, then applies Pearson's formula to the ranks. This captures any monotone relationship (not just linear) and reduces the influence of outliers because extreme values get compressed into ordinal positions. Neither coefficient measures causation (C is false). Pearson benefits from normality assumptions in some tests, but Spearman does not require normality (D is the reverse of the truth). Spearman is not guaranteed to have a larger absolute value than Pearson (A is false).",
+          "type": "single"
+        },
+        {
+          "id": "L7Q9",
+          "text": "You are preprocessing a gene expression dataset where most genes have low counts but a few have extremely high counts (heavily right-skewed). Which normalization approach is most appropriate?",
+          "options": [
+            "Min-max scaling — because it brings all values to [0, 1]",
+            "Log transformation — because it compresses large values and reduces skewness",
+            "Z-score normalization — because it assumes normality",
+            "Decimal scaling — because it is the simplest method"
+          ],
+          "correct": [1],
+          "explanation": "Log transformation (x' = log(x + 1)) is specifically designed for right-skewed count data. Logarithms grow slowly for large values, compressing the high end of the distribution and bringing it closer to normality. This is exactly the approach used for RNA-seq read counts in the lecture example. Min-max scaling would still be dominated by the extreme high counts. Z-score assumes normality — which is what we are trying to achieve, not what we already have. Decimal scaling divides by 10^k without addressing the skew.",
+          "type": "single"
+        },
+        {
+          "id": "L7Q10",
+          "text": "Which of the following are TRUE about min-max scaling? Select ALL that apply.",
+          "options": [
+            "It always maps data to the range [0, 1]",
+            "It preserves the relative order between data points",
+            "It is robust to outliers because it uses fixed bounds",
+            "New data points outside the original training range will produce values outside [0, 1]"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "Min-max scaling maps all training data to [0, 1] (A is true). Because the transformation is monotone ((xᵢ − m)/(M − m) is strictly increasing), relative order is preserved — if xᵢ > xⱼ then x'ᵢ > x'ⱼ (B is true). It is NOT robust to outliers — an extreme value reshapes the entire scale (C is false). If a new test point falls outside [min, max] of the training set, its scaled value will be below 0 or above 1 (D is true).",
+          "type": "multiple"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is the formal definition of the median?",
+          "back": "The value that minimizes the sum of absolute distances to all data points: median = argmin_x Σ |x − xᵢ|. Practically: the middle value in sorted order (or average of two middle values for even n)."
+        },
+        {
+          "front": "What does a positive skewness value indicate about a distribution?",
+          "back": "The distribution has a longer right tail. Extreme values are concentrated on the right side, pulling the mean above the median. Typical ordering: mode ≤ median ≤ mean."
+        },
+        {
+          "front": "What is the Interquartile Range (IQR) and what does it measure?",
+          "back": "IQR = Q3 − Q1. It measures the spread of the middle 50% of the data. It is robust to outliers because it ignores the top and bottom 25% of values."
+        },
+        {
+          "front": "State the z-score normalization formula and explain what z = 2 means.",
+          "back": "z_i = (x_i − μ) / σ. A z-score of 2 means the value is 2 standard deviations above the mean. After z-score normalization, the data has mean 0 and standard deviation 1."
+        },
+        {
+          "front": "State the min-max scaling formula and its output range.",
+          "back": "x'_i = (x_i − min) / (max − min). Output range is [0, 1] for all training data points. Values outside the training range produce scaled values outside [0, 1]."
+        },
+        {
+          "front": "What is robust scaling and why is it preferred when outliers are present?",
+          "back": "x'_i = (x_i − median) / IQR. Uses median and IQR — both resistant to extreme values — instead of mean and standard deviation. Ideal for skewed data or data with extreme outliers."
+        },
+        {
+          "front": "What is the key difference between Pearson and Spearman correlation?",
+          "back": "Pearson measures linear association using raw values; Spearman measures monotone association using fractional ranks. Spearman is robust to outliers and captures non-linear monotone relationships that Pearson misses."
+        },
+        {
+          "front": "What is the Coefficient of Variation (CV) and when must you NOT use it?",
+          "back": "CV = (σ / μ) × 100%. It measures relative dispersion as a percentage. Do not use on interval scales (e.g., temperature in °C) where zero is not a true zero — only use on ratio scales where ratios and zero are meaningful."
+        },
+        {
+          "front": "Name the four main normalization techniques covered in the lecture and their output ranges.",
+          "back": "1. Min-max scaling: [0, 1]\n2. Decimal scaling: [−1, 1]\n3. Z-score: unbounded (μ=0, σ=1)\n4. Robust scaling: unbounded (median=0)\n(Log transform also discussed — unbounded, reduces skewness)"
+        },
+        {
+          "front": "What is a box plot and what five summary values does it encode?",
+          "back": "A box plot encodes the five-number summary: minimum (within 1.5·IQR of Q1), Q1, median (Q2), Q3, and maximum (within 1.5·IQR of Q3). Points beyond the whiskers are marked as outliers. The box spans the IQR; the thick interior line marks the median."
+        },
+        {
+          "front": "When should you prefer log transformation over z-score normalization?",
+          "back": "When data is heavily right-skewed (e.g., count data like RNA-seq read counts, income, web traffic). Log transformation compresses large values and brings the distribution closer to normality — a precondition for methods that work better on z-score-normalized data."
+        },
+        {
+          "front": "What is the variance formula and why does squaring the deviations matter?",
+          "back": "σ² = (1/n) Σ (x_i − μ)². Squaring serves two purposes: it makes all deviations positive (so positive and negative deviations do not cancel) and it penalizes larger deviations more heavily, making variance sensitive to extreme values."
+        }
+      ]
+    }
   ]
 }

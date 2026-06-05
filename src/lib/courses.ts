@@ -36,7 +36,7 @@ export const COURSES: Record<Course, {
   de1: {
     label: 'Data Engineering 1',
     shortLabel: 'DE1',
-    description: 'FAU · 2 Lectures',
+    description: 'FAU · 8 Lectures',
     examDate: '',   // TBD — update when exam date is announced
     content: de1Content,
   },
