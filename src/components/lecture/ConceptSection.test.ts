@@ -22,6 +22,37 @@ describe('parseBody — code block handling', () => {
   })
 })
 
+describe('parseBody — code block isolation (table/bullet syntax inside fence)', () => {
+  it('treats table and bullet syntax inside a fence as verbatim code', () => {
+    const blocks = parseBody('```\n| col |\n- item\n```')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'code', code: '| col |\n- item' })
+  })
+})
+
+describe('parseBody — code block multiline and verbatim content', () => {
+  it('preserves newlines inside a code block', () => {
+    const blocks = parseBody('```python\nx = 1\ny = 2\n```')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'code', lang: 'python', code: 'x = 1\ny = 2' })
+  })
+
+  it('does not apply inline markdown processing inside a code block', () => {
+    const blocks = parseBody('```\n**not bold**\n```')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'code', code: '**not bold**' })
+  })
+})
+
+describe('parseBody — unterminated fence fail-safe', () => {
+  it('emits a code block with captured content when closing fence is missing', () => {
+    const blocks = parseBody('```python\nx = 1')
+    const codeBlock = blocks.find(b => b.type === 'code')
+    expect(codeBlock).toBeDefined()
+    expect(codeBlock).toMatchObject({ type: 'code', lang: 'python', code: 'x = 1' })
+  })
+})
+
 describe('parseBody — regression: table and bullets still work', () => {
   it('parses a markdown table as a table block', () => {
     const input = '|a|b|\n|---|---|\n|1|2|'
