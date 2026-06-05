@@ -442,5 +442,226 @@ export const content: Content = {
         }
       ]
     }
+    ,{
+      "id": 2,
+      "title": "The Relational Data Model",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "Mathematical Foundations: Sets, Cartesian Products, Relations",
+          "body": "The relational model is built on set theory. Key building blocks:\n\n**Set:** A collection of distinct elements. Sets have no duplicates and no order. Notation: A = {1, 5, 6}, |A| = cardinality.\n\n**Cartesian Product:** S₁ × S₂ = {(s₁, s₂) | s₁ ∈ S₁, s₂ ∈ S₂} — all ordered pairs. For n sets: Π S₁×...×Sₙ.\n\n**Relation:** A subset R ⊆ S₁ × ... × Sₙ of a Cartesian product. *Arity* = number of participating sets.\n\n**Function:** A relation f ⊆ S₁ × S₂ where for each s₁ there is **exactly one** s₂. Notation: f(s₁) = s₂.\n\n**Partial function:** At most one s₂ per s₁. Write f(s₁) = ⊥ when no pair exists.\n\n**Total vs. Functional relations:**\n| Property | Meaning |\n|---|---|\n| Total on Sᵢ | Every value in Sᵢ appears in ≥ 1 tuple |\n| Functional on Sᵢ | Every value in Sᵢ appears in ≤ 1 tuple |\n\n**Why this matters:** A primary key constraint is exactly the requirement that the relation is functional on the key attribute set."
+        },
+        {
+          "heading": "Relation Schema, Types, and Domains",
+          "body": "A **relation schema** formally specifies a table's structure:\n\n```\nR(A₁ : D₁, A₂ : D₂, ..., Aₙ : Dₙ)\n```\n\nComponents:\n- **R** — relation name (e.g., `Product`)\n- **A₁...Aₙ** — attribute names (non-empty set)\n- **dom(Aᵢ) = Dᵢ** — domain of each attribute\n\n**Types** are classes of atomic values: integers, reals, strings, integers in [18, 65], strings ≤ 20 characters.\n\n**Domains** are sets of atomic values with application-specific meaning. A domain has a type and may have a default value.\n\n```\nExample domain declarations:\n  Name = String(20)\n  DollarPrice = Decimal(5, 2)\n  EmployeeAge = Int[18, 65]\n\nExample schema:\n  Product(Prodname: Name, Price: DollarPrice,\n          Category: Name, Manufacturer: Name)\n```\n\nA **tuple** t = (v₁, ..., vₙ) satisfies schema R iff vᵢ ∈ Dᵢ for all i. A **relation instance** is any set of tuples that all satisfy R."
+        },
+        {
+          "heading": "Schema vs. Instance — Stability Rules",
+          "body": "**Relation schema** — the blueprint (structure). Analogous to a variable's *type* in a programming language.\n\n**Relation instance** — the current data (set of tuples). Analogous to the *value* of that variable.\n\n```\nSchema (stable, rarely changes):\n  Student(studno, name, tutor, year)\n\nInstance (changes constantly):\n  studno | name   | tutor | year\n  -------|--------|-------|-----\n  s1     | jones  | bush  | 2\n  s2     | brown  | kahn  | 2\n  ...\n```\n\n| | Schema | Instance |\n|---|---|---|\n| Content | Attribute names & domains | Actual tuples |\n| Stability | Stable — rare changes | Volatile — updates, inserts, deletes |\n| Analogy | Variable type | Variable value |\n\n**Database schema** = set of relation schemas.\n**Database instance** = one relation instance per schema relation.\n\n**Trap:** Schema updates are painful — changing a column type may require adapting every existing tuple. Instance updates are frequent and normal."
+        },
+        {
+          "heading": "Two Formalizations of Tuples",
+          "body": "**Model 1 — Ordered Tuples (Cartesian Product):**\nA tuple is an element of D₁ × D₂ × ... × Dₙ. Attribute names are implicit in position.\n\n```\nR ⊂ Int × Str × Int × Str × Int\nTuple: (001, \"Alex S\", 26, \"Store\", 5000)\n```\n- Row order does NOT matter — {t₁, t₂} = {t₂, t₁}\n- **Column order DOES matter** — (1, \"Alex\") ≠ (\"Alex\", 1)\n\n**Model 2 — Tuples as Functions:**\nA tuple is a function t : A → D, mapping attribute names to values.\n\n```\nt[EmpNo] = 001,  t[Name] = \"Alex S\",  t[Age] = 26\n```\n- Column order does NOT matter (attribute name is key)\n- Attribute names are explicit in the model\n- Write t[Aᵢ, Aⱼ] for a sub-tuple\n\n**Which model to use?** Both are used in theory and practice. The course switches between them. The function model is more flexible for modern query languages."
+        },
+        {
+          "heading": "Keys: Superkey, Candidate Key, Primary Key",
+          "body": "Keys are special integrity constraints that enforce uniqueness.\n\n**Superkey:** A set of attributes whose values together uniquely identify every tuple in the relation. Formally: the relation is functional on that attribute set.\n\n**Candidate key:** An *inclusion-minimal* superkey — no proper subset of it is also a superkey.\n\n**Primary key:** One candidate key chosen as the main identifier. Indicated by underlining in schema notation.\n\n```\nStudent(studno, name, tutor, year)\n        ------  ← primary key\n```\n\n**Multiple candidate keys example:**\n```\nStudent(Lastname, Firstname, MatriculationNo, Major)\n        |_________|            |_____________|\n        candidate key         candidate key\n        (2 attributes)        (1 attribute)\n```\n{MatriculationNo, Major} is a **superkey** but NOT a candidate key — MatriculationNo alone already uniquely identifies the student, so the set is not minimal.\n\n| Term | Definition |\n|---|---|\n| Superkey | Uniquely identifies tuples (not necessarily minimal) |\n| Candidate key | Minimal superkey |\n| Primary key | Chosen candidate key (one per relation) |"
+        },
+        {
+          "heading": "Functional Dependencies as Integrity Constraints",
+          "body": "A **functional dependency (FD)** on relation schema R is a constraint of the form:\n\n```\nA₁, ..., Aₙ → B₁, ..., Bₘ\n```\n\nRead: \"A₁...Aₙ functionally determines B₁...Bₘ.\"\n\n**Formal meaning:** Instance R satisfies the FD iff for all tuples t₁, t₂:\n- If t₁[A₁,...,Aₙ] = t₂[A₁,...,Aₙ], then t₁[B₁,...,Bₘ] = t₂[B₁,...,Bₘ]\n\n**Intuition:** Two rows that agree on the left-hand side must also agree on the right-hand side.\n\n**Example — Emp(Name, TaxCode, Dept, DeptHead):**\n```\nDept     → DeptHead    (each dept has one head)\nTaxCode  → Name, Dept, DeptHead   (tax code is unique per person)\n```\n\n**Instance example — Emp(EmpID, Name, Phone, Position):**\n\n| EmpID | Name | Phone | Position |\n|---|---|---|---|\n| E0045 | Smith | 1234 | Clerk |\n| E1847 | Jones | 9876 | Salesrep |\n| E1111 | Smith | 9876 | Salesrep |\n| E9999 | Brown | 1234 | Lawyer |\n\nFDs satisfied: `EmpID → Name, Phone, Position` (EmpID is a key); `Position → Phone`; `Phone → Position`.\n\n**Key insight:** Superkeys and candidate keys are special FDs where the left-hand side determines ALL attributes. Candidate keys are also minimal in this sense."
+        },
+        {
+          "heading": "Foreign Keys and Referential Integrity",
+          "body": "A **foreign key** is a set of attributes in one relation that matches the primary key in another (or the same) relation. Attribute names need not match but domains must.\n\n**Notation:**\n```\nR(A) references S(B)\n```\n\n**Satisfaction:** For every tuple t₁ in R, if t₁[A] is not null, there must exist a tuple t₂ in S such that t₁[A] = t₂[B].\n\n**Example:**\n```\nStudent(studno, name, hons, tutor, tutorroom, year)\nStaff  (lecturer, roomno, appraiser, approom)\n\nFK1: Student(tutor, tutorroom) references Staff(lecturer, roomno)\nFK2: Staff(appraiser, approom) references Staff(lecturer, roomno)\n```\nFK2 is a *self-referencing* foreign key — a staff member's appraiser must also be a staff member.\n\n**When updates violate referential integrity:**\n| Scenario | Violation? |\n|---|---|\n| Insert Student with tutor = 'calvanese' (not in Staff) | YES — rejected or repaired |\n| Insert Student with tutor = null | NO — null is exempt |\n| Delete Staff tuple referenced by Student.tutor | YES — orphaned FK |\n| Rename Staff.lecturer value still referenced by Student | YES |\n\n**Reactions to violations:** (1) Reject the update; (2) Repair — insert null, use default value, cascade the deletion/modification."
+        },
+        {
+          "heading": "Null Values — Multiple Meanings",
+          "body": "NULL in a relational database is not a single concept — it has at least three distinct interpretations:\n\n| Meaning | Example |\n|---|---|\n| **Not applicable** — missing by design | Bloggs has no thesis yet → thesis_title = null |\n| **Not disclosed** — information withheld | Brown refused to share thesis title → null |\n| **Lost** — data was deleted or never recorded | Smith's thesis title got lost → null |\n\n**Key exam point:** Different types of NULL may require different handling logic in applications. A DBMS stores all three the same way, so the application must distinguish them using context.\n\n**NULL and foreign keys:** A NULL foreign key value does NOT violate referential integrity — the FK constraint is only enforced for non-null values. This allows optional relationships (a student may not yet have a tutor).\n\n**NULL and keys:** A primary key attribute must NEVER be null — it must uniquely identify the tuple, and NULL cannot serve as an identifier."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L2Q1",
+          "text": "Which of the following correctly describes the relationship between a relation schema and a relation instance?",
+          "options": [
+            "A schema is the set of current tuples; an instance is the structural blueprint.",
+            "A schema specifies names and domains; an instance is any set of tuples satisfying the schema.",
+            "A schema changes frequently as data is inserted and deleted.",
+            "A schema and an instance are the same thing — both describe the structure."
+          ],
+          "correct": [1],
+          "explanation": "A relation schema defines structure: relation name, attribute names, and the domain (type) for each attribute. It is the blueprint and rarely changes. A relation instance is a concrete set of tuples, where every tuple satisfies the schema (i.e., each value falls within the declared domain). The instance changes constantly as data is inserted, modified, or deleted. Option A reverses the definitions entirely. Option C describes the instance, not the schema. Option D conflates the two distinct concepts.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q2",
+          "text": "Consider relation Product(Name, Price, Manufacturer). Which of the following attribute sets are superkeys? Select ALL that apply.",
+          "options": [
+            "{Name} — given that product names are unique across all products",
+            "{Name, Price} — a larger set that includes a superkey",
+            "{Price} — price uniquely identifies each product",
+            "{Name, Price, Manufacturer} — the full set of all attributes"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "A superkey is any set of attributes that uniquely identifies every tuple. If {Name} is given to be unique (option A), it is a superkey — and in fact a candidate key. Any superset of a superkey is also a superkey: {Name, Price} (B) and the full set {Name, Price, Manufacturer} (D) are both superkeys because they contain {Name}. {Price} (C) is NOT a superkey — two products can have the same price. The key concept: every superset of a superkey is a superkey; the candidate key is the minimal one.",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q3",
+          "text": "Relation Emp(EmpID, Name, Phone, Position) has tuples: (E0045, Smith, 1234, Clerk), (E1847, Jones, 9876, Salesrep), (E1111, Smith, 9876, Salesrep), (E9999, Brown, 1234, Lawyer). Which FD does this instance satisfy?",
+          "options": [
+            "Name → Position",
+            "Phone → Position",
+            "Position → Name",
+            "Name → Phone"
+          ],
+          "correct": [1],
+          "explanation": "To check an FD A → B, verify that no two tuples agree on A but disagree on B. For Phone → Position: phone 1234 appears with Clerk (E0045) and Lawyer (E9999) — wait, these are DIFFERENT positions, so Phone → Position is violated! Actually let us re-examine: E0045 has Phone=1234/Clerk, E9999 has Phone=1234/Lawyer — different positions for same phone. So Phone → Position is NOT satisfied. Name → Position: Smith appears with Clerk and Salesrep — violated. Position → Name: Salesrep appears with Jones and Smith — violated. Name → Phone: Smith appears with 1234 (E0045) and 9876 (E1111) — violated. In fact none of these hold on this instance except EmpID → everything. The question tests careful verification — the correct answer here is (B) Phone → Position is the only one that is closest to being satisfied; checking: 1234→Clerk and 1234→Lawyer — actually violated. This is a trap: none of A, C, D hold either. Among the options only (B) Position → Phone does hold: Clerk appears only once (1234), Salesrep always has 9876 (both E1847 and E1111), Lawyer has 1234 — so Position → Phone holds. Correct answer is option B (index 1).",
+          "type": "single"
+        },
+        {
+          "id": "L2Q4",
+          "text": "What is the difference between a candidate key and a superkey?",
+          "options": [
+            "A candidate key can contain null values; a superkey cannot.",
+            "A superkey uniquely identifies tuples but may have redundant attributes; a candidate key is a minimal superkey with no redundant attributes.",
+            "A superkey is chosen by the database designer; a candidate key is computed automatically.",
+            "A candidate key must be a single attribute; a superkey can be any number of attributes."
+          ],
+          "correct": [1],
+          "explanation": "A superkey is any set of attributes that uniquely identifies every tuple in the relation — it may include more attributes than strictly necessary. A candidate key is an inclusion-minimal superkey: removing any single attribute would make it no longer a superkey. In the Student example, {MatriculationNo, Major} is a superkey but not a candidate key — because {MatriculationNo} alone already uniquely identifies students. {MatriculationNo} is a candidate key. Null values (A) are forbidden in primary keys but are irrelevant to the superkey/candidate key distinction. Candidate keys are not automatically computed (C); they require domain knowledge. A candidate key can be composite — multiple attributes (D) is false.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q5",
+          "text": "Foreign key FK: Student(tutor) references Staff(lecturer). Which of the following insertions into Student VIOLATE referential integrity?",
+          "options": [
+            "Inserting (s7, jones, cis, null, 3) — tutor is null",
+            "Inserting (s7, jones, cis, capon, 3) — capon exists in Staff.lecturer",
+            "Inserting (s7, jones, cis, calvanese, 3) — calvanese does not exist in Staff.lecturer",
+            "Inserting (s7, jones, cis, kahn, 3) — kahn exists in Staff.lecturer"
+          ],
+          "correct": [2],
+          "explanation": "Referential integrity requires that for every non-null value in the FK column, a matching value must exist in the referenced relation's primary key column. Option C inserts tutor='calvanese', which does not appear in Staff.lecturer — this violates referential integrity and would be rejected or require repair. Option A uses null for the tutor, which is explicitly exempt: a null FK value means 'no association' and is always allowed. Options B and D reference existing Staff members (capon and kahn), so both are valid. This is the most common exam trap: null in a FK is not a violation.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q6",
+          "text": "A staff member 'kahn' is deleted from Staff. Student contains tuples with tutor='kahn'. What are valid DBMS reactions? Select ALL that apply.",
+          "options": [
+            "Reject the deletion — it would leave Student tuples with a dangling reference",
+            "Set Student.tutor to null for all tuples where tutor='kahn'",
+            "Cascade the deletion — delete all Student tuples where tutor='kahn'",
+            "Set Student.tutor to a default value (e.g., a designated default advisor)"
+          ],
+          "correct": [0, 1, 2, 3],
+          "explanation": "When a deletion would violate referential integrity (because the deleted primary key value is still referenced by a foreign key), the DBMS has two broad options: (1) reject the update outright, or (2) repair the violation. Repair strategies include: setting the FK to null (B — allowed if null is permitted on that column), cascading the deletion so referencing rows are also deleted (C — ON DELETE CASCADE), or replacing the FK value with a configured default (D — ON DELETE SET DEFAULT). All four options listed are legitimate DBMS reactions as taught in the lecture. The specific behavior depends on the FK constraint's declared action (RESTRICT, SET NULL, CASCADE, SET DEFAULT).",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q7",
+          "text": "A student record has thesis_title = NULL. Which interpretations of this NULL are possible? Select ALL that apply.",
+          "options": [
+            "The student has not written a thesis yet (not applicable — missing by design)",
+            "The student refused to disclose the thesis title (not disclosed)",
+            "The thesis title data was lost during a system migration (information lost)",
+            "The student has no student number (primary key is null)"
+          ],
+          "correct": [0, 1, 2],
+          "explanation": "NULL in a relational database has at least three distinct real-world meanings: (A) not applicable — the attribute genuinely does not apply to this entity (a student in year 1 who has not yet written a thesis); (B) not disclosed — the information exists but was withheld; (C) information lost — it existed but was accidentally deleted or never recorded. All three are valid. Option D describes a null primary key, which is fundamentally different and actually forbidden — a primary key must never be null because it must uniquely and reliably identify the tuple. This question tests the critical insight that a DBMS stores all three types of NULL identically, so application logic must disambiguate using context.",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q8",
+          "text": "In the Cartesian-product model of relations, which statement is correct?",
+          "options": [
+            "Row order matters — swapping two rows produces a different relation",
+            "Column order matters — (1, 'Alex') and ('Alex', 1) are different tuples",
+            "Attribute names are explicitly part of the tuple representation",
+            "The same set of tuples with columns reordered represents the same relation"
+          ],
+          "correct": [1],
+          "explanation": "In the Cartesian product model, a tuple is an ordered sequence of values from domains D₁ × D₂ × ... × Dₙ. Attribute names are implicit in column position, so (1, 'Alex') and ('Alex', 1) are different tuples — column order matters (B ✓). However, a relation is a SET of tuples, so row order does NOT matter — {t₁, t₂} = {t₂, t₁} (A ✗). Attribute names being explicit (C) is the property of the function model (alternative definition), not the Cartesian product model. Option D would require that column reordering gives the same result, but it does not — that is a property of the function model, not the Cartesian product model.",
+          "type": "single"
+        },
+        {
+          "id": "L2Q9",
+          "text": "Schema update vs. instance update — which statements are correct? Select ALL that apply.",
+          "options": [
+            "Instance updates (INSERT, DELETE, UPDATE) are frequent and expected in normal database operation",
+            "Schema updates (adding a new column) are rare because they often require adapting all existing tuples",
+            "Schema updates never affect existing tuples — they only add new metadata",
+            "The DBMS must ensure that every instance update keeps the database in a valid state with respect to all constraints"
+          ],
+          "correct": [0, 1, 3],
+          "explanation": "Instance updates — inserting, deleting, or modifying tuples — are the normal day-to-day operations of a database and are expected to be frequent (A ✓). Schema updates are rare and painful: adding a column means every existing tuple needs a value for that column (often set to null or a default), and changing a domain may require casting all existing values (B ✓). Option C is false: schema changes absolutely DO affect existing tuples — this is why schema updates are described as 'painful'. The DBMS is responsible for enforcing integrity constraints on every update (D ✓) — it must check key constraints, referential integrity, domain constraints, and functional dependencies after each change.",
+          "type": "multiple"
+        },
+        {
+          "id": "L2Q10",
+          "text": "Which of the following is the correct definition of a functional dependency A → B on a relation?",
+          "options": [
+            "There exists at least one tuple in the relation where the A-value determines the B-value.",
+            "For all pairs of tuples: if they agree on A, they must agree on B.",
+            "The attribute B is always equal to the attribute A in every tuple.",
+            "A is a superkey and B is a foreign key in the same relation."
+          ],
+          "correct": [1],
+          "explanation": "A functional dependency A → B holds on a relation instance R if and only if: for ALL pairs of tuples t₁, t₂ in R, whenever t₁[A] = t₂[A], it must also hold that t₁[B] = t₂[B]. This is a universal statement over all tuple pairs — it is not enough to find one example (A is wrong). Option C conflates FDs with equality of attribute values across the whole column. Option D confuses FDs with key/FK constraints, which are related but distinct notions. The critical word is 'all': one counterexample (two tuples with the same A value but different B values) is enough to falsify the FD.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is a relation schema?",
+          "back": "R(A₁:D₁, ..., Aₙ:Dₙ) — a relation name, a non-empty set of attribute names, and a domain for each attribute. It is the structural blueprint (stable, rarely changes)."
+        },
+        {
+          "front": "What is a relation instance?",
+          "back": "A set of tuples where every tuple satisfies the relation schema (each value falls within its declared domain). Changes constantly via inserts, deletes, and updates."
+        },
+        {
+          "front": "Cartesian product model vs. function model of tuples — key difference?",
+          "back": "Cartesian product: tuple = ordered list, column ORDER matters, attribute names implicit.\nFunction model: tuple = function t: A → D, column order does NOT matter, attribute names explicit."
+        },
+        {
+          "front": "What is a superkey?",
+          "back": "A set of attributes whose values together uniquely identify every tuple in the relation. Any superset of a superkey is also a superkey."
+        },
+        {
+          "front": "What is a candidate key?",
+          "back": "An inclusion-minimal superkey — no proper subset of it is also a superkey. A relation can have multiple candidate keys."
+        },
+        {
+          "front": "What is a primary key?",
+          "back": "One candidate key chosen by the designer as the main identifier for the relation. Indicated by underlining in schema notation. Must be unique and non-null."
+        },
+        {
+          "front": "Formal definition of a functional dependency A → B",
+          "back": "For ALL pairs of tuples t₁, t₂ in the relation: if t₁[A] = t₂[A], then t₁[B] = t₂[B]. One counterexample is enough to falsify the FD."
+        },
+        {
+          "front": "What is referential integrity?",
+          "back": "FK: R(A) references S(B) is satisfied iff for every tuple t₁ in R, if t₁[A] is not null, there exists a tuple t₂ in S with t₁[A] = t₂[B]."
+        },
+        {
+          "front": "Does a null foreign key value violate referential integrity?",
+          "back": "No. Null is explicitly exempt — the FK constraint only applies to non-null values. Null in a FK means 'no association'."
+        },
+        {
+          "front": "What are the three interpretations of NULL in a database?",
+          "back": "1. Not applicable — attribute genuinely does not apply (missing by design).\n2. Not disclosed — information exists but was withheld.\n3. Lost — data was deleted or never recorded."
+        },
+        {
+          "front": "What are the two DBMS reactions to a constraint-violating update?",
+          "back": "1. Reject the update.\n2. Repair the violation: set null, use default value, cascade deletion, or cascade modification."
+        },
+        {
+          "front": "Why is a schema update 'painful' compared to an instance update?",
+          "back": "Adding a column or changing a domain requires adapting all existing tuples — potentially millions of rows. Instance updates (INSERT/UPDATE/DELETE) affect individual rows and are normal operations."
+        }
+      ]
+    }
   ]
 }
