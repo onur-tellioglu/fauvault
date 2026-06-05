@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
 import { getLeaderboardByCourse } from '@/lib/leaderboard'
@@ -25,10 +25,11 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
+  if (!session) redirect('/login')
 
   const content = getCourseContent(course as Course)
   const [progressRows, leaderboard] = await Promise.all([
-    session ? getProgress(session.userId, course as Course) : Promise.resolve([]),
+    getProgress(session.userId, course as Course),
     getLeaderboardByCourse(course as Course),
   ])
 
