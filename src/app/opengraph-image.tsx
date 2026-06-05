@@ -1,7 +1,8 @@
 import { ImageResponse } from 'next/og'
+import { SITE_NAME, SITE_TAGLINE } from '@/lib/constants'
 
 export const runtime = 'edge'
-export const alt = 'FAUVault'
+export const alt = SITE_NAME
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -29,7 +30,7 @@ export default function OGImage() {
             marginBottom: 24,
           }}
         >
-          FAUVault
+          {SITE_NAME}
         </div>
         <div
           style={{
@@ -40,16 +41,7 @@ export default function OGImage() {
             lineHeight: 1.5,
           }}
         >
-          FAU exam prep platform prepared by students
-        </div>
-        <div
-          style={{
-            fontSize: 22,
-            color: '#555555',
-            marginTop: 16,
-          }}
-        >
-          AI Perspectives · Renewable Energies · Data Engineering
+          {SITE_TAGLINE}
         </div>
       </div>
     ),
