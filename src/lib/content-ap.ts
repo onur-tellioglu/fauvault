@@ -409,6 +409,138 @@ export const content: Content = {
           "back": "Welch's method divides a signal into overlapping segments, computes the FFT squared magnitude on each, and averages across segments to estimate the Power Spectral Density (PSD). Used for stochastic signals (EMG, EEG) because a single FFT of a random process has very high variance — averaging across windows reduces variance without sacrificing frequency resolution. `scipy.signal.welch(x, fs=2000, nperseg=512)`."
         }
       ]
+    },
+    {
+      "id": 4,
+      "title": "Vectors, Matrices, and Convolutions",
+      "speaker": "Prof. Dr. Alessandro Del Vecchio",
+      "concepts": [
+        {
+          "heading": "Vectors — A List of Numbers",
+          "body": "A **vector** is a 1D `np.ndarray` — the simplest multi-element data structure in NumPy. The same concept appears across radically different domains:\n\n| Domain | Vector contents | Example shape |\n|--------|----------------|---------------|\n| Tabular data (one patient) | `(age, height, weight, BMI)` | `(4,)` |\n| Image pixel (colour) | `(R, G, B)` | `(3,)` |\n| LLM embedding | 1536 semantic dimensions | `(1536,)` |\n| EMG feature | `(RMS, ARV, mean_freq)` per window | `(3,)` |\n\n**NumPy is natively vectorised** — all basic operations work element-wise without Python loops:\n\n```python\nimport numpy as np\nu = np.array([1.0, 2.0, 3.0])\nv = np.array([4.0, 5.0, 6.0])\n\nprint(u + v)       # [5. 7. 9.]  — element-wise addition\nprint(2.5 * u)     # [2.5 5.  7.5]  — scalar scaling\n```\n\nWriting explicit Python `for` loops over NumPy arrays is almost always slower and unnecessary — embrace vectorised operations."
+        },
+        {
+          "heading": "Dot Product and Similarity — The Workhorse of Machine Learning",
+          "body": "The **dot product** of two equal-length vectors is a single scalar:\n$$u \\cdot v = \\sum_i u_i \\cdot v_i$$\n\nIn NumPy: `np.dot(u, v)` or `u @ v` (uses a single optimised BLAS call — microseconds for vectors of length 10⁶).\n\n**Where it appears:**\n- **Artificial neuron:** `y = w · x + b` — every layer of a neural network is a dot product\n- **Search / RAG:** cosine similarity between query and document embedding = `(q · d) / (‖q‖·‖d‖)`\n- **Recommender systems:** user preference vector · item attribute vector → predicted rating\n\n**Vector length (L2 norm):** `‖v‖ = √(Σ vᵢ²)` → `np.linalg.norm(v)`\n\n**Distance between two samples:** `np.linalg.norm(a - b)` — the Euclidean distance in feature space.\n\n**Nearest-neighbour search** (powers FAISS, Chroma, pgvector):\n```python\nX = np.random.randn(1000, 128)  # 1000 stored vectors, 128 dims each\nq = np.random.randn(128)         # query vector\ndists = np.linalg.norm(X - q, axis=1)  # distance from q to every row\nidx = np.argmin(dists)                  # index of nearest neighbour\n```\nThis `axis=1` trick is the most important NumPy idiom for similarity search."
+        },
+        {
+          "heading": "Matrices — 2D Arrays and Linear Transformations",
+          "body": "A **matrix** is a 2D `np.ndarray` with shape `(rows, cols)`. Three canonical interpretations:\n\n| Use case | Shape convention | Indexing |\n|----------|-----------------|----------|\n| Dataset | `(n_samples, n_features)` | `X[i]` = sample i, `X[:, j]` = feature j |\n| Greyscale image | `(height, width)` | `img[r, c]` = pixel at row r, column c |\n| Neural-network weight layer | `(n_outputs, n_inputs)` | `W[j, :]` = weights feeding into output j |\n\n**Matrix–vector product** `A @ x`: applies the linear transformation encoded in matrix A to input vector x, producing output vector y. This is how a single neural layer computes its output:\n\n```python\nA = np.random.randn(4, 3)   # 4-output, 3-input layer\nx = np.array([1.0, 2.0, 3.0])  # input vector\ny = A @ x                   # output: shape (4,)\n```\n\nEvery deep-learning forward pass is a sequence of such matrix–vector products interspersed with non-linear activation functions. Understanding `A @ x` is understanding neural networks at the mathematical level."
+        },
+        {
+          "heading": "Convolution — A Kernel Sliding Over a Signal",
+          "body": "**Convolution** slides a small kernel (filter) h over a signal x and computes a weighted sum at each position:\n$$(x * h)[n] = \\sum_k x[k] \\cdot h[n-k]$$\n\nIn NumPy: `np.convolve(x, h)`. The kernel h defines what the convolution emphasises or suppresses.\n\n**Key applications:**\n\n1. **EMG envelope smoothing** — a moving-average kernel:\n```python\nW = 200                             # window length (samples)\nh = np.ones(W) / W                  # moving-average kernel\nenvelope = np.convolve(EMG_rect, h, mode='same')  # smooth envelope\n```\n\n2. **Spike-train firing rate** — convolving a binary spike raster with a Gaussian kernel:\n```python\nfrom scipy.ndimage import gaussian_filter1d\nspike_train = np.array([0,0,1,0,0,0,1,0,1,0,0])  # discrete spikes\nfiring_rate = gaussian_filter1d(spike_train.astype(float), sigma=5)\n```\n\nConvolution is the bridge between the discrete spike language of biology and the continuous signal language of control engineering."
+        },
+        {
+          "heading": "Windows — Shaping the Kernel to Reduce Leakage",
+          "body": "The **shape** of the convolution kernel determines what frequency content is preserved or attenuated. Two important cases:\n\n**Rectangular (boxcar) window:**\n- Abrupt edges create ringing artefacts in the frequency domain (**spectral leakage**)\n- Energy from one frequency bin bleeds into adjacent bins\n- Result: poor frequency resolution\n\n**Smooth windows (Hanning, Hamming, Gaussian):**\n- Taper to zero at both ends → no abrupt edges → dramatically less leakage\n- **Hanning window:** `scipy.signal.windows.hann(L)` — the default choice for EMG and general signal processing\n\n```python\nfrom scipy.signal import windows\nimport numpy as np\n\nL = 256\nhann = windows.hann(L)        # tapers to zero at both ends\nrect = np.ones(L)             # rectangular window\n```\n\n**Rule of thumb:** Always apply a Hanning window *before* computing an FFT; always choose a smooth kernel (Hanning or Gaussian) for firing-rate estimation from spike trains. The single extra line `x_windowed = x * hann` is the difference between a clean and a leaky spectrum."
+        },
+        {
+          "heading": "Spike Trains and the Bridge to Motor Control",
+          "body": "A **motor unit** does not fire continuously — it fires as a train of discrete spikes (action potentials). In a computer, this is represented as a binary vector where `1` marks a spike and `0` marks silence.\n\n**Raster plot:** Each row represents one motor unit; each vertical mark is a spike time. At 35% of maximum voluntary contraction (ankle dorsiflexors), you can observe 20–25 active motor units firing at 10–30 pulses per second.\n\n**Problem:** A robot joint cannot respond to a binary spike train — it needs a smooth continuous signal proportional to desired torque.\n\n**Solution — convolution with a smooth kernel:**\n\n```python\nspike_train = np.zeros(2000)         # 1 second at fs=2000 Hz\nspike_times = [150, 230, 320, 420]   # spike sample indices\nspike_train[spike_times] = 1.0\n\nh = np.hanning(100) / np.sum(np.hanning(100))   # normalised Hanning kernel\nfiring_rate = np.convolve(spike_train, h, mode='same')   # smooth continuous estimate\n```\n\nThis single convolution converts discrete neuroscience data into a continuous control signal — the core conceptual bridge of Lecture 3 (and of the whole course)."
+        },
+        {
+          "heading": "Linear Algebra in AI — Why It All Matters",
+          "body": "Every concept in this lecture — vectors, dot products, matrix products, convolution — is a primitive operation that underlies modern artificial intelligence.\n\n**2-layer MLP (Multi-Layer Perceptron) forward pass:**\n```python\nimport numpy as np\n\ndef relu(x): return np.maximum(0, x)\n\n# Layer 1: (n_hidden, n_input) weight matrix\nh = relu(W1 @ x + b1)   # hidden layer\n# Layer 2: (n_output, n_hidden) weight matrix\ny = W2 @ h + b2          # output layer\n```\n\n**Convolutional Neural Networks (CNNs):** The 2D convolution in a CNN is exactly `np.convolve` extended to 2D — the kernel slides over an image and computes weighted sums, detecting edges, textures, and shapes.\n\n**Embedding lookup:** Retrieving a word/token embedding from a model is a matrix row-selection: `embedding = E[token_id]`.\n\n**Vector databases:** Semantic search is `np.argmin(np.linalg.norm(X - q, axis=1))` at scale (with approximate nearest-neighbour indexing).\n\n**Five lines to remember from Lecture 3:** `a + b` (addition), `u @ v` (dot product), `A @ x` (matrix multiply), `np.convolve(spikes, h)` (convolution), `windows.hann(L)` (window)."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L4Q1",
+          "text": "Which of the following CORRECTLY uses the dot product? Select ALL that apply.",
+          "options": [
+            "Artificial neuron output: y = w · x + b",
+            "Element-wise multiplication of two feature vectors to compare them",
+            "Nearest-neighbour distance via np.linalg.norm(a − b)",
+            "Convolution of a spike train with a Gaussian kernel"
+          ],
+          "correct": [0, 2],
+          "explanation": "The dot product (w · x = Σ wᵢxᵢ) appears in: (A) the artificial neuron — every neural network layer computes `y = W @ x + b`, which is a dot product per output unit. (C) the L2 norm `‖a−b‖ = sqrt((a−b)·(a−b))` is derived from the dot product and measures Euclidean distance for nearest-neighbour search. Option B describes element-wise multiplication, which produces a vector, not a scalar — it is NOT the dot product and not a standard similarity metric. Option D describes convolution (sliding weighted sum), which has a different mathematical definition (`Σ x[k]·h[n−k]`) and cannot be reduced to a simple dot product of the two full vectors.",
+          "type": "multiple"
+        },
+        {
+          "id": "L4Q2",
+          "text": "A medical dataset has 500 patients, each described by 12 clinical features. What is `X.shape` in NumPy, following the standard ML convention?",
+          "options": [
+            "(12, 500)",
+            "(500, 12)",
+            "(500,)",
+            "(12,)"
+          ],
+          "correct": [1],
+          "explanation": "By convention in scikit-learn and NumPy-based ML: rows = samples, columns = features. For 500 patients × 12 features: `X.shape = (500, 12)`. `X[i]` gives the feature vector of patient i (shape `(12,)`). `X[:, j]` gives all values of feature j across all patients (shape `(500,)`). Option A reverses rows and columns — this is the transpose. Option C would be a 1D vector (one sample with 500 values). Option D would be one sample's feature vector.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q3",
+          "text": "Which kernel applied in `np.convolve(x, h)` produces a moving-average smoothing of a 1D signal?",
+          "options": [
+            "h = np.ones(W) / W",
+            "h = scipy.signal.windows.hann(W)",
+            "h = np.array([1, 0, -1])",
+            "h = np.eye(W)[0]"
+          ],
+          "correct": [0],
+          "explanation": "A moving-average computes the mean of W consecutive samples — equivalent to convolving with a rectangular kernel `h = np.ones(W) / W` (all weights equal to 1/W, so their sum = 1 and each output is the local mean). Option B is a Hanning window kernel — it produces a *weighted* average (more weight at the centre, tapering to zero at the edges) — this is a weighted smoother, not a pure moving average. Option C `[1, 0, -1]` is a finite-difference kernel that approximates the first derivative (edge detector) — it does not smooth. Option D `np.eye(W)[0]` is a unit impulse (1 followed by zeros) — convolving with this is the identity operation, leaving the signal unchanged.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q4",
+          "text": "Why is a Hanning window applied to a signal before computing an FFT?",
+          "options": [
+            "To increase the signal's amplitude and improve signal-to-noise ratio",
+            "To reduce spectral leakage by tapering the signal to zero at the segment edges",
+            "To high-pass filter the signal and remove DC offset",
+            "To double the effective frequency resolution of the FFT"
+          ],
+          "correct": [1],
+          "explanation": "Spectral leakage occurs when a signal segment is not periodic at its endpoints — the abrupt discontinuity at the edges of a rectangular window creates Gibbs-like ringing that spreads energy from one frequency bin into adjacent bins. A Hanning window tapers the signal smoothly to zero at both ends, eliminating the edge discontinuity and dramatically reducing inter-bin leakage. Option A is wrong: windowing *reduces* amplitude (the ends are suppressed) — it lowers SNR of the windowed region. Option C is wrong: windowing is a time-domain multiplication, not a high-pass filter — it does not specifically attenuate DC. Option D is wrong: windowing slightly *reduces* effective frequency resolution (the window widens the spectral peak) compared to a rectangular window of the same length.",
+          "type": "single"
+        },
+        {
+          "id": "L4Q5",
+          "text": "A motor-unit spike train is a discrete binary vector (1 = spike, 0 = silence). What operation converts it into a smooth continuous firing-rate signal suitable for driving a robot joint?",
+          "options": [
+            "FFT — transform the spike train to the frequency domain",
+            "Dot product with a reference template vector",
+            "Convolution with a Gaussian or Hanning kernel",
+            "Matrix multiplication with the inverse of the weight matrix"
+          ],
+          "correct": [2],
+          "explanation": "Convolving the discrete binary spike train with a smooth kernel (Gaussian or Hanning) produces a continuous, smooth estimate of the local firing rate. At each time point, the output is the weighted sum of nearby spikes — more recent spikes contribute more (if the kernel is causal). This is the standard neuroscience technique for estimating instantaneous firing rate and the key bridge from discrete biology to continuous control. Option A (FFT) transforms to the frequency domain — useful for analysis, but the output is a complex spectrum, not a time-domain firing-rate signal. Option B (dot product) produces a single scalar — it cannot produce a time-varying signal. Option D (matrix inverse) is a linear algebra operation unrelated to spike-rate estimation.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "Dot product: formula and NumPy idiom.",
+          "back": "u · v = Σ uᵢ·vᵢ. NumPy: `np.dot(u, v)` or `u @ v` (preferred — one optimised BLAS call). Produces a scalar. Used in: artificial neuron (`y = w·x + b`), cosine similarity, recommendation systems."
+        },
+        {
+          "front": "L2 norm formula and its use for nearest-neighbour distance.",
+          "back": "‖v‖ = √(Σ vᵢ²) → `np.linalg.norm(v)`. Distance between two vectors a and b: `np.linalg.norm(a − b)`. Nearest neighbour in dataset X: `np.argmin(np.linalg.norm(X − q, axis=1))`. Powers FAISS, Chroma, pgvector."
+        },
+        {
+          "front": "Matrix shape convention: (rows, cols) — what are rows and cols in a dataset?",
+          "back": "Rows = samples (patients, time windows, images). Columns = features (clinical measurements, EMG channels, pixel intensities). `X.shape = (n_samples, n_features)`. Access: `X[i]` = sample i; `X[:, j]` = feature j across all samples."
+        },
+        {
+          "front": "What does np.convolve(x, h) compute?",
+          "back": "The discrete convolution (x * h)[n] = Σ x[k]·h[n−k]. Slides kernel h over signal x, computing a weighted sum at each position. Application: moving-average smoothing with `h = np.ones(W)/W`, or firing-rate estimation with a Gaussian kernel."
+        },
+        {
+          "front": "Hanning vs rectangular window — what is spectral leakage?",
+          "back": "Spectral leakage: energy from one frequency bin bleeds into adjacent bins when a signal segment has discontinuous edges (rectangular window). A Hanning window tapers to zero at both ends, eliminating edge discontinuities and greatly reducing leakage. Always apply before FFT: `x_windowed = x * np.hanning(len(x))`."
+        },
+        {
+          "front": "Spike raster to firing rate — which operation bridges the gap?",
+          "back": "Convolution with a smooth kernel (Gaussian or Hanning). The binary spike vector (1=spike, 0=silence) is convolved with a normalised Gaussian or Hanning kernel → continuous, smooth estimate of local firing rate at each time point. This converts discrete neuroscience data into a continuous engineering control signal."
+        },
+        {
+          "front": "Five lines to remember from Lecture 3 (Vectors, Matrices, Convolutions).",
+          "back": "1. `a + b` — vector addition (element-wise)\n2. `u @ v` — dot product (scalar)\n3. `A @ x` — matrix–vector product (linear transformation)\n4. `np.convolve(spikes, h)` — convolution with kernel h\n5. `scipy.signal.windows.hann(L)` — Hanning window of length L"
+        }
+      ]
     }
   ]
 }
