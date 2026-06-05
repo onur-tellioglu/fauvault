@@ -6,11 +6,17 @@ type Mode = 'login' | 'register'
 
 /**
  * Only allow same-origin relative paths as redirect targets.
- * Rejects absolute URLs (https://evil.com), protocol-relative URLs (//evil.com),
+ * Rejects absolute URLs (https://evil.com), protocol-relative URLs (//evil.com
+ * and the backslash variant /\evil.com, which browsers normalize to //evil.com),
  * and pseudo-schemes (javascript:) to prevent open-redirect attacks.
  */
 function isSafeRedirect(url: string | undefined): url is string {
-  return typeof url === 'string' && url.startsWith('/') && !url.startsWith('//')
+  return (
+    typeof url === 'string' &&
+    url.startsWith('/') &&
+    !url.startsWith('//') &&
+    !url.startsWith('/\\')
+  )
 }
 
 export function AuthForm({ onSuccess, callbackUrl }: { onSuccess?: () => void; callbackUrl?: string } = {}) {
