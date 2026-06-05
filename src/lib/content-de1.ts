@@ -1320,5 +1320,228 @@ export const content: Content = {
         }
       ]
     }
+    ,{
+      "id": 6,
+      "title": "Graph Databases & Cypher",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "What Is a Graph Database?",
+          "body": "A graph database stores and queries data modeled as a network of nodes and edges. The formal definition is G = (V, E, λ_V, λ_E), where V is the node set, E is the edge set (directed or undirected), λ_V assigns attributes to nodes, and λ_E assigns attributes to edges.\n\n**Three core building blocks:**\n- **Nodes:** entities (e.g., persons, movies, proteins)\n- **Edges:** directed relationships between nodes (e.g., FOLLOWS, ACTED_IN)\n- **Properties:** key-value pairs attached to nodes or edges (e.g., `name: 'Alice'`, `since: 2020`)\n\nAdditionally, **node labels** (tags identifying the entity type, like `Person` or `Movie`) and **edge names** (the relationship type, like `KNOWS`) are first-class metadata.\n\n**Key difference from relational databases:** In a relational DB, relationships are represented by foreign-key joins computed at query time. In a graph DB, joins are *implicit in the schema* — related nodes point to each other directly in the underlying storage, making traversals constant-time per hop.\n\n```\n(Ruth:User)-[:FOLLOWS]->(Harry:User)\n(Harry:User)-[:FOLLOWS]->(Billy:User)\n```\n\nFinding all of Ruth's followers' followers is a breadth-first search from the \"Ruth\" node — no recursive SQL join needed."
+        },
+        {
+          "heading": "Graph Databases vs Relational Databases",
+          "body": "Graph databases were developed to handle highly interconnected data — social networks, recommendation engines, biological networks — where relational schemas and recursive joins are awkward and slow.\n\n| Dimension | Relational | Graph |\n|-----------|-----------|-------|\n| Data model | Tables, rows, columns | Nodes, edges, properties |\n| Relationships | Foreign keys + JOINs at query time | First-class edges, navigated at storage time |\n| Schema | Rigid, must be defined upfront | Flexible; can populate without prior schema |\n| Multi-hop queries | Recursive joins, expensive | Breadth/depth-first traversal, efficient |\n| Best for | Complex aggregations, uniform structure | Highly connected data, traversal-heavy queries |\n\n**When graph databases win:**\n1. **Traversal-heavy queries:** finding friends-of-friends, computing shortest paths, ranking in a citation network — each hop is O(1) with native storage.\n2. **Schema evolution:** adding a new node type or edge type does not break existing data.\n3. **Natural modeling:** relationships are real-world facts, not a side-effect of a join table.\n\n**When relational databases win:** complex aggregation (GROUP BY, HAVING, window functions), highly uniform data with many bulk operations."
+        },
+        {
+          "heading": "Native Graph Storage & Index-Free Adjacency",
+          "body": "Graph databases can use either **native** or **non-native** storage internally.\n\n**Native graph storage** uses data structures specifically designed for graphs — an adjacency-list-like layout where each node holds direct pointers to its neighbours. This is also called **index-free adjacency**: to traverse an edge, you follow a pointer rather than looking up an index.\n\n```\nNode A  →  [ptr to edge AB, ptr to edge AC]\nNode B  →  [ptr to edge AB, ptr to edge BD]\n```\n\n- **Advantage:** traversal queries are very fast — each hop is O(1).\n- **Disadvantage:** attribute-only queries (e.g., find all nodes where `age > 30`) must scan all nodes and can be slower or more memory-intensive than in a relational engine.\n\n**Non-native graph storage** stores the graph internally as a relational database, while still exposing a graph data model to the user.\n\n**Key definition:** A graph database is defined by what it *exposes to the user* (a graph data model and a graph query language), not necessarily by how it stores data internally. Neo4j uses native storage; some other graph databases do not."
+        },
+        {
+          "heading": "Mapping an ER Diagram to a Graph Schema",
+          "body": "The ER model from relational design maps cleanly onto a graph schema using two primary rules:\n\n**Rule A — Entity Types become Vertex Types:**\n- The entity type name becomes the **node label**.\n- The entity's attributes become **node properties**.\n\n```\nER: User(name, login) → Graph: (:User {name: String, login: String})\n```\n\n**Rule B — Binary Relationship Types become Edge Types:**\n- The relationship name becomes the **edge label**.\n- Relationship attributes become **edge properties**.\n- The two participating entity types become the **source and target node labels**.\n\n```\nER: User --Owns(1:N)--> Page  →  (:User)-[:owns {# = 1:N}]->(:Page)\n```\n\n**Higher-order (N-ary) relationships become Vertex Types:**\nAn N-ary relationship (degree ≥ 3) cannot be directly represented as a single edge (edges connect exactly two nodes). Instead, the relationship itself becomes a new node type, and each participating entity type gets an edge to/from that new node.\n\n```\nER: Invites(User-inviter, User-invitee, Page, allowComments)\n→\n(:Invitation {allowComments: Boolean})\n  -[:inviter]->(:User),  -[:invitee]->(:User),  -[:page]->(:Page)\n```\n\nUnlike relational databases, a graph database **can be populated without prior schema specification** — the schema is optional, and data can be inserted freely."
+        },
+        {
+          "heading": "Graph Schema Transformation Rules",
+          "body": "Graph schemas can be restructured using equivalence-preserving transformations. Two schemas are **equivalent** if there is a bijection between their graph universes (every database valid in one can be ported to the other and back).\n\n**The 7 main transformation rules:**\n\n| Rule | What it does |\n|------|--------------|\n| **1. Renaming** | Rename a vertex label, edge label, or property — as long as the new name is not already in use |\n| **2. Reversing edges** | Flip edge direction (and reverse cardinality constraints). Allowed for self-loops always; for non-self-loops only if no edge already exists in the other direction |\n| **3. Property displacement** | Move a property from an edge to an adjacent vertex (or vice versa), when the look-across cardinality of the edge is 1 |\n| **4. Specialization/Generalization** | Split a vertex type into two disjoint subtypes (specialization) or merge two types into one (generalization) |\n| **5. Edge promotion** | Promote an edge type to a vertex type by adding two new edge types from the new vertex to the original endpoints |\n| **6. Property promotion** | Promote a group of properties to a new vertex type with edges connecting it to all vertex types that had those properties |\n| **7. Multivalued property expansion** | Move a list-valued property to a separate vertex type with a 1:N in-edge |\n\n**General simplification rule:** Deleting a *derived* vertex type, edge type, or property from schema S yields an equivalent schema S' — the removed element can be reconstructed from the remaining schema.\n\n**General complexification rule:** Adding a new element T such that T is derived in S' = S + T yields an equivalent schema."
+        },
+        {
+          "heading": "Cypher: Pattern Matching with ASCII Art",
+          "body": "Cypher is the declarative query language for Neo4j. Its core idea: describe the **graph pattern** you want to find using ASCII-art notation, then state what you want to retrieve.\n\n**Syntax at a glance:**\n\n| Element | Cypher syntax | Example |\n|---------|---------------|---------|\n| Node | `(variable:Label {prop: val})` | `(p:Person {name: 'Anna'})` |\n| Directed edge | `-[:TYPE]->` | `-[:ACTED_IN]->` |\n| Undirected edge | `-[:TYPE]-` | `-[:KNOWS]-` |\n| Edge with variable | `[r:TYPE]` | `[r:KNOWS WHERE r.since < 2020]` |\n| Multi-hop path | `-[:TYPE*min..max]-` | `-[:KNOWS*1..5]-` |\n\n**Basic query structure:**\n```cypher\nMATCH (actor:Actor)-[:ACTED_IN]->(movie:Movie {title: 'The Matrix'})\nRETURN actor.name\n```\n\nCompare with SQL — Cypher says *what pattern exists in the graph*, SQL says *which columns to select then which rows to keep*.\n\n**Filtering with WHERE:**\n```cypher\nMATCH (n:Person {name: 'Anna'})-[r:KNOWS WHERE r.since < 2020]->(friend:Person)\nRETURN count(r) AS numberOfFriends\n```\n\n**Important:** Nodes can carry multiple labels (`n:Person:Actor`), but edges can only have **one type** — `[r:KNOWS:LOVES]` is invalid syntax. Neo4j allows parallel edges of the same type."
+        },
+        {
+          "heading": "Cypher: Writing and Modifying Data",
+          "body": "Beyond reading, Cypher supports full CRUD operations.\n\n**CREATE — add nodes and edges:**\n```cypher\n-- Create two nodes with multiple labels\nCREATE (charlie:Person:Actor {name: 'Charlie Sheen'}),\n       (oliver:Person:Director {name: 'Oliver Stone'})\n\n-- Match existing nodes, then create edges and an inline new node\nMATCH (charlie:Person {name: 'Charlie Sheen'}),\n      (oliver:Person {name: 'Oliver Stone'})\nCREATE (charlie)-[:ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})\n       <-[:DIRECTED]-(oliver)\n```\n\n**SET — update properties:**\n```cypher\nMATCH (n {name: 'Andy'})\nSET n.surname = 'Taylor'\nRETURN n.name, n.surname\n```\n\n**DELETE — remove nodes and edges:**\n```cypher\n-- Delete isolated node (must have no edges)\nMATCH (n:Person {name: 'Tom Hanks'}) DELETE n\n\n-- Delete edges only (node survives)\nMATCH (n:Person {name: 'Laurence Fishburne'})-[r:ACTED_IN]->() DELETE r\n\n-- Delete node together with all its incident edges\nMATCH (n:Person {name: 'Carrie-Anne Moss'}) DETACH DELETE n\n```\n\n**MERGE — create-or-match (upsert):** Checks if the pattern exists; creates it only if it does not. Essential for avoiding duplicates when loading data incrementally."
+        },
+        {
+          "heading": "Cypher: Schema Constraints",
+          "body": "Cypher only partially enforces schema — it **cannot** constrain which node labels an edge may connect, enforce cardinality constraints, or enforce total participation. This trade-off gives flexibility but puts data-integrity responsibility on the user.\n\n**What Cypher CAN enforce:**\n\n**1. Property uniqueness constraint** — no two nodes (or edges) of the same label/type share the same property value:\n```cypher\nCREATE CONSTRAINT book_title_year\nFOR (book:Book) REQUIRE (book.title, book.publicationYear) IS UNIQUE\n```\n\n**2. Property existence constraint** — a property must not be NULL:\n```cypher\nCREATE CONSTRAINT wrote_year\nFOR ()-[wrote:WROTE]-() REQUIRE wrote.year IS NOT NULL\n```\n\n**3. Property type constraint** — a property must be of a given Cypher type:\n```cypher\nCREATE CONSTRAINT movie_tagline\nFOR (movie:Movie) REQUIRE movie.tagline IS :: STRING | LIST<STRING NOT NULL>\n```\n\n**4. Key constraint** — combines uniqueness + existence (shorthand for both at once):\n```cypher\nCREATE CONSTRAINT actor_fullname\nFOR (actor:Actor) REQUIRE (actor.firstname, actor.surname) IS NODE KEY\n```\n\nThe schema flexibility of graph databases is simultaneously their **strength** (easy evolution, no rigid upfront design) and **weakness** (the application must validate data integrity that the DBMS cannot enforce)."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L6Q1",
+          "text": "What is the key architectural difference between how relational and native graph databases handle relationships?",
+          "options": [
+            "Relational databases store edges as first-class objects; graph databases compute joins at query time",
+            "Native graph databases use index-free adjacency — related nodes point directly to each other — while relational databases compute joins at query time",
+            "Native graph databases use B-tree indexes on every relationship; relational databases do not",
+            "Relational databases traverse relationships in O(1) per hop; graph databases require O(log n) index lookups"
+          ],
+          "correct": [1],
+          "explanation": "In a native graph database, each node stores direct pointers to its neighbouring nodes — this is called index-free adjacency. Traversing one hop is O(1): follow the pointer, no index lookup needed. In a relational database, relationships are encoded as foreign keys and must be joined at query time, which does not benefit from this pointer-following shortcut. Options A and D reverse the facts, and C is incorrect — native storage avoids the B-tree index for traversal.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q2",
+          "text": "The formal definition of a graph in this course is G = (V, E, λ_V, λ_E). What do λ_V and λ_E represent?",
+          "options": [
+            "λ_V is the set of vertex labels; λ_E is the set of edge labels",
+            "λ_V is a function assigning attributes to nodes; λ_E is a function assigning attributes to edges",
+            "λ_V is the number of vertices; λ_E is the number of edges",
+            "λ_V and λ_E are the adjacency functions used by native storage"
+          ],
+          "correct": [1],
+          "explanation": "In the formal definition G = (V, E, λ_V, λ_E): V is the node set, E is the edge set, λ_V is a function that assigns attribute key-value pairs to each node u ∈ V, and λ_E is a function that assigns attribute key-value pairs to each edge e ∈ E. These attribute functions are what distinguish a property graph from a simple mathematical graph. Options A, C, and D each misrepresent the formal role of these functions.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q3",
+          "text": "Which of the following Cypher snippets correctly creates a directed ACTED_IN edge with a role property from a matched Person node to a new Movie node?",
+          "options": [
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[:ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})",
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)<-[:ACTED_IN {role: 'Bud Fox'}]-(ws:Movie {title: 'Wall Street'})",
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})",
+            "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[:ACTED_IN role: 'Bud Fox']->(ws:Movie {title: 'Wall Street'})"
+          ],
+          "correct": [0],
+          "explanation": "Option A is correct: edge type in brackets with colon [:ACTED_IN], edge properties in curly braces {role: 'Bud Fox'}, arrow pointing right to indicate the direction from actor to movie. Option B points the arrow backward (person receives the edge). Option C omits the colon before the edge type, which is required syntax. Option D puts edge properties outside the brackets, which is invalid syntax.",
+          "shuffle": false,
+          "type": "single"
+        },
+        {
+          "id": "L6Q4",
+          "text": "Consider this Cypher query:\n```\nMATCH (n:Person {name: 'Anna'})-[:KNOWS*1..5]-(friend:Person WHERE n.born < friend.born)\nRETURN DISTINCT friend.name\n```\nWhat does this query return?",
+          "options": [
+            "The names of all Person nodes exactly 1 to 5 hops from Anna via KNOWS edges, where the friend was born after Anna — duplicates removed",
+            "The names of all Person nodes exactly 1 to 5 hops from Anna via directed KNOWS edges only, where Anna was born after the friend",
+            "The names of all Person nodes connected to Anna by exactly 5 KNOWS edges, regardless of birth year",
+            "An error — the undirected edge pattern -[:KNOWS]- is not valid Cypher"
+          ],
+          "correct": [0],
+          "explanation": "The pattern -[:KNOWS*1..5]- (no arrowhead) means the traversal follows KNOWS edges in either direction — the relationship is treated as undirected for this query. The range *1..5 means between 1 and 5 hops. The WHERE clause n.born < friend.born keeps only friends born after Anna (higher birth year = born later). RETURN DISTINCT removes duplicate names. Option B incorrectly says 'directed only' and reverses the birth-year condition. Options C and D are both wrong.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q5",
+          "text": "In an ER diagram, you have a ternary relationship type SUPPLY connecting SUPPLIER, PART, and PROJECT with an attribute 'quantity'. How should this be mapped to a graph schema?",
+          "options": [
+            "Create three binary edge types: SUPPLIER-[:SUPPLIES]->PART, SUPPLIER-[:SUPPLIES]->PROJECT, PART-[:USED_IN]->PROJECT",
+            "Create a new SUPPLY vertex type with a quantity property and three edge types connecting it to SUPPLIER, PART, and PROJECT nodes",
+            "Create a single edge type from SUPPLIER to PROJECT with PART and quantity as edge properties",
+            "N-ary relationships cannot be represented in graph databases"
+          ],
+          "correct": [1],
+          "explanation": "N-ary (higher-order) relationships with degree ≥ 3 cannot be represented as a single edge, because edges in a property graph connect exactly two nodes. The standard transformation is: the relationship type itself becomes a new vertex type (SUPPLY node), and the participating entity types each get an edge type connecting them to the new vertex. Properties of the relationship (quantity) become properties of the new SUPPLY vertex. Option A loses information — three binary edges cannot express which specific supplier-part-project combination occurred. Options C and D are incorrect.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q6",
+          "text": "Which of the following statements about Cypher's schema enforcement are correct? Select ALL that apply.",
+          "options": [
+            "Cypher can enforce that a property value is unique across all nodes with a given label",
+            "Cypher can enforce cardinality constraints (e.g., that a Person node has at most one BORN_IN edge)",
+            "Cypher can enforce that a property must not be NULL for all relationships of a given type",
+            "Cypher can enforce that edges of type ACTED_IN may only connect Actor nodes to Movie nodes"
+          ],
+          "correct": [0, 2],
+          "explanation": "Cypher supports property uniqueness constraints (A ✓) via CREATE CONSTRAINT ... IS UNIQUE, and property existence constraints (C ✓) via CREATE CONSTRAINT ... IS NOT NULL. It cannot enforce cardinality constraints (B ✗) — the max number of edges per node is not enforceable through Cypher schema. It also cannot restrict which node labels an edge type may connect (D ✗). This is a known limitation and a source of both flexibility and data-integrity risk.",
+          "type": "multiple"
+        },
+        {
+          "id": "L6Q7",
+          "text": "Consider this Cypher query:\n```\nMATCH (:Person {name: 'Anna'})-[r:KNOWS WHERE r.since < 2020]->(friend:Person)\nRETURN count(r) AS numberOfFriends\n```\nDoes the result variable `numberOfFriends` accurately count Anna's friends? Why or why not?",
+          "options": [
+            "Yes — it counts all outgoing KNOWS edges from Anna, which equals her friend count",
+            "No — it counts KNOWS relationships established before 2020, not all current friends; also, if Anna and a friend have multiple KNOWS edges, each is counted separately",
+            "No — count(r) counts nodes, not relationships",
+            "Yes — the WHERE clause on the edge filters correctly and count(r) counts unique friends"
+          ],
+          "correct": [1],
+          "explanation": "The query only matches KNOWS edges where r.since < 2020 — friendships formed in 2020 or later are excluded. Additionally, Neo4j allows parallel edges of the same type between the same two nodes (unless prevented by a schema constraint), so if Anna and a friend have two KNOWS edges both before 2020, count(r) counts 2 for that friend. The result is the count of matching edge instances, not unique friends. Option A ignores the since filter. Option C is wrong — count(r) counts relationship bindings, not nodes.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q8",
+          "text": "You want to apply graph schema transformation Rule 3 (Property Displacement) to move a property from edge (:T1)-[:E]->(:T2) to vertex type T1. What condition must hold?",
+          "options": [
+            "The edge E must have an M:N cardinality constraint",
+            "T1's look-across cardinality with respect to E must be 1 (i.e., each T1 node has at most one E edge)",
+            "T2's look-across cardinality with respect to E must be 1",
+            "The edge E must be a self-loop"
+          ],
+          "correct": [1],
+          "explanation": "Property displacement from an edge to vertex T1 is valid only if T1's look-across cardinality w.r.t. E is 1 — meaning each T1 node is connected to at most one T2 node via E. Under this condition, each T1 node is associated with exactly one edge instance, so the property can be unambiguously moved to T1 without information loss. If T1 could have multiple E edges (M:N), each edge might have a different property value, so moving the property to T1 would lose which value corresponds to which edge. Options A, C, and D describe incorrect conditions.",
+          "type": "single"
+        },
+        {
+          "id": "L6Q9",
+          "text": "Which of the following correctly apply the Cypher DETACH DELETE vs DELETE distinction? Select ALL that apply.",
+          "options": [
+            "DETACH DELETE n removes node n along with all its incident edges",
+            "DELETE n on a node that still has incident edges will fail — Neo4j raises an error",
+            "DELETE r where r is a relationship variable removes only the relationship, not the connected nodes",
+            "DETACH DELETE n removes only the node's properties, leaving the node itself in the graph"
+          ],
+          "correct": [0, 1, 2],
+          "explanation": "DETACH DELETE n (A ✓) first removes all edges attached to n, then deletes n itself. Plain DELETE n (B ✓) on a node with incident edges raises a runtime error in Neo4j — you must either manually delete edges first or use DETACH DELETE. DELETE r where r is bound to a relationship (C ✓) removes only that relationship; the connected nodes remain. Option D is wrong — DETACH DELETE removes the entire node (and its edges), not just its properties.",
+          "type": "multiple"
+        },
+        {
+          "id": "L6Q10",
+          "text": "A social network stores FOLLOWS edges between Person nodes. A query needs to find all accounts reachable from 'Ruth' by following between 2 and 4 FOLLOWS edges. Which Cypher MATCH clause is correct?",
+          "options": [
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS*2..4]->(reachable:Person)",
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS]->(reachable:Person) WHERE length = 4",
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS{2,4}]->(reachable:Person)",
+            "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS]->()-[:FOLLOWS]->()-[:FOLLOWS]->(reachable:Person)"
+          ],
+          "correct": [0],
+          "explanation": "Variable-length path syntax in Cypher uses *min..max inside the relationship brackets: -[:FOLLOWS*2..4]-> means between 2 and 4 directed FOLLOWS hops. Option B uses invalid syntax — there is no bare 'length' keyword in this context. Option C uses an incorrect {2,4} notation (that is not valid Cypher path syntax). Option D hard-codes exactly 3 hops, not 2–4, and misses the 2-hop and 4-hop cases.",
+          "shuffle": false,
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What are the four components of the formal graph definition G = (V, E, λ_V, λ_E)?",
+          "back": "V = set of nodes, E = set of edges (directed or undirected), λ_V = function assigning attributes to nodes, λ_E = function assigning attributes to edges."
+        },
+        {
+          "front": "What is index-free adjacency and why does it matter?",
+          "back": "Each node holds direct pointers to its neighbours — traversing one hop is O(1), no index lookup needed. It is the key performance advantage of native graph storage for traversal-heavy queries."
+        },
+        {
+          "front": "In Cypher, how do you write a directed edge pattern vs an undirected one?",
+          "back": "Directed: (a)-[:REL]->(b)  or  (a)<-[:REL]-(b)\nUndirected: (a)-[:REL]-(b)  — no arrowhead, traversal in either direction."
+        },
+        {
+          "front": "How many labels can a node have in Neo4j? How many types can an edge have?",
+          "back": "Nodes: multiple labels (e.g., n:Person:Actor). Edges: exactly one type — [r:KNOWS:LOVES] is invalid syntax."
+        },
+        {
+          "front": "What is the graph schema transformation rule for mapping an N-ary ER relationship?",
+          "back": "The relationship type becomes a new vertex type. Each participating entity type gets an edge type connecting it to the new vertex. Relationship attributes become properties of the new vertex."
+        },
+        {
+          "front": "What does DETACH DELETE do in Cypher, and how does it differ from DELETE?",
+          "back": "DETACH DELETE n removes the node and all its incident edges. Plain DELETE n fails if the node still has incident edges — you must remove edges manually first."
+        },
+        {
+          "front": "What Cypher clause upserts a pattern (creates it only if it does not exist)?",
+          "back": "MERGE — it checks whether the pattern already exists in the database; if yes, it matches it; if no, it creates it. Essential for deduplication during incremental data loading."
+        },
+        {
+          "front": "What are the four types of schema constraints Cypher supports?",
+          "back": "1. Property uniqueness (IS UNIQUE)\n2. Property existence (IS NOT NULL)\n3. Property type (IS :: <TYPE>)\n4. Key constraint (IS NODE KEY / IS RELATIONSHIP KEY) — shorthand for uniqueness + existence combined."
+        },
+        {
+          "front": "When is Property Displacement (Rule 3) valid?",
+          "back": "A property on edge (:T1)-[:E]->(:T2) can move to T1 if T1's look-across cardinality w.r.t. E is 1 (each T1 node has at most one E edge). It can move to T2 if T2's look-across cardinality is 1."
+        },
+        {
+          "front": "What is the main reason graph databases outperform relational databases on deep multi-hop queries?",
+          "back": "Graph databases use index-free adjacency — each hop follows a pointer in O(1). Relational databases must compute recursive JOINs, which grow exponentially with depth and cannot exploit direct pointer navigation."
+        },
+        {
+          "front": "What does the Cypher path pattern -[:KNOWS*1..5]- mean?",
+          "back": "Match any path following KNOWS edges between 1 and 5 hops, in either direction (no arrowhead = undirected). Equivalent to allowing the traversal to go both along and against the KNOWS edge direction."
+        },
+        {
+          "front": "Name the two 'meta-rules' that generalise all 7 graph schema transformation rules.",
+          "back": "Simplification: deleting a derived vertex type, edge type, or property from S yields an equivalent schema S'.\nComplexification: adding a vertex type, edge type, or property T such that T is derived in S' = S + T yields an equivalent schema S'."
+        }
+      ]
+    }
   ]
 }
