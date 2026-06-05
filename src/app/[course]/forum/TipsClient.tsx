@@ -17,6 +17,7 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   const [tips, setTips] = useState(initialTips)
   const [newBody, setNewBody] = useState('')
   const [posting, setPosting] = useState(false)
+  const [postError, setPostError] = useState<string | null>(null)
   const [expandedTip, setExpandedTip] = useState<string | null>(null)
   const [comments, setComments] = useState<Record<string, TipComment[]>>({})
   const [commentBody, setCommentBody] = useState<Record<string, string>>({})
@@ -24,13 +25,20 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
   async function submitTip() {
     if (!newBody.trim()) return
     setPosting(true)
-    await fetch('/api/tips', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ course, body: newBody.trim() }),
-    })
-    setPosting(false)
-    window.location.reload()
+    setPostError(null)
+    try {
+      const res = await fetch('/api/tips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course, body: newBody.trim() }),
+      })
+      if (!res.ok) throw new Error('Post failed')
+      window.location.reload()
+    } catch {
+      setPostError('Failed to post. Please try again.')
+    } finally {
+      setPosting(false)
+    }
   }
 
   async function toggleUpvote(tipId: string) {
@@ -135,6 +143,11 @@ export function TipsClient({ course, initialTips, username, isAdmin, courseLabel
                 {posting ? '…' : 'Post'}
               </button>
             </div>
+            {postError && (
+              <p style={{ color: 'var(--error, #f87171)', fontSize: '0.8rem', marginTop: '0.5rem', marginBottom: 0 }}>
+                {postError}
+              </p>
+            )}
           </div>
         ) : (
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
