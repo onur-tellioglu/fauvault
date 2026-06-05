@@ -1600,8 +1600,8 @@ export const content: Content = {
             "IQR = 4",
             "IQR = 6"
           ],
-          "correct": [1],
-          "explanation": "Sorted: [2,4,4,6,6,8], n=6 (even). Lower half = [2,4,4] → Q1 = median of lower half = 4. Upper half = [6,6,8] → Q3 = median of upper half = 6. IQR = Q3 − Q1 = 6 − 4 = 2. Wait — recalculating: Q1 = 4, Q3 = 6, so IQR = 2. Actually option A (IQR=2) is also plausible here; the standard method (include median in each half when n is even) gives Q1=4, Q3=6, IQR=2. However if you use the exclusive method: lower half [2,4] gives Q1=3; upper half [6,8] gives Q3=7; IQR=4. The lecture uses Q1=25th percentile as the average of positions n/2 and n/2+1 in the sorted lower sub-array: lower half [2,4,4] → Q1=4, upper half [6,6,8] → Q3=6, IQR=2. The correct answer per the lecture's definition (IQR = Q3 − Q1 where Q1 and Q3 are the medians of the two halves) is IQR = 3 when using the inclusive split for n=6: positions are [2,4,4 | 6,6,8]. Q1 = (4+4)/2 = 4, Q3 = (6+6)/2 = 6, IQR = 2. The presented answer B=3 corresponds to interpolation: Q1 = 3.5, Q3 = 6.5, IQR = 3. The most common textbook convention used in this course yields IQR = Q3 − Q1 where Q3 and Q1 are the 75th and 25th percentiles computed by linear interpolation, giving IQR = 6.5 − 3.5 = 3.",
+          "correct": [0],
+          "explanation": "This course uses the median-of-halves (inclusive) convention. Sorted: [2, 4, 4, 6, 6, 8], n=6. Split into lower half [2, 4, 4] and upper half [6, 6, 8]. Q1 = median of lower half = 4. Q3 = median of upper half = 6. IQR = Q3 − Q1 = 6 − 4 = 2. (Note: some textbooks use linear interpolation instead, which gives Q1=3.5, Q3=6.5, IQR=3 — but this course applies the median-of-halves method.)",
           "type": "single"
         },
         {
