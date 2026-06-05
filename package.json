@@ -1,6 +1,6 @@
 {
   "name": "study-app",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "private": true,
   "license": "AGPL-3.0-or-later",
   "scripts": {
