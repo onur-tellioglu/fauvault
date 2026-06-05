@@ -4,11 +4,12 @@ import { content as aipContent } from './content-aip'
 import { content as reContent } from './content-re'
 import { content as de1Content } from './content-de1'
 import { content as apContent } from './content-ap'
+import { content as bioContent } from './content-bio'
 import './exam-prep-re'
 
-export type Course = 'aip' | 're' | 'de1' | 'ap'
+export type Course = 'aip' | 're' | 'de1' | 'ap' | 'bio'
 
-export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap']
+export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap', 'bio']
 
 export const COURSES: Record<Course, {
   label: string
@@ -44,6 +45,13 @@ export const COURSES: Record<Course, {
     description: 'FAU · 1 Lecture',
     examDate: '',   // TBD — oral exam, date not yet announced
     content: apContent,
+  },
+  bio: {
+    label: 'Introduction to Molecular Biology',
+    shortLabel: 'BIO',
+    description: 'FAU · 6 Lectures',
+    examDate: '',   // TBD — update when exam date is announced
+    content: bioContent,
   },
 }
 
