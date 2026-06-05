@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { isValidCourse, COURSES, type Course } from '@/lib/courses'
 import { getExamPrepExams } from '@/lib/exam-prep'
@@ -17,12 +17,11 @@ export default async function ExamPrepListPage({ params }: { params: Promise<{ c
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
-  if (!session) redirect('/')
 
   const exams = getExamPrepExams(course as Course)
   if (exams.length === 0) notFound()
 
-  const bestScores = await getBestScores(session.userId, course as Course)
+  const bestScores = session ? await getBestScores(session.userId, course as Course) : []
   const bestByExam = Object.fromEntries(bestScores.map(b => [b.exam_id, b]))
 
   return (
