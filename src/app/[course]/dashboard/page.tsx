@@ -25,7 +25,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
   if (!isValidCourse(course)) notFound()
 
   const session = await getSession()
-  if (!session) redirect('/login')
+  if (!session) redirect('/login?callbackUrl=' + encodeURIComponent(`/${course}/dashboard`))
 
   const content = getCourseContent(course as Course)
   const [progressRows, leaderboard] = await Promise.all([
