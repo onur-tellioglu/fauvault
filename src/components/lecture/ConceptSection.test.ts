@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseBody } from './ConceptSection'
+import { parseBody, normalizeLang } from './ConceptSection'
 
 describe('parseBody — code block handling', () => {
   it('parses a fenced python block', () => {
@@ -50,6 +50,30 @@ describe('parseBody — unterminated fence fail-safe', () => {
     const codeBlock = blocks.find(b => b.type === 'code')
     expect(codeBlock).toBeDefined()
     expect(codeBlock).toMatchObject({ type: 'code', lang: 'python', code: 'x = 1' })
+  })
+})
+
+describe('normalizeLang', () => {
+  it('passes through known Prism languages unchanged', () => {
+    expect(normalizeLang('python')).toBe('python')
+    expect(normalizeLang('bash')).toBe('bash')
+    expect(normalizeLang('sql')).toBe('sql')
+  })
+
+  it('maps matlab to clike (Prism has no matlab grammar)', () => {
+    expect(normalizeLang('matlab')).toBe('clike')
+  })
+
+  it('maps cypher to clike (Prism has no cypher grammar)', () => {
+    expect(normalizeLang('cypher')).toBe('clike')
+  })
+
+  it('maps unknown languages to plain', () => {
+    expect(normalizeLang('foobar')).toBe('plain')
+  })
+
+  it('maps empty string (bare fence) to plain', () => {
+    expect(normalizeLang('')).toBe('plain')
   })
 })
 
