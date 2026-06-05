@@ -48,6 +48,9 @@ export async function middleware(req: NextRequest) {
   return response
 }
 
+// Course content routes (/:course/lectures|study|quiz|flashcard|exam-prep) are
+// intentionally PUBLIC so guests can explore study material (see the guest-access
+// feature). Only personal/aggregate-data routes are gated here. Decision: #17.
 export const config = {
   matcher: [
     '/dashboard/:path*',
