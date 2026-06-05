@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 type Mode = 'login' | 'register'
 
-export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
+export function AuthForm({ onSuccess, callbackUrl }: { onSuccess?: () => void; callbackUrl?: string } = {}) {
   const [mode, setMode] = useState<Mode>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -35,7 +35,7 @@ export function AuthForm({ onSuccess }: { onSuccess?: () => void } = {}) {
     if (onSuccess) {
       onSuccess()
     } else {
-      router.push('/')
+      router.push(callbackUrl ?? '/')
     }
   }
 

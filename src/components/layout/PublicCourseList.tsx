@@ -51,7 +51,7 @@ export function PublicCourseList() {
           return (
             <Link
               key={slug}
-              href="/login"
+              href={`/login?callbackUrl=/${slug}/dashboard`}
               style={{
                 display: 'flex',
                 alignItems: 'center',
