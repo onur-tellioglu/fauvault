@@ -24,7 +24,7 @@ const PRISM_SUPPORTED = new Set([
   'go', 'rust', 'swift',
   // JVM / other languages
   'kotlin', 'kt', 'kts',
-  'python', 'py',
+  'python',
   'coffeescript', 'coffee',
   // Query / graph
   'sql', 'graphql',
@@ -33,8 +33,8 @@ const PRISM_SUPPORTED = new Set([
   'objectivec', 'objc',
   'n4js', 'n4jsd',
   'jsdoc',
-  // Catch-all plain variants (Prism built-ins)
-  'plain', 'plaintext', 'text', 'txt',
+  // Catch-all plain (Prism built-in); plaintext/text/txt aliased below
+  'plain',
 ])
 
 const LANG_ALIASES: Record<string, string> = {
@@ -48,12 +48,16 @@ const LANG_ALIASES: Record<string, string> = {
   ruby:   'clike',   // not bundled
   r:      'clike',   // not bundled; clike approximates R comments + strings
   scala:  'clike',   // not bundled
-  diff:   'plain',   // not bundled; plain is safer than a wrong grammar
-  git:    'plain',   // not bundled
+  diff:      'plain',   // not bundled; plain is safer than a wrong grammar
+  git:       'plain',   // not bundled
+  // Plain text aliases — normalize to 'plain' so grammar is undefined → no tokenization
+  plaintext: 'plain',
+  text:      'plain',
+  txt:       'plain',
   // Convenience aliases for bundled languages
   matlab: 'clike',   // no matlab grammar anywhere; clike is best approximation
   cypher: 'clike',   // no cypher grammar; clike handles keywords + strings
-  py:     'python',  // py is in PRISM_SUPPORTED but alias for explicitness
+  py:     'python',  // alias; PRISM_SUPPORTED only has 'python'
 }
 
 export function normalizeLang(lang: string): string {
