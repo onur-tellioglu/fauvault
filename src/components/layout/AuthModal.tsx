@@ -1,4 +1,5 @@
 'use client'
+import { useRef, useEffect } from 'react'
 import { useAuthModal } from './AuthModalContext'
 import { AuthForm } from './AuthForm'
 
@@ -7,8 +8,73 @@ const REASON_MESSAGES: Record<string, string> = {
   post_forum: 'Sign in to post in the forum.',
 }
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (el) => !el.hasAttribute('disabled') && el.offsetParent !== null,
+  )
+}
+
 export function AuthModal() {
   const { isOpen, options, closeModal, onLoginSuccess } = useAuthModal()
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const closeModalRef = useRef(closeModal)
+  closeModalRef.current = closeModal
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const previouslyFocused = document.activeElement as HTMLElement | null
+
+    // Move focus into the dialog on open
+    const dialog = dialogRef.current
+    if (dialog) {
+      const focusable = getFocusableElements(dialog)
+      if (focusable.length > 0) {
+        focusable[0].focus()
+      } else {
+        dialog.focus()
+      }
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        closeModalRef.current()
+        return
+      }
+
+      if (e.key === 'Tab' && dialog) {
+        const focusable = getFocusableElements(dialog)
+        if (focusable.length === 0) return
+
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      previouslyFocused?.focus()
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   const message = options.reason ? REASON_MESSAGES[options.reason] : null
@@ -23,9 +89,11 @@ export function AuthModal() {
         }}
       />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="auth-modal-title"
+        tabIndex={-1}
         style={{
           position: 'fixed', top: '50%', left: '50%',
           transform: 'translate(-50%, -50%)',
