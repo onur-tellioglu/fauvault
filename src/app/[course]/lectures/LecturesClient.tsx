@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import type { Course } from '@/lib/courses'
+import type { CourseVideos } from '@/lib/lecture-videos'
 import { LectureCard } from '@/components/dashboard/LectureCard'
 import { StudyClient } from '@/app/[course]/study/StudyClient'
 
@@ -25,9 +26,11 @@ type Props = {
   lectures: LectureMeta[]
   byLecture: Record<number, LectureProgress>
   totalCount: number
+  /** Lecture recording reference URLs. Only provided to authenticated users. */
+  videos?: CourseVideos
 }
 
-export function LecturesClient({ course, lectures, byLecture, totalCount }: Props) {
+export function LecturesClient({ course, lectures, byLecture, totalCount, videos }: Props) {
   const [mode, setMode] = useState<'grid' | 'browse'>('grid')
 
   const toggleStyle = (active: boolean): React.CSSProperties => ({
@@ -54,6 +57,24 @@ export function LecturesClient({ course, lectures, byLecture, totalCount }: Prop
         </div>
       </div>
 
+      {videos?.seriesUrl && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <a
+            href={videos.seriesUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: 'var(--font-geist-mono)',
+              fontSize: '0.75rem',
+              color: 'var(--accent)',
+              textDecoration: 'none',
+            }}
+          >
+            Lecture recordings on fau.tv ↗
+          </a>
+        </div>
+      )}
+
       {mode === 'grid' ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--density-gap)' }}>
           {lectures.map(lecture => (
@@ -62,6 +83,7 @@ export function LecturesClient({ course, lectures, byLecture, totalCount }: Prop
               lecture={lecture as Parameters<typeof LectureCard>[0]['lecture']}
               progress={byLecture[lecture.id] as Parameters<typeof LectureCard>[0]['progress']}
               course={course}
+              videoUrl={videos?.byLecture[lecture.id]}
             />
           ))}
         </div>
