@@ -541,6 +541,159 @@ export const content: Content = {
           "back": "1. `a + b` — vector addition (element-wise)\n2. `u @ v` — dot product (scalar)\n3. `A @ x` — matrix–vector product (linear transformation)\n4. `np.convolve(spikes, h)` — convolution with kernel h\n5. `scipy.signal.windows.hann(L)` — Hanning window of length L"
         }
       ]
+    },
+    {
+      "id": 5,
+      "title": "The Electromyogram — Interfacing the Neuromuscular System",
+      "speaker": "Prof. Dr. Alessandro Del Vecchio, Daniel Fenzel, Annika Ritter, Atharva Pall",
+      "concepts": [
+        {
+          "heading": "The Motor Unit — Neural Command to Muscle",
+          "body": "A **motor unit** is the fundamental functional unit of motor control: one **alpha motor neuron** plus **all the muscle fibres it innervates** through neuromuscular junctions (NMJs). When the motor neuron fires, every fibre in the unit contracts simultaneously (all-or-nothing principle).\n\n**Neural pathway from brain to muscle:**\n1. Descending corticospinal tract — voluntary motor commands from motor cortex\n2. Spinal cord integration — inputs converge at the alpha motor neuron\n3. Proprioceptive feedback — muscle spindles (Group Ia/Ib) report length and tension\n4. Renshaw cell inhibition — recurrent inhibition prevents over-excitation\n5. Neuromuscular junction — action potential triggers muscle contraction\n\n**Why this matters for neural interfacing:**\n\n| Disease | What breaks | Effect |\n|---------|-------------|--------|\n| ALS (e.g., Stephen Hawking) | Alpha motor neurons die | Paralysis with intact cognition |\n| Spinal cord injury (e.g., Christopher Reeve) | Descending drive is severed | Motor neurons intact but unreachable |\n| Peripheral neuropathy | NMJ or axon damaged | Partial or full denervation |\n\nRecording and decoding the electrical signals produced by motor units is the core technical challenge this course addresses."
+        },
+        {
+          "heading": "Motor Unit Recruitment and Rate Coding — Two Mechanisms of Force Grading",
+          "body": "The nervous system has two complementary strategies for controlling muscle force:\n\n**1. Recruitment** — activate more motor units as force demand increases. Each unit has a **recruitment threshold** — the minimum descending drive needed to bring it to firing. Small units (slow, fatigue-resistant, Type I fibres) are recruited first (Henneman's Size Principle); large units (fast, fatigable, Type II fibres) are recruited last.\n\n**2. Rate coding** — increase the **discharge rate** of already-active units. Once recruited, a motor unit fires at 8–40 pulses per second (pps). Higher firing rates produce stronger contractions (summation of twitches → tetanus).\n\n**Experimental observation (ankle dorsiflexors at 35% MVC):**\n- ~20–25 active motor units\n- Discharge rates: 10–30 pps\n- Cumulative spike count (smoothed with a Hanning kernel) tracks the force profile\n\n```python\n# Convert smoothed cumulative spike count to force estimate\ncum_spikes = np.cumsum(np.convolve(spike_train, hann_kernel, mode='same'))\n```\n\nUnderstanding recruitment + rate coding is essential for interpreting EMG amplitude: a stronger EMG burst can mean more units recruited, faster firing, or both."
+        },
+        {
+          "heading": "Historical Foundations — du Bois-Reymond and Differential Recording",
+          "body": "The electrical nature of nerve and muscle has been understood since the 19th century:\n\n- **Emil du Bois-Reymond (1818–1896):** First demonstrated that nerves and muscles carry electrical currents using a galvanometer-based *multiplicator* (a sensitive electromagnetic device). He showed that injured tissue is electrically negative compared to intact tissue — the first measurement of a bioelectric signal.\n\n**Modern surface EMG — differential recording:**\n\nTwo electrodes are placed on the skin over the muscle, typically 20 mm apart along the muscle fibre direction. The amplifier measures the **voltage difference** between the two electrodes:\n\n$$V_{EMG} = V_{electrode1} - V_{electrode2}$$\n\nThis is **differential recording** — it rejects **common-mode noise**:\n- Powerline interference (50 Hz) couples equally into both electrodes (same amplitude, same phase)\n- Subtracting them cancels the interference\n- The MUAP signal is spatially localised — it appears with opposite polarity at the two electrodes → subtraction *adds* the signal components\n\n**CMRR (Common-Mode Rejection Ratio):** A measure of how well the differential amplifier rejects common-mode noise. High-quality EMG amplifiers have CMRR > 100 dB."
+        },
+        {
+          "heading": "EMG Signal Generation — Action Potentials and the MUAP",
+          "body": "When an alpha motor neuron fires, the action potential (AP) propagates along the motor axon and simultaneously into every innervated muscle fibre. Along each fibre:\n\n1. AP travels away from the **innervation zone** (NMJ) toward the **terminal zones** at both ends of the fibre\n2. Conduction velocity ≈ **3–5 m/s** (proportional to fibre diameter)\n3. The depolarisation front creates an extracellular **source-sink** current field\n4. Surface electrodes detect this field as a biphasic or triphasic waveform\n\nThis waveform — the electrical signature of one motor unit firing once — is the **Motor Unit Action Potential (MUAP)**.\n\n**From MUAP to raw EMG:**\n\n$$EMG(t) = \\sum_{k=1}^{K} \\sum_{j} MUAP_k(t - t_{k,j}) + noise$$\n\nRaw surface EMG is the **algebraic summation** of all MUAPs from all K active motor units, each firing at its own times `t_{k,j}`. Because the firing is asynchronous and the MUAPs partially overlap, the result appears as a noisy, fluctuating waveform — the characteristic 'fuzzy caterpillar' of sEMG."
+        },
+        {
+          "heading": "Live Code Walkthrough — EMG Handshake (MATLAB and Python)",
+          "body": "The `live_coding.m` and `emg_handshake.py` scripts load a 32-channel surface EMG recording of a rest-to-handshake-to-high-intensity movement sequence, convert the raw ADC integers to millivolts, and plot all 32 channels offset vertically.\n\n**MATLAB (`live_coding.m`):**\n```matlab\nclear, clc, clearvars\nload('Default_Recording_20260527_103637311222_rest_handshake_slow_to_high.mat')\n\nconversion_factor = 0.0002861;  % ADC units -> mV\nemg = emg(1:32, :) * conversion_factor;\nfs = 2000;\nt = (0:size(emg,2)-1) / fs;\n\nfigure, hold on\ndist = 1;\nfor channels = 1:size(emg,1)\n    plot(t, emg(channels,:) + dist)\n    dist = dist + 1;\nend\nxlabel('Time (ms)'); ylabel('EMG (mV)')\n```\n\n**Python equivalent (`emg_handshake.py`):**\n```python\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy.io import loadmat\n\ndata = loadmat('Default_Recording_20260527_103637311222_rest_handshake_slow_to_high.mat')\nconversion_factor = 0.0002861   # ADC integers -> mV\nemg = data['emg'][:32, :] * conversion_factor  # shape (32, T)\nfs = 2000\nt = np.arange(emg.shape[1]) / fs\n\nfor ch in range(emg.shape[0]):\n    plt.plot(t, emg[ch, :] + ch + 1)\nplt.xlabel('Time (ms)'); plt.ylabel('EMG (mV)'); plt.show()\n```\n\n**Key facts:** Conversion factor `0.0002861` maps raw 16-bit ADC integers to millivolts (calibrated for the specific hardware amplifier gain). `fs = 2000 Hz`. 32 channels recorded simultaneously from a forearm electrode grid. Both repos: [Applied-Programming-2026](https://github.com/NsquaredLab/Applied-Programming-2026) · [MyoGestic](https://github.com/NsquaredLab/MyoGestic)."
+        },
+        {
+          "heading": "EMG Envelope — Rectification and Smoothing",
+          "body": "The raw EMG waveform fluctuates symmetrically around zero (positive and negative half-cycles). To extract the **amplitude envelope** — a slow-varying signal tracking how intensely the muscle is contracting — two steps are required:\n\n**Step 1 — Full-wave rectification:** Take the absolute value to flip all negative values positive.\n$$EMG_{rect}(t) = |EMG(t)|$$\n\n**Step 2 — Smoothing:** Convolve the rectified signal with a moving-average kernel to remove the rapid carrier-frequency fluctuations.\n\nThis is exactly the convolution-with-kernel operation from Lecture 3 applied to a biological signal.\n\n**MATLAB:**\n```matlab\nEMG_rect = abs(EMG(1,:));\nplot(smooth(EMG_rect, 1000))   % smooth over 1000 samples = 500 ms\n```\n\n**Python (`emg_handshake.py`, adapted):**\n```python\nEMG_rect = np.abs(emg[0, :])          # rectify channel 0\nwindow = 1000                           # 500 ms at fs=2000 Hz\nsmoothed = np.convolve(EMG_rect, np.ones(window) / window, mode='same')\nplt.plot(smoothed); plt.show()\n```\n\nThe resulting envelope follows the contraction profile: flat during rest, rising during the handshake, rising further during maximum grip. It is the basis for force estimation and gesture segmentation."
+        },
+        {
+          "heading": "EMG Filtering Pipeline — From Raw to Clean Signal",
+          "body": "Before any analysis or ML classification, raw EMG must be cleaned with a standard three-stage filter pipeline (from `emg_filtering_demo.m`):\n\n| Stage | Filter type | Cutoff / Target | Purpose |\n|-------|-------------|----------------|--------|\n| 1 | High-pass | 20 Hz | Remove slow motion artifact drift |\n| 2 | Low-pass | 450 Hz | Remove high-frequency electronic noise |\n| 1+2 | Band-pass | 20–450 Hz | Stages 1+2 combined in one filter |\n| 3 | Notch | 50 Hz | Remove European powerline interference |\n\n**Always use `filtfilt` (zero-phase):** applies the filter forward, then backward. Net result: zero phase distortion (timing relationships preserved). `lfilter` applies the filter in one direction only → phase delay that shifts peaks in time.\n\n**Python full pipeline:**\n```python\nfrom scipy.signal import butter, filtfilt, iirnotch\n\nfs = 2000\n# Stage 1+2: Band-pass 20-450 Hz\nsos_bp, g = butter(4, [20, 450], btype='bandpass', fs=fs, output='sos')\nemg_bp = filtfilt(sos_bp, g, emg)\n\n# Stage 3: Notch at 50 Hz\nwo = 50 / (fs / 2)          # normalised frequency (0-1, Nyquist=1)\nb_n, a_n = iirnotch(wo, Q=30)\nemg_clean = filtfilt(b_n, a_n, emg_bp)\n```\n\n**MATLAB equivalent (from `emg_filtering_demo.m` block 8):**\n```matlab\n[sos_bp, g_bp] = butter(4, [20 450]/(fs/2), 'bandpass');\n[b_n, a_n] = iirnotch(50/(fs/2), (50/(fs/2))/30);\nemg_clean = filtfilt(sos_bp, g_bp, emg);\nemg_clean = filtfilt(b_n, a_n, emg_clean);\n```"
+        },
+        {
+          "heading": "MyoGestic and the Applied Programming Ecosystem",
+          "body": "[MyoGestic](https://github.com/NsquaredLab/MyoGestic) is the n-squared lab's open-source Python framework for real-time biosignal experiments. It serves as the software backbone for the gesture-decoding demonstrations in the course.\n\n**What MyoGestic provides:**\n- **Live LSL ingest** — reads streaming biosignals from any Lab Streaming Layer source (compatible with most research-grade EEG/EMG hardware)\n- **On-disk recording** — saves sessions in Zarr format for offline analysis and ML training\n- **ML pipeline lifecycle** — training and prediction run on separate threads so the GUI stays responsive\n- **Dear ImGui widgets** — lightweight, immediate-mode GUI for real-time visualisation with minimal overhead\n\n**What you must bring yourself:**\n- DSP algorithms (SciPy filters, Welch PSD)\n- ML models (scikit-learn, PyTorch, etc.)\n- Feature extraction logic\n\n> This modularity is by design: the lab's philosophy is to provide infrastructure, not algorithms, so researchers can plug in any method.\n\n**Try the in-browser playground (no install required):** [https://nsquaredlab.github.io/MyoGestic/playground/](https://nsquaredlab.github.io/MyoGestic/playground/)\n\n**Exercise repository for this course:** [https://github.com/NsquaredLab/Applied-Programming-2026](https://github.com/NsquaredLab/Applied-Programming-2026)\n\nThe exercises walk through the full pipeline: load a `.mat` file → convert ADC units → band-pass + notch filter → extract RMS envelope → train a classifier → predict gesture labels in real time via MyoGestic."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L5Q1",
+          "text": "Which statement correctly defines a motor unit?",
+          "options": [
+            "A group of alpha motor neurons that collectively innervate one muscle",
+            "One alpha motor neuron and all the muscle fibres it innervates",
+            "A single muscle fibre and its neuromuscular junction",
+            "A synapse between the spinal cord and a peripheral nerve"
+          ],
+          "correct": [1],
+          "explanation": "A motor unit = one alpha motor neuron + all the muscle fibres it innervates via neuromuscular junctions. When the motor neuron fires, every fibre in the unit contracts simultaneously (all-or-nothing). Option A reverses the relationship — it is one neuron to many fibres, not many neurons to one muscle. Option C describes only one fibre + one NMJ — that is part of a motor unit, not the whole unit. Option D describes a synapse, not a motor unit — the NMJ is the synapse between motor neuron and muscle, not between spinal cord and peripheral nerve.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q2",
+          "text": "EMG signals arise from which source?",
+          "options": [
+            "Extracellular current fields generated by action potentials propagating along muscle fibres",
+            "Motor neuron firing in the spinal cord, detected transcutaneously",
+            "Brain activity from the motor cortex propagating to the skin surface",
+            "Mechanical vibration of muscle fibres causing piezoelectric potentials"
+          ],
+          "correct": [0],
+          "explanation": "Surface EMG records the extracellular voltage field produced by the depolarisation wavefront propagating along muscle fibres. When a motor neuron fires, the action potential travels along each innervated fibre from the innervation zone (NMJ) toward the fibre ends at 3–5 m/s. This moving depolarisation zone creates extracellular source-sink currents that are detectable at the skin surface as the MUAP. Option B is wrong: spinal motor neuron firing cannot be detected at the skin surface — it is too deep and too small. Option C is wrong: cortical signals require EEG, not surface EMG. Option D is wrong: EMG is electrical, not mechanical/piezoelectric.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q3",
+          "text": "In the live-coding demo, the line `emg = data['emg'][:32, :] * 0.0002861` is used. What does multiplying by 0.0002861 accomplish?",
+          "options": [
+            "Normalises the signal to the range [0, 1] for ML input",
+            "Converts raw ADC integer values to millivolts (mV)",
+            "Applies a digital gain-correction filter to remove amplifier noise",
+            "Scales the EMG amplitude to Newtons of muscle force"
+          ],
+          "correct": [1],
+          "explanation": "The `0.0002861` is the **conversion factor** specific to the recording hardware — it maps the raw 16-bit ADC integer values (which reflect the amplifier's internal gain and ADC range) to physically meaningful millivolt values. Without this conversion, the numbers are arbitrary integers that cannot be compared across sessions or hardware setups. Option A (normalisation to [0,1]) would require dividing by the maximum, which this constant does not do. Option C (digital filter) involves convolution/frequency-domain operations, not a scalar multiplication. Option D (scaling to Newtons) is not a linear conversion from EMG voltage — force estimation requires additional modelling.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q4",
+          "text": "Why should `filtfilt` be used instead of `lfilter` for EMG filtering?",
+          "options": [
+            "filtfilt is faster because it processes the signal in one pass",
+            "filtfilt applies the filter forward and backward, producing zero phase shift and preserving timing relationships",
+            "lfilter can only handle integer input, while filtfilt accepts floats",
+            "filtfilt automatically selects the optimal filter order based on signal length"
+          ],
+          "correct": [1],
+          "explanation": "`filtfilt` applies the digital filter twice: once forward in time, then once backward. The two phase shifts cancel exactly, yielding **zero net phase distortion**. This means peaks, onsets, and fine temporal features in the EMG are not shifted in time — critical when you are measuring muscle activation timing or synchronising with other signals (force, kinematics). `lfilter` applies the filter in one direction only, introducing a phase delay proportional to the filter order — a 4th-order filter at 2000 Hz introduces a delay of several milliseconds, which can corrupt synchronisation analyses. Options A, C, and D are factually incorrect: `filtfilt` is slower (two passes), both functions accept floats, and neither automatically selects filter order.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q5",
+          "text": "In Europe, a notch filter is applied to EMG recordings at 50 Hz. Why specifically 50 Hz?",
+          "options": [
+            "50 Hz is the resonant frequency of the EMG electrode-skin interface",
+            "The European electrical grid operates at 50 Hz, and this frequency electromagnetically couples into electrode cables as powerline interference",
+            "50 Hz is the upper boundary of slow motor unit discharge rates",
+            "60 Hz interference is filtered at 50 Hz to provide a safety margin"
+          ],
+          "correct": [1],
+          "explanation": "European (and most of Asia, Africa, Australia) electrical power distribution operates at **50 Hz**. The alternating current in mains wiring creates an oscillating electromagnetic field that induces a 50 Hz voltage in any conductor near it — including electrode cables. This appears as a sharp 50 Hz peak in the EMG power spectrum, superimposed on the biological signal. A notch filter with a high Q-factor (e.g., Q=30) removes a very narrow band centred at exactly 50 Hz while leaving surrounding EMG content intact. In North America the grid runs at 60 Hz — instruments there use a 60 Hz notch instead. Option A is wrong: electrode impedance has a broad-spectrum effect, not a sharp resonance. Option C is wrong: 50 Hz is well within the EMG band and coincidentally overlaps with some discharge rates but is not defined by them.",
+          "type": "single"
+        },
+        {
+          "id": "L5Q6",
+          "text": "Select ALL mechanisms the nervous system uses to grade muscle force.",
+          "options": [
+            "Motor unit recruitment — activating additional motor units as force demand increases",
+            "Rate coding — increasing the discharge rate of already-active motor units",
+            "Fibre type switching — converting Type I to Type II fibres during high-force tasks",
+            "Electrode impedance reduction — lowering skin resistance to amplify EMG"
+          ],
+          "correct": [0, 1],
+          "explanation": "The two physiological mechanisms of force grading are: (1) **Recruitment** — the nervous system progressively activates more motor units following Henneman's Size Principle (small, slow, fatigue-resistant units first; large, fast units last). (2) **Rate coding** — increasing the firing rate of already-active units from ~8 pps (minimal) to ~40 pps (near-tetanic), which increases force via twitch summation. Option C is wrong: fibre type composition is a long-term adaptation (weeks of training), not an acute force-grading mechanism — you cannot switch fibre types in real time. Option D is wrong: electrode impedance is an instrumental measurement property, not a physiological force-grading mechanism at all.",
+          "type": "multiple"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "Motor unit definition — what is it?",
+          "back": "One alpha motor neuron + all the muscle fibres it innervates via neuromuscular junctions. All fibres in the unit contract simultaneously when the neuron fires (all-or-nothing). The motor unit is the smallest independently controllable unit of muscle force."
+        },
+        {
+          "front": "Two mechanisms of force grading in muscle — name and describe each.",
+          "back": "1. **Recruitment** — activate more motor units as force demand rises; small (Type I, slow) units recruited first (Henneman's Size Principle).\n2. **Rate coding** — increase discharge rate of already-active units from ~8 to ~40 pps; higher rate → twitch summation → greater force.\nBoth mechanisms operate simultaneously."
+        },
+        {
+          "front": "MUAP: what is it and how does raw surface EMG relate to it?",
+          "back": "MUAP = Motor Unit Action Potential. The voltage waveform recorded at the skin surface when one motor unit fires once — produced by the propagating depolarisation along muscle fibres (velocity 3–5 m/s). Raw surface EMG = algebraic sum of all MUAPs from all active motor units firing asynchronously: EMG(t) = Σ Σ MUAP_k(t − t_{k,j}) + noise."
+        },
+        {
+          "front": "EMG conversion factor 0.0002861 — what does it convert?",
+          "back": "Maps raw 16-bit ADC integer values (from the recording hardware) to millivolts (mV). It encodes the hardware amplifier gain and ADC voltage range. Applied as: `emg_mV = emg_ADC * 0.0002861`. Without this, values are arbitrary integers with no physical meaning."
+        },
+        {
+          "front": "Standard EMG filter pipeline — stages and SciPy idiom.",
+          "back": "1. Band-pass 20–450 Hz (high-pass removes motion artifact; low-pass removes HF noise).\n2. Notch 50 Hz (removes European powerline interference).\n```python\nb_bp, a_bp = butter(4, [20, 450], btype='bandpass', fs=2000)\nemg_bp = filtfilt(b_bp, a_bp, emg)\nb_n, a_n = iirnotch(50/1000, Q=30)\nemg_clean = filtfilt(b_n, a_n, emg_bp)\n```"
+        },
+        {
+          "front": "filtfilt vs lfilter — which to use and why?",
+          "back": "`filtfilt`: applies the filter forward then backward → zero net phase shift → peaks and onsets are not shifted in time. Use for all EMG analyses where timing matters.\n`lfilter`: single forward pass → introduces phase delay (several ms for order-4 filter at 2 kHz) → distorts temporal relationships. Only acceptable for real-time (causal) processing where filtfilt is impossible."
+        },
+        {
+          "front": "What does MyoGestic provide vs what must the user bring?",
+          "back": "MyoGestic provides: live LSL biosignal ingest, Zarr on-disk recording, ML lifecycle management (train/predict threads), Dear ImGui visualisation widgets.\nUser must bring: DSP algorithms (SciPy filters), ML models (scikit-learn / PyTorch), feature extraction logic.\nRepo: https://github.com/NsquaredLab/MyoGestic"
+        },
+        {
+          "front": "EMG envelope: two steps — what are they and why?",
+          "back": "1. **Full-wave rectification** — `EMG_rect = abs(EMG)` — flips negative half-cycles to positive so they contribute to the amplitude estimate rather than cancelling positive cycles.\n2. **Smoothing** — convolve rectified signal with a moving-average or Hanning kernel (e.g., window=1000 samples = 500 ms at 2 kHz) — removes rapid carrier-frequency fluctuations to reveal the slow contraction envelope."
+        }
+      ]
     }
   ]
 }
