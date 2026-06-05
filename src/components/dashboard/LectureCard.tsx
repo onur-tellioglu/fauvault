@@ -22,7 +22,7 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
         onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-default)')}
       >
         <span style={{
-          position: 'absolute', top: 4, right: 10,
+          position: 'absolute', top: 4, right: 10, zIndex: 0,
           fontFamily: 'var(--font-fraunces)', fontSize: '4.5rem', fontWeight: 300,
           color: 'var(--border-subtle)', lineHeight: 1, userSelect: 'none',
         }}>{lecture.id}</span>
@@ -36,12 +36,14 @@ export function LectureCard({ lecture, progress, course, videoUrl }: Props) {
           }}>Complete</span>
         )}
 
-        <h3 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.05rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 3, paddingRight: '2.5rem' }}>
-          {lecture.title}
-        </h3>
-        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-          {lecture.speaker} · {lecture.questions.length} questions
-        </p>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h3 style={{ fontFamily: 'var(--font-fraunces)', fontSize: '1.05rem', fontWeight: 400, color: 'var(--text-primary)', marginBottom: 3, paddingRight: '2.5rem' }}>
+            {lecture.title}
+          </h3>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+            {lecture.speaker} · {lecture.questions.length} questions
+          </p>
+        </div>
 
         {score !== undefined && (
           <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', marginBottom: 8, color: score >= 0.9 ? 'var(--success)' : 'var(--accent)' }}>
