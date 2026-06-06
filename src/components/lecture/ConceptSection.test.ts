@@ -113,6 +113,69 @@ describe('normalizeLang — grammar resolution', () => {
   })
 })
 
+describe('parseBody — block math ($$...$$)', () => {
+  it('parses a standalone $$ block as type "math"', () => {
+    const blocks = parseBody('intro\n$$\nE = mc^2\n$$')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    expect(mathBlock).toBeDefined()
+    expect(mathBlock).toMatchObject({ type: 'math', tex: 'E = mc^2', display: true })
+  })
+
+  it('parses a multi-line $$ block preserving newlines', () => {
+    const blocks = parseBody('$$\na + b\n= c\n$$')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'math', tex: 'a + b\n= c', display: true })
+  })
+
+  it('does not treat $$ inside a code fence as math', () => {
+    const blocks = parseBody('```\n$$\nnot math\n$$\n```')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0].type).toBe('code')
+  })
+
+  it('treats an unterminated $$ block as a math block (fail-safe)', () => {
+    const blocks = parseBody('$$\nx = 1')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    expect(mathBlock).toBeDefined()
+    expect(mathBlock).toMatchObject({ type: 'math', tex: 'x = 1', display: true })
+  })
+})
+
+describe('parseBody — inline math ($...$)', () => {
+  it('parseBody still produces p blocks for lines containing inline math', () => {
+    // parseBody works at the block level; inline math is resolved in renderInline
+    const blocks = parseBody('The value is $x^2 + 1$.')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'p', text: 'The value is $x^2 + 1$.' })
+  })
+
+  it('does not treat a bare dollar sign (price) as inline math', () => {
+    const blocks = parseBody('Costs $5 per unit.')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'p', text: 'Costs $5 per unit.' })
+  })
+})
+
+describe('parseBody — regression after math block addition', () => {
+  it('still parses bullets after a math block', () => {
+    const blocks = parseBody('$$\nf(x)\n$$\n- item')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    const bulletsBlock = blocks.find(b => b.type === 'bullets')
+    expect(mathBlock).toBeDefined()
+    expect(bulletsBlock).toBeDefined()
+  })
+
+  it('still parses code block after a math block', () => {
+    const blocks = parseBody('$$\nf(x)\n$$\n```python\nx=1\n```')
+    expect(blocks.map(b => b.type)).toEqual(['math', 'code'])
+  })
+
+  it('still parses a table block unaffected', () => {
+    const blocks = parseBody('|a|b|\n|---|---|\n|1|2|')
+    expect(blocks.find(b => b.type === 'table')).toBeDefined()
+  })
+})
+
 describe('parseBody — regression: table and bullets still work', () => {
   it('parses a markdown table as a table block', () => {
     const input = '|a|b|\n|---|---|\n|1|2|'

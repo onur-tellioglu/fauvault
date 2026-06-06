@@ -168,12 +168,13 @@ function renderInline(text: string): ReactNode[] {
 
 // ── Block types ──────────────────────────────────────────────────────────────
 
-export type PBlock      = { type: 'p';       text: string }
+export type PBlock       = { type: 'p';       text: string }
 export type BulletsBlock = { type: 'bullets'; items: string[] }
-export type TableBlock  = { type: 'table';   rows: string[][] }
-export type CodeBlock   = { type: 'code';    lang: string; code: string }
+export type TableBlock   = { type: 'table';   rows: string[][] }
+export type CodeBlock    = { type: 'code';    lang: string; code: string }
+export type MathBlock    = { type: 'math';    tex: string; display: true }
 
-export type Block = PBlock | BulletsBlock | TableBlock | CodeBlock
+export type Block = PBlock | BulletsBlock | TableBlock | CodeBlock | MathBlock
 
 // ── Pure parser ──────────────────────────────────────────────────────────────
 
@@ -196,6 +197,17 @@ export function parseBody(body: string): Block[] {
   let inCode = false
   let codeLang = ''
   let codeLines: string[] = []
+
+  // Math-collecting state
+  const MATH_FENCE = /^\$\$\s*$/
+  let inMath = false
+  let mathLines: string[] = []
+
+  const flushMath = () => {
+    blocks.push({ type: 'math', tex: mathLines.join('\n'), display: true })
+    inMath = false
+    mathLines = []
+  }
 
   const flushBullets = () => {
     if (pendingBullets.length > 0) {
@@ -226,6 +238,25 @@ export function parseBody(body: string): Block[] {
       } else {
         codeLines.push(line)
       }
+      continue
+    }
+
+    // ── Inside a math block ──
+    if (inMath) {
+      if (MATH_FENCE.test(line.trim())) {
+        flushMath()
+      } else {
+        mathLines.push(line)
+      }
+      continue
+    }
+
+    // ── Detect opening math fence ──
+    if (!inCode && MATH_FENCE.test(line.trim())) {
+      flushBullets()
+      flushTable()
+      inMath = true
+      mathLines = []
       continue
     }
 
@@ -268,6 +299,11 @@ export function parseBody(body: string): Block[] {
   // Fail-safe: flush any unterminated fence as a code block (even if empty)
   if (inCode) {
     flushCode()
+  }
+
+  // Fail-safe: flush any unterminated math block
+  if (inMath) {
+    flushMath()
   }
 
   flushTable()
