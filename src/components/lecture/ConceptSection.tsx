@@ -291,7 +291,7 @@ export function parseBody(body: string): Block[] {
     }
 
     // ── Detect opening math fence ──
-    if (!inCode && MATH_FENCE.test(line.trim())) {
+    if (MATH_FENCE.test(line.trim())) {
       flushBullets()
       flushTable()
       inMath = true
