@@ -182,7 +182,7 @@ function KatexBlock({ tex }: { tex: string }) {
 }
 
 /** Render inline markdown: **bold**, *italic*, `code`, $math$ */
-function renderInline(text: string): ReactNode[] {
+export function renderInline(text: string): ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\$(?!\s)(?:\\.|[^$\n])+(?<!\s)\$)/g)
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**'))
