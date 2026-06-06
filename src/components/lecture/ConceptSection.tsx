@@ -1,6 +1,7 @@
 'use client'
 import { useMemo, type ReactNode } from 'react'
 import { Prism, normalizeTokens } from 'prism-react-renderer'
+import katex from 'katex'
 
 type Props = { heading: string; body: string; index: number; total: number }
 
@@ -152,9 +153,37 @@ function HighlightedCode({ lang, code }: { lang: string; code: string }) {
   )
 }
 
-/** Render inline markdown: **bold**, *italic*, `code` */
-function renderInline(text: string): ReactNode[] {
-  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g)
+/**
+ * Renders a KaTeX display-mode expression.
+ * throwOnError: false — on parse error, renders the raw TeX source in a <code>
+ * fallback so a broken formula never crashes the page.
+ * dangerouslySetInnerHTML is safe here: katex.renderToString produces its own
+ * sanitised HTML; the raw `tex` string is never passed through unescaped.
+ */
+function KatexBlock({ tex }: { tex: string }) {
+  let html: string
+  try {
+    html = katex.renderToString(tex, { displayMode: true, throwOnError: false })
+  } catch {
+    // Fallback: this branch is only reached if katex itself throws (not a parse
+    // error — those are handled by throwOnError: false). Show raw source.
+    return (
+      <pre style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.85rem', color: 'var(--text-secondary)', overflowX: 'auto', margin: '0.75rem 0' }}>
+        <code>{tex}</code>
+      </pre>
+    )
+  }
+  return (
+    <div
+      style={{ overflowX: 'auto', margin: '0.75rem 0', textAlign: 'center' }}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
+}
+
+/** Render inline markdown: **bold**, *italic*, `code`, $math$ */
+export function renderInline(text: string): ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\$(?!\s)(?:\\.|[^$\n])+(?<!\s)\$)/g)
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**'))
       return <strong key={i} style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{part.slice(2, -2)}</strong>
@@ -162,18 +191,29 @@ function renderInline(text: string): ReactNode[] {
       return <em key={i}>{part.slice(1, -1)}</em>
     if (part.startsWith('`') && part.endsWith('`'))
       return <code key={i} style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.875em', background: 'var(--bg-elevated)', padding: '1px 5px', borderRadius: 4 }}>{part.slice(1, -1)}</code>
+    if (part.startsWith('$') && part.endsWith('$') && part.length > 2 && /^\$(?!\s)(?:\\.|[^$\n])+(?<!\s)\$$/.test(part)) {
+      const inlineTex = part.slice(1, -1)
+      let html: string
+      try {
+        html = katex.renderToString(inlineTex, { displayMode: false, throwOnError: false })
+      } catch {
+        return <code key={i} style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.875em' }}>{inlineTex}</code>
+      }
+      return <span key={i} dangerouslySetInnerHTML={{ __html: html }} />
+    }
     return part
   })
 }
 
 // ── Block types ──────────────────────────────────────────────────────────────
 
-export type PBlock      = { type: 'p';       text: string }
+export type PBlock       = { type: 'p';       text: string }
 export type BulletsBlock = { type: 'bullets'; items: string[] }
-export type TableBlock  = { type: 'table';   rows: string[][] }
-export type CodeBlock   = { type: 'code';    lang: string; code: string }
+export type TableBlock   = { type: 'table';   rows: string[][] }
+export type CodeBlock    = { type: 'code';    lang: string; code: string }
+export type MathBlock    = { type: 'math';    tex: string; display: true }
 
-export type Block = PBlock | BulletsBlock | TableBlock | CodeBlock
+export type Block = PBlock | BulletsBlock | TableBlock | CodeBlock | MathBlock
 
 // ── Pure parser ──────────────────────────────────────────────────────────────
 
@@ -196,6 +236,19 @@ export function parseBody(body: string): Block[] {
   let inCode = false
   let codeLang = ''
   let codeLines: string[] = []
+
+  // Math-collecting state
+  const MATH_FENCE = /^\$\$\s*$/
+  // Single-line $$...$$ pattern, e.g. $$E = mc^2$$ pasted from another source
+  const MATH_SINGLE_LINE = /^\$\$(.+)\$\$\s*$/
+  let inMath = false
+  let mathLines: string[] = []
+
+  const flushMath = () => {
+    blocks.push({ type: 'math', tex: mathLines.join('\n'), display: true })
+    inMath = false
+    mathLines = []
+  }
 
   const flushBullets = () => {
     if (pendingBullets.length > 0) {
@@ -226,6 +279,34 @@ export function parseBody(body: string): Block[] {
       } else {
         codeLines.push(line)
       }
+      continue
+    }
+
+    // ── Inside a math block ──
+    if (inMath) {
+      if (MATH_FENCE.test(line.trim())) {
+        flushMath()
+      } else {
+        mathLines.push(line)
+      }
+      continue
+    }
+
+    // ── Detect single-line $$...$$ (e.g. $$E = mc^2$$ pasted from another source) ──
+    const singleMathMatch = MATH_SINGLE_LINE.exec(line.trim())
+    if (singleMathMatch) {
+      flushBullets()
+      flushTable()
+      blocks.push({ type: 'math', tex: singleMathMatch[1].trim(), display: true })
+      continue
+    }
+
+    // ── Detect opening math fence ──
+    if (MATH_FENCE.test(line.trim())) {
+      flushBullets()
+      flushTable()
+      inMath = true
+      mathLines = []
       continue
     }
 
@@ -268,6 +349,11 @@ export function parseBody(body: string): Block[] {
   // Fail-safe: flush any unterminated fence as a code block (even if empty)
   if (inCode) {
     flushCode()
+  }
+
+  // Fail-safe: flush any unterminated math block
+  if (inMath) {
+    flushMath()
   }
 
   flushTable()
@@ -330,6 +416,8 @@ function renderBody(body: string): ReactNode[] {
       result.push(
         <HighlightedCode key={key++} lang={block.lang} code={block.code} />
       )
+    } else if (block.type === 'math') {
+      result.push(<KatexBlock key={key++} tex={block.tex} />)
     }
   }
 

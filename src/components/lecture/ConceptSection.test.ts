@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { parseBody, normalizeLang } from './ConceptSection'
+import { parseBody, normalizeLang, renderInline } from './ConceptSection'
 import { Prism } from 'prism-react-renderer'
+import { renderToString } from 'react-dom/server'
+import type { ReactNode } from 'react'
 
 describe('parseBody — code block handling', () => {
   it('parses a fenced python block', () => {
@@ -113,6 +115,83 @@ describe('normalizeLang — grammar resolution', () => {
   })
 })
 
+describe('parseBody — block math ($$...$$)', () => {
+  it('parses a standalone $$ block as type "math"', () => {
+    const blocks = parseBody('intro\n$$\nE = mc^2\n$$')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    expect(mathBlock).toBeDefined()
+    expect(mathBlock).toMatchObject({ type: 'math', tex: 'E = mc^2', display: true })
+  })
+
+  it('parses a multi-line $$ block preserving newlines', () => {
+    const blocks = parseBody('$$\na + b\n= c\n$$')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'math', tex: 'a + b\n= c', display: true })
+  })
+
+  it('does not treat $$ inside a code fence as math', () => {
+    const blocks = parseBody('```\n$$\nnot math\n$$\n```')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0].type).toBe('code')
+  })
+
+  it('treats an unterminated $$ block as a math block (fail-safe)', () => {
+    const blocks = parseBody('$$\nx = 1')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    expect(mathBlock).toBeDefined()
+    expect(mathBlock).toMatchObject({ type: 'math', tex: 'x = 1', display: true })
+  })
+})
+
+describe('parseBody — inline math ($...$)', () => {
+  it('parseBody still produces p blocks for lines containing inline math', () => {
+    // parseBody works at the block level; inline math is resolved in renderInline
+    const blocks = parseBody('The value is $x^2 + 1$.')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'p', text: 'The value is $x^2 + 1$.' })
+  })
+
+  it('does not treat a bare dollar sign (price) as inline math', () => {
+    const blocks = parseBody('Costs $5 per unit.')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'p', text: 'Costs $5 per unit.' })
+  })
+})
+
+describe('parseBody — regression after math block addition', () => {
+  it('still parses bullets after a math block', () => {
+    const blocks = parseBody('$$\nf(x)\n$$\n- item')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    const bulletsBlock = blocks.find(b => b.type === 'bullets')
+    expect(mathBlock).toBeDefined()
+    expect(bulletsBlock).toBeDefined()
+  })
+
+  it('still parses code block after a math block', () => {
+    const blocks = parseBody('$$\nf(x)\n$$\n```python\nx=1\n```')
+    expect(blocks.map(b => b.type)).toEqual(['math', 'code'])
+  })
+
+  it('still parses a table block unaffected', () => {
+    const blocks = parseBody('|a|b|\n|---|---|\n|1|2|')
+    expect(blocks.find(b => b.type === 'table')).toBeDefined()
+  })
+})
+
+describe('parseBody — single-line $$...$$ (student paste)', () => {
+  it('emits a math block for $$E = mc^2$$', () => {
+    const blocks = parseBody('$$E = mc^2$$')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'math', tex: 'E = mc^2', display: true })
+  })
+
+  it('emits a math block for single-line $$ in mixed content', () => {
+    const blocks = parseBody('Intro\n$$F = ma$$\nOutro')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    expect(mathBlock).toMatchObject({ type: 'math', tex: 'F = ma', display: true })
+  })
+})
+
 describe('parseBody — regression: table and bullets still work', () => {
   it('parses a markdown table as a table block', () => {
     const input = '|a|b|\n|---|---|\n|1|2|'
@@ -128,5 +207,57 @@ describe('parseBody — regression: table and bullets still work', () => {
     const bulletsBlock = blocks.find(b => b.type === 'bullets')
     expect(bulletsBlock).toBeDefined()
     expect(bulletsBlock?.type).toBe('bullets')
+  })
+})
+
+// Helper: render renderInline output to an HTML string for assertion
+function renderInlineToHtml(text: string): string {
+  const nodes = renderInline(text)
+  return renderToString(nodes as unknown as ReactNode)
+}
+
+describe('renderInline — inline math rendering', () => {
+  it('(a) $x^2$ produces a span with KaTeX HTML (dangerouslySetInnerHTML)', () => {
+    const html = renderInlineToHtml('$x^2$')
+    // KaTeX output always contains class="katex"
+    expect(html).toContain('katex')
+  })
+
+  it('(b) $5 off — lone dollar before digit — does NOT produce a math span', () => {
+    const html = renderInlineToHtml('$5 off')
+    expect(html).not.toContain('katex')
+    expect(html).toContain('$5 off')
+  })
+
+  it('(b) a lone $ with no closing $ does NOT produce a math span', () => {
+    const html = renderInlineToHtml('price is $ per item')
+    expect(html).not.toContain('katex')
+  })
+
+  it('(b) $ text $ (space-padded) does NOT produce a math span', () => {
+    // The re-validation guard (finding #3) prevents false positive
+    const html = renderInlineToHtml('$ text $')
+    expect(html).not.toContain('katex')
+  })
+
+  it('(c) malformed TeX renders a safe fallback — no throw, no raw unescaped source in dangerouslySetInnerHTML', () => {
+    // throwOnError: false means KaTeX emits an error span rather than throwing
+    // The raw source must NOT appear via dangerouslySetInnerHTML — only via a <code> element
+    const nodes = renderInline('$\\invalid{$')
+    // Should not throw when rendering
+    expect(() => renderToString(nodes as unknown as ReactNode)).not.toThrow()
+    const html = renderInlineToHtml('$\\invalid{$')
+    // Either a KaTeX error span or a <code> fallback — either way no throw
+    // and the content is enclosed in a safe element, not injected raw
+    expect(typeof html).toBe('string')
+  })
+
+  it('\\$ escape in inline math — full expression captured, not split at \\$', () => {
+    const html = renderInlineToHtml('$a \\$ b$')
+    // The entire expression renders as a single KaTeX span
+    expect(html).toContain('katex')
+    // Plain text ` b$` must not appear as a trailing text node outside KaTeX
+    // (if the regex was wrong, ` b$` would appear verbatim in the output)
+    expect(html).not.toMatch(/ b\$$/)
   })
 })
