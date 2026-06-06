@@ -1,7 +1,156 @@
 'use client'
 import { useMemo, type ReactNode } from 'react'
+import { Prism, normalizeTokens } from 'prism-react-renderer'
 
 type Props = { heading: string; body: string; index: number; total: number }
+
+// Languages actually bundled in prism-react-renderer v2's Prism subset.
+// Verified at install time via:
+//   node -e "const {Prism}=require('prism-react-renderer'); console.log(Object.keys(Prism.languages).sort().join(','))"
+// Only list languages that have a real grammar object — listing a language
+// that isn't bundled causes a silent plain-mono fallback with no error.
+const PRISM_SUPPORTED = new Set([
+  // Core web
+  'markup', 'html', 'xml', 'svg', 'mathml', 'rss', 'ssml',
+  'css',
+  'javascript', 'js', 'jsx',
+  'typescript', 'ts', 'tsx',
+  // Data / config
+  'json', 'yaml', 'yml', 'webmanifest',
+  // Prose
+  'markdown', 'md',
+  // Systems / compiled
+  'c', 'cpp', 'clike',
+  'go', 'rust', 'swift',
+  // JVM / other languages
+  'kotlin', 'kt', 'kts',
+  'python',
+  'coffeescript', 'coffee',
+  // Query / graph
+  'sql', 'graphql',
+  // Misc
+  'regex', 'reason',
+  'objectivec', 'objc',
+  'n4js', 'n4jsd',
+  'jsdoc',
+  // Catch-all plain (Prism built-in); plaintext/text/txt aliased below
+  'plain',
+])
+
+const LANG_ALIASES: Record<string, string> = {
+  // Languages not bundled — map to closest approximation
+  bash:   'clike',   // not bundled; clike approximates comments + strings
+  sh:     'clike',   // same
+  shell:  'clike',   // same
+  java:   'clike',   // not bundled; clike is a reasonable C-family approximation
+  csharp: 'clike',   // not bundled
+  cs:     'clike',   // not bundled
+  ruby:   'clike',   // not bundled
+  r:      'clike',   // not bundled; clike approximates R comments + strings
+  scala:  'clike',   // not bundled
+  diff:      'plain',   // not bundled; plain is safer than a wrong grammar
+  git:       'plain',   // not bundled
+  // Plain text aliases — normalize to 'plain' so grammar is undefined → no tokenization
+  plaintext: 'plain',
+  text:      'plain',
+  txt:       'plain',
+  // Convenience aliases for bundled languages
+  matlab: 'clike',   // no matlab grammar anywhere; clike is best approximation
+  cypher: 'clike',   // no cypher grammar; clike handles keywords + strings
+  py:     'python',  // alias; PRISM_SUPPORTED only has 'python'
+}
+
+export function normalizeLang(lang: string): string {
+  if (!lang) return 'plain'
+  const lower = lang.toLowerCase()
+  if (LANG_ALIASES[lower]) return LANG_ALIASES[lower]
+  if (PRISM_SUPPORTED.has(lower)) return lower
+  return 'plain'
+}
+
+/** Minimal token-color map using the app's CSS variables.
+ *  Keys are Prism token type strings; values are CSS color values. */
+const TOKEN_COLORS: Record<string, string> = {
+  // Comments — secondary (#8A8A9A on #1C1C22 = 4.99:1, passes WCAG AA).
+  // text-muted (#4A4A58) is only 1.95:1 — insufficient for readable code comments.
+  comment:          'var(--text-secondary)',
+  prolog:           'var(--text-secondary)',
+  doctype:          'var(--text-secondary)',
+  cdata:            'var(--text-secondary)',
+  // Punctuation — secondary
+  punctuation:      'var(--text-secondary)',
+  // Keywords / operators — primary, semi-bold rendered via color
+  keyword:          'var(--text-primary)',
+  'control-flow':   'var(--text-primary)',
+  operator:         'var(--text-primary)',
+  // Strings — accent (fallback to primary if --accent not defined)
+  string:           'var(--accent, var(--text-primary))',
+  'template-string':'var(--accent, var(--text-primary))',
+  'string-interpolation': 'var(--accent, var(--text-primary))',
+  // Numbers / booleans
+  number:           'var(--text-primary)',
+  boolean:          'var(--text-primary)',
+  // Functions / class names
+  function:         'var(--text-primary)',
+  'class-name':     'var(--text-primary)',
+  // Built-ins / constants
+  builtin:          'var(--text-primary)',
+  constant:         'var(--text-primary)',
+}
+
+/** Renders a code block with Prism token-based syntax highlighting.
+ *  Falls back to plain mono when lang is '' or unrecognized. */
+function HighlightedCode({ lang, code }: { lang: string; code: string }) {
+  const normalizedLang = normalizeLang(lang)
+  const grammar = normalizedLang === 'plain'
+    ? undefined
+    : Prism.languages[normalizedLang as keyof typeof Prism.languages]
+
+  const containerStyle: React.CSSProperties = {
+    background: 'var(--bg-elevated)',
+    border: '1px solid var(--border)',
+    borderRadius: 6,
+    padding: '0.75rem 1rem',
+    overflowX: 'auto',
+    margin: '0.75rem 0',
+    fontFamily: 'var(--font-geist-mono)',
+    fontSize: '0.8125rem',
+    lineHeight: 1.6,
+  }
+
+  // Bare fence or unrecognized language — plain mono, no highlighting.
+  if (!grammar) {
+    return (
+      <pre style={containerStyle}>
+        <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre' }}>
+          {code}
+        </code>
+      </pre>
+    )
+  }
+
+  const tokens = normalizeTokens(Prism.tokenize(code, grammar))
+
+  return (
+    <pre style={containerStyle}>
+      <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre', display: 'block' }}>
+        {tokens.map((line, lineIndex) => (
+          <span key={lineIndex}>
+            {line.filter(t => !t.empty).map((token, tokenIndex) => (
+              <span
+                key={tokenIndex}
+                style={{ color: TOKEN_COLORS[token.types[token.types.length - 1]] ?? 'inherit' }}
+              >
+                {token.content}
+              </span>
+            ))}
+            {lineIndex < tokens.length - 1 ? '\n' : null}
+          </span>
+        ))}
+      </code>
+    </pre>
+  )
+}
 
 /** Render inline markdown: **bold**, *italic*, `code` */
 function renderInline(text: string): ReactNode[] {
@@ -179,22 +328,7 @@ function renderBody(body: string): ReactNode[] {
       )
     } else if (block.type === 'code') {
       result.push(
-        <pre
-          key={key++}
-          style={{
-            background: 'var(--bg-elevated)',
-            border: '1px solid var(--border)',
-            borderRadius: 6,
-            padding: '0.75rem 1rem',
-            overflowX: 'auto',
-            margin: '0.75rem 0',
-            fontFamily: 'var(--font-geist-mono)',
-            fontSize: '0.8125rem',
-            lineHeight: 1.6,
-          }}
-        >
-          <code style={{ fontFamily: 'var(--font-geist-mono)', whiteSpace: 'pre' }}>{block.code}</code>
-        </pre>
+        <HighlightedCode key={key++} lang={block.lang} code={block.code} />
       )
     }
   }
