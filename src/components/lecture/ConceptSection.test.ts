@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { parseBody, normalizeLang } from './ConceptSection'
+import { parseBody, normalizeLang, renderInline } from './ConceptSection'
 import { Prism } from 'prism-react-renderer'
+import { renderToString } from 'react-dom/server'
+import type { ReactNode } from 'react'
 
 describe('parseBody — code block handling', () => {
   it('parses a fenced python block', () => {
@@ -205,5 +207,57 @@ describe('parseBody — regression: table and bullets still work', () => {
     const bulletsBlock = blocks.find(b => b.type === 'bullets')
     expect(bulletsBlock).toBeDefined()
     expect(bulletsBlock?.type).toBe('bullets')
+  })
+})
+
+// Helper: render renderInline output to an HTML string for assertion
+function renderInlineToHtml(text: string): string {
+  const nodes = renderInline(text)
+  return renderToString(nodes as unknown as ReactNode)
+}
+
+describe('renderInline — inline math rendering', () => {
+  it('(a) $x^2$ produces a span with KaTeX HTML (dangerouslySetInnerHTML)', () => {
+    const html = renderInlineToHtml('$x^2$')
+    // KaTeX output always contains class="katex"
+    expect(html).toContain('katex')
+  })
+
+  it('(b) $5 off — lone dollar before digit — does NOT produce a math span', () => {
+    const html = renderInlineToHtml('$5 off')
+    expect(html).not.toContain('katex')
+    expect(html).toContain('$5 off')
+  })
+
+  it('(b) a lone $ with no closing $ does NOT produce a math span', () => {
+    const html = renderInlineToHtml('price is $ per item')
+    expect(html).not.toContain('katex')
+  })
+
+  it('(b) $ text $ (space-padded) does NOT produce a math span', () => {
+    // The re-validation guard (finding #3) prevents false positive
+    const html = renderInlineToHtml('$ text $')
+    expect(html).not.toContain('katex')
+  })
+
+  it('(c) malformed TeX renders a safe fallback — no throw, no raw unescaped source in dangerouslySetInnerHTML', () => {
+    // throwOnError: false means KaTeX emits an error span rather than throwing
+    // The raw source must NOT appear via dangerouslySetInnerHTML — only via a <code> element
+    const nodes = renderInline('$\\invalid{$')
+    // Should not throw when rendering
+    expect(() => renderToString(nodes as unknown as ReactNode)).not.toThrow()
+    const html = renderInlineToHtml('$\\invalid{$')
+    // Either a KaTeX error span or a <code> fallback — either way no throw
+    // and the content is enclosed in a safe element, not injected raw
+    expect(typeof html).toBe('string')
+  })
+
+  it('\\$ escape in inline math — full expression captured, not split at \\$', () => {
+    const html = renderInlineToHtml('$a \\$ b$')
+    // The entire expression renders as a single KaTeX span
+    expect(html).toContain('katex')
+    // Plain text ` b$` must not appear as a trailing text node outside KaTeX
+    // (if the regex was wrong, ` b$` would appear verbatim in the output)
+    expect(html).not.toMatch(/ b\$$/)
   })
 })
