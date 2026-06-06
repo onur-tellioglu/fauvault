@@ -12,8 +12,10 @@ Live: **[fauvault.space](https://fauvault.space)**
 
 ## Features
 
-- **Lectures** — readable, Markdown-rendered concept summaries per lecture.
-- **Quizzes** — single- and multiple-correct questions with explanations.
+- **Lectures** — readable, Markdown-rendered concept summaries per lecture, with
+  LaTeX math support (KaTeX) for inline `$…$` and block `$$…$$` formulas.
+- **Quizzes** — single- and multiple-correct questions with explanations and
+  LaTeX-rendered math.
 - **Flashcards** — spaced front/back cards with progress tracking.
 - **Exam-prep mode** — focused review built from the highest-yield material.
 - **Leaderboard** — per-course ranking to keep a study group motivated.
@@ -34,7 +36,7 @@ Live: **[fauvault.space](https://fauvault.space)**
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 24+ (see [`.nvmrc`](.nvmrc) — `nvm use` to match)
 - A [Neon](https://neon.tech/) Postgres database (free tier works)
 - Optionally, an [Upstash](https://upstash.com/) Redis database for rate limiting
 
