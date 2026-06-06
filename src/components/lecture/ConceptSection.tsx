@@ -191,7 +191,7 @@ function renderInline(text: string): ReactNode[] {
       return <em key={i}>{part.slice(1, -1)}</em>
     if (part.startsWith('`') && part.endsWith('`'))
       return <code key={i} style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.875em', background: 'var(--bg-elevated)', padding: '1px 5px', borderRadius: 4 }}>{part.slice(1, -1)}</code>
-    if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
+    if (part.startsWith('$') && part.endsWith('$') && part.length > 2 && /^\$(?!\s)(?:\\.|[^$\n])+(?<!\s)\$$/.test(part)) {
       const inlineTex = part.slice(1, -1)
       let html: string
       try {
