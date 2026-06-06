@@ -239,6 +239,8 @@ export function parseBody(body: string): Block[] {
 
   // Math-collecting state
   const MATH_FENCE = /^\$\$\s*$/
+  // Single-line $$...$$ pattern, e.g. $$E = mc^2$$ pasted from another source
+  const MATH_SINGLE_LINE = /^\$\$(.+)\$\$\s*$/
   let inMath = false
   let mathLines: string[] = []
 
@@ -287,6 +289,15 @@ export function parseBody(body: string): Block[] {
       } else {
         mathLines.push(line)
       }
+      continue
+    }
+
+    // ── Detect single-line $$...$$ (e.g. $$E = mc^2$$ pasted from another source) ──
+    const singleMathMatch = MATH_SINGLE_LINE.exec(line.trim())
+    if (singleMathMatch) {
+      flushBullets()
+      flushTable()
+      blocks.push({ type: 'math', tex: singleMathMatch[1].trim(), display: true })
       continue
     }
 

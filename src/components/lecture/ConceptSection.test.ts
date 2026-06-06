@@ -176,6 +176,20 @@ describe('parseBody — regression after math block addition', () => {
   })
 })
 
+describe('parseBody — single-line $$...$$ (student paste)', () => {
+  it('emits a math block for $$E = mc^2$$', () => {
+    const blocks = parseBody('$$E = mc^2$$')
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0]).toMatchObject({ type: 'math', tex: 'E = mc^2', display: true })
+  })
+
+  it('emits a math block for single-line $$ in mixed content', () => {
+    const blocks = parseBody('Intro\n$$F = ma$$\nOutro')
+    const mathBlock = blocks.find(b => b.type === 'math')
+    expect(mathBlock).toMatchObject({ type: 'math', tex: 'F = ma', display: true })
+  })
+})
+
 describe('parseBody — regression: table and bullets still work', () => {
   it('parses a markdown table as a table block', () => {
     const input = '|a|b|\n|---|---|\n|1|2|'
