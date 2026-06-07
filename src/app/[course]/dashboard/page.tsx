@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth'
 import { getProgress } from '@/lib/progress'
-import { getLeaderboardByCourse } from '@/lib/leaderboard'
 import { isValidCourse, getCourseContent, COURSES, type Course } from '@/lib/courses'
 import { NewspaperDashboard } from '@/components/dashboard/NewspaperDashboard'
 
@@ -28,10 +27,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
   if (!session) redirect('/login?callbackUrl=' + encodeURIComponent(`/${course}/dashboard`))
 
   const content = getCourseContent(course as Course)
-  const [progressRows, leaderboard] = await Promise.all([
-    getProgress(session.userId, course as Course),
-    getLeaderboardByCourse(course as Course),
-  ])
+  const progressRows = await getProgress(session.userId, course as Course)
 
   const byLecture = Object.fromEntries(progressRows.map(r => [r.lecture_id, r]))
   const completed = progressRows.filter(r => r.completed_at).length
@@ -63,11 +59,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
       }
     : null
 
-  const topUsers = leaderboard
-    .filter(u => u.username !== session?.username)
-    .slice(0, 6)
-    .map(u => ({ username: u.username, completedCount: u.completed_count }))
-
   const hasFlashcards = content.lectures.some(l => l.flashcards?.length)
 
   return (
@@ -78,7 +69,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
       completedCount={completed}
       totalLectures={content.lectures.length}
       hasFlashcards={hasFlashcards}
-      topUsers={topUsers}
       daysUntilExam={getDaysUntilExam(COURSES[course as Course].examDate)}
     />
   )
