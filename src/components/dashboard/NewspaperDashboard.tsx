@@ -11,11 +11,6 @@ export interface CurrentLectureInfo {
   readPct: number
 }
 
-export interface ClassmateInfo {
-  username: string
-  completedCount: number
-}
-
 export interface NewspaperDashboardProps {
   courseSlug: string
   examDate: string
@@ -23,19 +18,7 @@ export interface NewspaperDashboardProps {
   completedCount: number
   totalLectures: number
   hasFlashcards: boolean
-  topUsers: ClassmateInfo[]
   daysUntilExam: number | null
-}
-
-const STATUS_LABELS = [
-  'crushing it', 'reviewing concepts', 'quiz sprint', 'flashcards',
-  'on a streak', 'grinding hard', 'deep focus', 'exam ready',
-]
-
-function statusForUser(user: ClassmateInfo): string {
-  if (user.completedCount === 0) return 'just getting started'
-  const idx = (user.username.charCodeAt(0) + user.completedCount) % STATUS_LABELS.length
-  return STATUS_LABELS[idx]
 }
 
 function getLectureProgress(pct: number): string {
@@ -52,7 +35,7 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
   const {
     courseSlug, examDate,
     currentLecture, completedCount, totalLectures,
-    hasFlashcards, topUsers, daysUntilExam,
+    hasFlashcards, daysUntilExam,
   } = props
 
   const onTrackCount = completedCount
@@ -300,60 +283,6 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
           </div>
         </aside>
       </div>
-
-      {/* Studying Now */}
-      {topUsers.length > 0 && (
-        <section style={{ marginTop: 'var(--density-gap)', paddingTop: 'var(--density-gap)', borderTop: '1px solid var(--border-default)' }}>
-          <div style={{
-            fontFamily: 'var(--font-geist-mono)',
-            fontSize: '0.65rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            marginBottom: '1rem',
-          }}>
-            Leaderboard · {topUsers.length} classmates
-          </div>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '0.75rem',
-          }}>
-            {topUsers.map((user, i) => (
-              <div key={user.username} style={{
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 10,
-                padding: '0.9rem 1rem',
-                animation: `fadeSlideUp 300ms ease ${i * 40}ms both`,
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                  <span style={{
-                    width: 7, height: 7, borderRadius: '50%',
-                    background: 'var(--success)',
-                    display: 'inline-block', flexShrink: 0,
-                  }} />
-                  <span style={{
-                    fontFamily: 'var(--font-geist-mono)',
-                    fontSize: '0.78rem',
-                    color: 'var(--text-primary)',
-                    fontWeight: 500,
-                  }}>
-                    @{user.username}
-                  </span>
-                </div>
-                <div style={{
-                  fontSize: '0.75rem',
-                  color: 'var(--text-muted)',
-                  paddingLeft: '1.1rem',
-                }}>
-                  {statusForUser(user)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   )
 }
