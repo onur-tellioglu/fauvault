@@ -1208,6 +1208,122 @@ export const content: Content = {
         },
       ],
     },
+    {
+      id: 12,
+      title: 'Exam Preparation & High-Yield Topics (2021-2025)',
+      speaker: 'Prof. Dr. Zoran Nikoloski',
+      concepts: [
+        {
+          heading: 'Algorithm Pseudocode is Highly Tested',
+          body: 'The exams heavily emphasize writing exact pseudocode for algorithms like DFS for Articulation Points, Greedy Modularity Maximization, Spectral Clustering (using the Laplacian Fiedler vector), and Switch Randomization (edge-swapping).',
+        },
+        {
+          heading: 'Bipartite Graphs & Network Flows',
+          body: 'A core exam theme is understanding bipartite graph properties (e.g., lack of odd cycles) and using them. A frequent question asks to construct a flow network to find a maximum bipartite matching (connecting a supersource to partition U and a supersink to partition V).',
+        },
+        {
+          heading: 'Modularity, Line Graphs, & Isomorphism',
+          body: '- **Modularity (Q):** Know the theoretical bounds (-0.5 to 1) and how to calculate it.\n- **Line Graphs:** Finding an independent set in a line graph is equivalent to finding a maximum matching in the original graph.\n- **Isomorphism:** 3-graphlets and 4-graphlets are used as topological invariants to prove non-isomorphism.',
+        },
+        {
+          heading: 'Graph Laplacian Properties',
+          body: 'Understand that the smallest eigenvalue is exactly 0, and its corresponding eigenvector is a vector of identical values (all 1s). The second smallest eigenvalue (algebraic connectivity) is used for divisive spectral clustering.',
+        },
+        {
+          heading: 'Null Models and Matrix Powers',
+          body: '- **Null Models:** Switch randomization preserves the exact degree sequence to test the significance of metrics like closeness centrality or assortativity.\n- **Matrix Powers:** The (i,j) entry of $A^k$ represents the exact number of walks of length $k$ between node $i$ and $j$.',
+        },
+      ],
+      questions: [
+        {
+          id: 'L12Q1',
+          text: 'What does a high modularity score indicate in a network?',
+          options: [
+            'The network has a strong bipartite structure.',
+            'The network has dense connections within groups and sparse connections between groups.',
+            'The network consists of a single massive connected component with small diameter.',
+            'Every node has an equal probability of being connected to every other node.',
+          ],
+          correct: [1],
+          explanation: 'Modularity measures the strength of division into modules. High modularity means dense intra-module connections and sparse inter-module connections.',
+          type: 'single',
+        },
+        {
+          id: 'L12Q2',
+          text: 'What is the primary purpose of switch randomization (edge-swapping) when testing significance?',
+          options: [
+            'To create a completely random Erdős-Rényi graph.',
+            'To preserve the exact degree sequence of the original graph while randomizing the topology.',
+            'To reduce the number of edges in the graph.',
+            'To find the optimal clustering arrangement.',
+          ],
+          correct: [1],
+          explanation: 'Switch randomization randomizes the network structure while strictly maintaining the degree of every individual node, creating an unbiased null model.',
+          type: 'single',
+        },
+        {
+          id: 'L12Q3',
+          text: 'For a connected, undirected graph, what are the properties of the eigenvector associated with the smallest eigenvalue of the Laplacian matrix?',
+          options: [
+            'It contains different signs for different nodes.',
+            'It contains all the same numbers, as the smallest eigenvalue is exactly 0.',
+            'It corresponds to the Fiedler vector.',
+            'It strictly depends on the modularity score.',
+          ],
+          correct: [1],
+          explanation: 'The smallest eigenvalue is 0, and its eigenvector is the vector of all 1s (or a constant multiple), meaning all components are identical.',
+          type: 'single',
+        },
+        {
+          id: 'L12Q4',
+          text: 'Which of the following topological structures CANNOT be present in a valid bipartite graph?',
+          options: [
+            'A tree structure with a diameter greater than 5.',
+            'More than two nodes of degree 10.',
+            'A cycle with an even number of edges.',
+            'A cycle with an odd number of edges.',
+          ],
+          correct: [3],
+          explanation: 'By definition, a graph is bipartite if and only if it does not contain any odd cycles. It can only be colored with two colors.',
+          type: 'single',
+        },
+        {
+          id: 'L12Q5',
+          text: 'When modifying a bipartite graph (partitions U and V) to find its maximum bipartite matching using flow algorithms, how is the flow network correctly constructed?',
+          options: [
+            'Assign a capacity equal to the node\'s degree.',
+            'Connect a source to all nodes in U with infinite capacity.',
+            'Connect a source to U nodes with capacity 1, direct U to V with capacity 1, and V to a sink with capacity 1.',
+            'Connect a source directly to a sink bypassing the graph.',
+          ],
+          correct: [2],
+          explanation: 'Adding a supersource to U (capacity 1) and a supersink from V (capacity 1) limits each node to being paired at most once, which calculates the maximum bipartite matching.',
+          type: 'single',
+        },
+      ],
+      flashcards: [
+        {
+          front: 'Laplacian Smallest Eigenvalue',
+          back: 'Exactly 0; its eigenvector has all identical components.',
+        },
+        {
+          front: 'Line Graph Independent Set',
+          back: 'Equivalent to finding a maximum matching in the original graph.',
+        },
+        {
+          front: 'Bipartite Graph Constraint',
+          back: 'Cannot contain any cycles with an odd number of edges.',
+        },
+        {
+          front: 'Matrix Power A^k',
+          back: 'Entry (i,j) gives the exact number of walks of length k between i and j.',
+        },
+        {
+          front: 'Modularity (Q) Bounds',
+          back: 'Theoretically ranges from -0.5 to 1.',
+        },
+      ],
+    },
   ],
 }
 

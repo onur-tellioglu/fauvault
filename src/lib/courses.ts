@@ -65,7 +65,7 @@ export const COURSES: Record<Course, {
   acn: {
     label: 'Analysis of Cellular Networks',
     shortLabel: 'ACN',
-    description: 'UP · 11 Lectures',
+    description: 'UP · 12 Lectures',
     examDate: '',   // TBD — update when exam date is announced
     content: acnContent,
   },
