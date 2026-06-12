@@ -6,11 +6,12 @@ import { content as de1Content } from './content-de1'
 import { content as apContent } from './content-ap'
 import { content as bioContent } from './content-bio'
 import { content as adsContent } from './content-ads'
+import { content as acnContent } from './content-acn'
 import './exam-prep-re'
 
-export type Course = 'aip' | 're' | 'de1' | 'ap' | 'bio' | 'ads'
+export type Course = 'aip' | 're' | 'de1' | 'ap' | 'bio' | 'ads' | 'acn'
 
-export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap', 'bio', 'ads']
+export const COURSE_SLUGS: Course[] = ['aip', 're', 'de1', 'ap', 'bio', 'ads', 'acn']
 
 export const COURSES: Record<Course, {
   label: string
@@ -60,6 +61,13 @@ export const COURSES: Record<Course, {
     description: 'FAU · 7 Lectures',
     examDate: '2026-07-13T14:00:00',
     content: adsContent,
+  },
+  acn: {
+    label: 'Analysis of Cellular Networks',
+    shortLabel: 'ACN',
+    description: 'UP · 11 Lectures',
+    examDate: '',   // TBD — update when exam date is announced
+    content: acnContent,
   },
 }
 
