@@ -25,6 +25,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P1Q1",
+          "conceptIndex": 1,
           "text": "By what temperature does the NATURAL greenhouse gas effect increase the mean temperature of the Earth's atmosphere?",
           "options": [
             "0 K — there is no natural effect",
@@ -38,6 +39,7 @@ export const content: Content = {
         },
         {
           "id": "P1Q2",
+          "conceptIndex": 1,
           "text": "Match the CO₂ emissions per capita (year 2020). Select ALL countries that emit MORE than 7 t CO₂ per person per year.",
           "options": [
             "USA (~13.5 t/person)",
@@ -51,6 +53,7 @@ export const content: Content = {
         },
         {
           "id": "P1Q3",
+          "conceptIndex": 1,
           "text": "Which of the following are key goals of the Paris Agreement (2015)? Select ALL that apply.",
           "options": [
             "Limit global warming to 1.5°C above pre-industrial levels",
@@ -65,6 +68,7 @@ export const content: Content = {
         },
         {
           "id": "P1Q4",
+          "conceptIndex": 0,
           "text": "A water storage tank has height 2 m and diameter 1 m, heated from 40°C to 90°C. Which formula correctly gives its stored thermal energy?",
           "options": [
             "Q = ρ · cₚ · V · ΔT, where V = π·(0.5)²·2 and ΔT = 50 K",
@@ -78,6 +82,7 @@ export const content: Content = {
         },
         {
           "id": "P1Q5",
+          "conceptIndex": 2,
           "text": "When hydrogen (H₂) reacts with oxygen (½ O₂) to form water, what happens to the energy?",
           "options": [
             "Energy is absorbed — the reaction is endothermic",
@@ -112,6 +117,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P2Q1",
+          "conceptIndex": 0,
           "text": "What is the primary mechanism by which the EEG drove renewable energy growth in Germany?",
           "options": [
             "It provided direct subsidies paid to renewable plant operators from tax revenue",
@@ -125,6 +131,7 @@ export const content: Content = {
         },
         {
           "id": "P2Q2",
+          "conceptIndex": 0,
           "text": "Which renewable energy technology had the highest share in Germany's public net electricity generation in 2023?",
           "options": [
             "Solar PV",
@@ -138,6 +145,7 @@ export const content: Content = {
         },
         {
           "id": "P2Q3",
+          "conceptIndex": 1,
           "text": "What is 'Dunkelflaute' and why is it critical for renewable energy systems? Select ALL correct statements.",
           "options": [
             "A period of simultaneously low wind speed AND low solar irradiance",
@@ -152,6 +160,7 @@ export const content: Content = {
         },
         {
           "id": "P2Q4",
+          "conceptIndex": 1,
           "text": "Why did wholesale electricity prices in Germany rise sharply in 2022 even though wind and solar were generating at near-zero cost?",
           "options": [
             "There was a major grid outage that reduced available capacity",
@@ -165,6 +174,7 @@ export const content: Content = {
         },
         {
           "id": "P2Q5",
+          "conceptIndex": 2,
           "text": "According to the merit order principle, which power plant sets the electricity price in a given hour?",
           "options": [
             "The cheapest plant (e.g., nuclear) — to minimize consumer costs",
@@ -199,6 +209,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P3Q1",
+          "conceptIndex": 0,
           "text": "What does LCOE represent?",
           "options": [
             "The average cost per kWh over a plant's lifetime including capital, fuel, and O&M",
@@ -212,6 +223,7 @@ export const content: Content = {
         },
         {
           "id": "P3Q2",
+          "conceptIndex": 2,
           "text": "A wind turbine: P_el = 2 MW, K_I = €3,000,000, n = 20 years, p = 5%, z = 2,000 h/year. Which correctly calculates the capital cost component sᵢ?",
           "options": [
             "First compute annuity a = 0.05·(1.05)²⁰/((1.05)²⁰−1), then sᵢ = a · 3,000,000 / (2,000 kW · 2,000 h)",
@@ -225,6 +237,7 @@ export const content: Content = {
         },
         {
           "id": "P3Q3",
+          "conceptIndex": 0,
           "text": "How does increasing full load hours z affect the LCOE? Select ALL correct statements.",
           "options": [
             "Higher z reduces the capital cost component sᵢ (same investment, more kWh produced)",
@@ -238,6 +251,7 @@ export const content: Content = {
         },
         {
           "id": "P3Q4",
+          "conceptIndex": 1,
           "text": "In a CHP plant heat cost: w = wᵢ + w_v + w_s − σ · s_E. What does '−σ · s_E' represent?",
           "options": [
             "The additional fuel cost when generating electricity simultaneously",
@@ -251,6 +265,7 @@ export const content: Content = {
         },
         {
           "id": "P3Q5",
+          "conceptIndex": 0,
           "text": "Which correctly describes the annuity factor 'a'?",
           "options": [
             "a = 1/n — the fraction of investment recovered each year without interest",
@@ -285,6 +300,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P4Q1",
+          "conceptIndex": 0,
           "text": "A heat pump extracts heat from the ground (10°C) and delivers it to a floor heating system (45°C). Quality grade g = 0.55. What is the real COP?",
           "options": [
             "COP ≈ 2.0",
@@ -298,6 +314,7 @@ export const content: Content = {
         },
         {
           "id": "P4Q2",
+          "conceptIndex": 0,
           "text": "Why does a ground-source heat pump achieve higher COP than an air-source heat pump in winter? Select ALL correct statements.",
           "options": [
             "Ground maintains ~10°C year-round, giving a smaller temperature lift",
@@ -311,6 +328,7 @@ export const content: Content = {
         },
         {
           "id": "P4Q3",
+          "conceptIndex": 1,
           "text": "How does increasing (t_m − t_u) affect solar thermal collector efficiency?",
           "options": [
             "Efficiency increases — hotter collectors produce more useful heat",
@@ -324,6 +342,7 @@ export const content: Content = {
         },
         {
           "id": "P4Q4",
+          "conceptIndex": 0,
           "text": "A steam power plant operates between 550°C and 40°C. What is its Carnot efficiency?",
           "options": [
             "η = 1 − 40/550 = 92.7% (wrong: must use Kelvin)",
@@ -358,6 +377,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P5Q1",
+          "conceptIndex": 2,
           "text": "What is the Betz limit?",
           "options": [
             "c_p = 0.45 — the typical efficiency of modern wind turbines",
@@ -371,6 +391,7 @@ export const content: Content = {
         },
         {
           "id": "P5Q2",
+          "conceptIndex": 0,
           "text": "A site has average wind speed 6 m/s. A second site has 9 m/s. By what factor does available wind power increase?",
           "options": [
             "1.5× (linear scaling with velocity)",
@@ -384,6 +405,7 @@ export const content: Content = {
         },
         {
           "id": "P5Q3",
+          "conceptIndex": 1,
           "text": "A site has v = 7 m/s at 50 m height, z₀ = 0.1 m. Wind speed at 100 m hub height is approximately:",
           "options": [
             "v(100) = 7 · (100/50) = 14 m/s — linear scaling",
@@ -397,6 +419,7 @@ export const content: Content = {
         },
         {
           "id": "P5Q4",
+          "conceptIndex": 1,
           "text": "Select ALL correct statements about roughness length z₀.",
           "options": [
             "z₀ is larger for rougher terrain (forests, cities) than smooth terrain (sea, flat plains)",
@@ -410,6 +433,7 @@ export const content: Content = {
         },
         {
           "id": "P5Q5",
+          "conceptIndex": 0,
           "text": "A 3 MW wind turbine generates 5,400 MWh per year. How many full load hours does it operate?",
           "options": [
             "h = 5,400 / 3 = 1,800 full load hours/year",
@@ -444,6 +468,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P6Q1",
+          "conceptIndex": 0,
           "text": "What is the Solar Constant and its value?",
           "options": [
             "Maximum PV efficiency: ~33% (Shockley-Queisser limit)",
@@ -457,6 +482,7 @@ export const content: Content = {
         },
         {
           "id": "P6Q2",
+          "conceptIndex": 1,
           "text": "A PV module has P_STC = 400 W at 25°C. Temperature coefficient = −0.4%/K. On a hot day, cell temperature = 65°C. Output power ≈ ?",
           "options": [
             "400 W — temperature has no effect on silicon PV",
@@ -470,6 +496,7 @@ export const content: Content = {
         },
         {
           "id": "P6Q3",
+          "conceptIndex": 0,
           "text": "What does 'AM 1.5' mean and why is it the standard test condition for solar cells?",
           "options": [
             "The atmosphere is 1.5× thicker than at sea level — for high-altitude measurements",
@@ -483,6 +510,7 @@ export const content: Content = {
         },
         {
           "id": "P6Q4",
+          "conceptIndex": 1,
           "text": "Select ALL correct statements about the PV I-V characteristic.",
           "options": [
             "At I_SC, voltage = 0 and current is at maximum",
@@ -497,6 +525,7 @@ export const content: Content = {
         },
         {
           "id": "P6Q5",
+          "conceptIndex": 2,
           "text": "Why does a flat-plate solar collector become less efficient than an evacuated tube collector at high operating temperatures?",
           "options": [
             "Flat-plate collectors use lower-quality glass that breaks down at high temperature",
@@ -531,6 +560,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P7Q1",
+          "conceptIndex": 0,
           "text": "A hydropower plant: q̇ = 50 m³/s, h_useful = 30 m, η_s = 85%. What is the output power?",
           "options": [
             "P = 0.85 · 50 · 1000 · 9.81 · 30 ≈ 12.5 MW",
@@ -544,6 +574,7 @@ export const content: Content = {
         },
         {
           "id": "P7Q2",
+          "conceptIndex": 1,
           "text": "Which turbine type is best suited for a site with very high head (500 m) and low flow rate?",
           "options": [
             "Kaplan turbine — designed for low head, high flow",
@@ -557,6 +588,7 @@ export const content: Content = {
         },
         {
           "id": "P7Q3",
+          "conceptIndex": 1,
           "text": "Select ALL correct statements about pumped storage hydropower.",
           "options": [
             "It is currently the largest form of grid-scale electrical energy storage globally (>90% of installed capacity)",
@@ -571,6 +603,7 @@ export const content: Content = {
         },
         {
           "id": "P7Q4",
+          "conceptIndex": 0,
           "text": "What does the 'useful head' h_useful account for in hydro power calculations?",
           "options": [
             "Only the geometric elevation difference between upstream and downstream",
@@ -601,6 +634,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P8Q1",
+          "conceptIndex": 1,
           "text": "Under what conditions can biomass combustion be considered carbon-neutral?",
           "options": [
             "Always — because plants absorb CO₂ from the atmosphere while growing",
@@ -614,6 +648,7 @@ export const content: Content = {
         },
         {
           "id": "P8Q2",
+          "conceptIndex": 0,
           "text": "A biomass CHP plant burns 10 kg/s of dry wood (H_LHV = 18 MJ/kg), generates 18 MW of electricity, and delivers 54 MW of useful heat. What is its total efficiency?",
           "options": [
             "η_el = 18 / (10·18) = 10% — only electricity",
@@ -627,6 +662,7 @@ export const content: Content = {
         },
         {
           "id": "P8Q3",
+          "conceptIndex": 0,
           "text": "How does moisture content affect the usable energy of wood fuel?",
           "options": [
             "No effect — chemical bonds contain the same energy regardless of moisture",
@@ -640,6 +676,7 @@ export const content: Content = {
         },
         {
           "id": "P8Q4",
+          "conceptIndex": 1,
           "text": "Select ALL correct statements about anaerobic digestion of biomass.",
           "options": [
             "Anaerobic digestion produces biogas containing mainly CH₄ (60–70%) and CO₂",
@@ -671,6 +708,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P9Q1",
+          "conceptIndex": 0,
           "text": "Typical geothermal gradient in continental crust is ~30°C/km. Expected temperature at 4 km depth in Germany (surface T = 10°C)?",
           "options": [
             "Gradient ~3°C/km → T(4km) = 22°C",
@@ -684,6 +722,7 @@ export const content: Content = {
         },
         {
           "id": "P9Q2",
+          "conceptIndex": 1,
           "text": "What is Enhanced Geothermal System (EGS) and its main challenge?",
           "options": [
             "EGS extracts heat from natural hot springs — challenge is finding water reservoirs",
@@ -697,6 +736,7 @@ export const content: Content = {
         },
         {
           "id": "P9Q3",
+          "conceptIndex": 0,
           "text": "Select ALL correct statements about geothermal energy's advantages over wind and solar.",
           "options": [
             "Geothermal provides baseload power — available 24/7 with capacity factors >80%",
@@ -710,6 +750,7 @@ export const content: Content = {
         },
         {
           "id": "P9Q4",
+          "conceptIndex": 0,
           "text": "What minimum reservoir temperature is needed for economical geothermal electricity generation?",
           "options": [
             "40°C — ground-source heat pump temperature",
@@ -744,6 +785,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "P10Q1",
+          "conceptIndex": 0,
           "text": "A battery is charged with 100 kWh and delivers 90 kWh when discharged. What is the Power-to-Power (round-trip) efficiency?",
           "options": [
             "η_P2P = 90/100 = 90%",
@@ -757,6 +799,7 @@ export const content: Content = {
         },
         {
           "id": "P10Q2",
+          "conceptIndex": 1,
           "text": "Why is hydrogen (P2G2P) round-trip efficiency much lower than Li-ion batteries? Select ALL correct statements.",
           "options": [
             "Electrolysis efficiency is ~65–80% — not all electricity converts to H₂ chemical energy",
@@ -770,6 +813,7 @@ export const content: Content = {
         },
         {
           "id": "P10Q3",
+          "conceptIndex": 1,
           "text": "The standard equilibrium (Nernst) voltage of a hydrogen-oxygen fuel cell at 25°C is approximately:",
           "options": [
             "0.7 V — typical operating voltage under load",
@@ -783,6 +827,7 @@ export const content: Content = {
         },
         {
           "id": "P10Q4",
+          "conceptIndex": 2,
           "text": "What is 'sector coupling' and why is it important for the energy transition?",
           "options": [
             "Connecting electricity grids between different countries via interconnectors",
@@ -796,6 +841,7 @@ export const content: Content = {
         },
         {
           "id": "P10Q5",
+          "conceptIndex": 0,
           "text": "A battery has C_max = 200 Ah at 48 V. Currently 75 Ah remains. What is the State of Charge (SOC)?",
           "options": [
             "SOC = 75/200 = 37.5%",

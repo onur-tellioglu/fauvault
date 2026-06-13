@@ -53,6 +53,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L1Q1",
+          "conceptIndex": 0,
           "text": "What is the single defining feature that distinguishes eukaryotic cells from prokaryotic cells?",
           "options": [
             "Presence of ribosomes",
@@ -68,6 +69,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q2",
+          "conceptIndex": 3,
           "text": "Which statements about transcription are correct? (Select all that apply.)",
           "options": [
             "The transcribed RNA is single-stranded",
@@ -87,6 +89,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q3",
+          "conceptIndex": 4,
           "text": "In the central dogma, an mRNA is read in groups of three nucleotides. What is each such group called, and what does it specify?",
           "options": [
             "A gene, specifying an entire protein",
@@ -102,6 +105,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q4",
+          "conceptIndex": 5,
           "text": "How does an enzyme accelerate a chemical reaction?",
           "options": [
             "By increasing the free-energy difference (ΔG) between substrate and product",
@@ -117,6 +121,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q5",
+          "conceptIndex": 6,
           "text": "Comparing aerobic and anaerobic respiration of one glucose molecule, which is true?",
           "options": [
             "Anaerobic respiration yields more ATP than aerobic",
@@ -132,6 +137,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q6",
+          "conceptIndex": 2,
           "text": "Which base pairings and classifications are correct for DNA? (Select all that apply.)",
           "options": [
             "Adenine pairs with Thymine",
@@ -150,6 +156,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q7",
+          "conceptIndex": 7,
           "text": "Regarding motor-protein transport along microtubules, which protein moves cargo toward the (+)-end (anterograde, e.g., toward the synaptic terminal)?",
           "options": [
             "Dynein",
@@ -165,6 +172,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q8",
+          "conceptIndex": 7,
           "text": "A student claims Brownian motion is an ATP-powered, motor-protein-driven process. Why is this wrong?",
           "options": [
             "Brownian motion is ATP-independent and entropy-driven, caused by random collisions of surrounding fluid molecules",
@@ -180,6 +188,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q9",
+          "conceptIndex": 7,
           "text": "Which properties describe the plasma membrane as presented in the lecture? (Select all that apply.)",
           "options": [
             "Made of amphiphilic lipids with a hydrophilic head and hydrophobic tail",
@@ -197,6 +206,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q10",
+          "conceptIndex": 8,
           "text": "In the molecular disease-classification example, what molecular signature did the deep-learning classifier use to distinguish epilepsy-associated brain lesions, and which paradigm trained the CNN?",
           "options": [
             "RNA codon usage; reinforcement learning",
@@ -299,6 +309,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L2Q1",
+          "conceptIndex": 2,
           "text": "Which statement about complementary base pairing in DNA is correct?",
           "options": [
             "A pairs with T via 3 hydrogen bonds; G pairs with C via 2",
@@ -314,6 +325,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q2",
+          "conceptIndex": 0,
           "text": "What is the single chemical difference between the sugar in DNA and the sugar in RNA?",
           "options": [
             "RNA uses a 6-carbon sugar, DNA a 5-carbon sugar",
@@ -329,6 +341,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q3",
+          "conceptIndex": 1,
           "text": "Which bases are purines? (Select all that apply.)",
           "options": [
             "Adenine",
@@ -346,6 +359,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q4",
+          "conceptIndex": 4,
           "text": "In the order of DNA packaging, which sequence is correct?",
           "options": [
             "30 nm fiber → beads-on-a-string → mitotic chromosome → loops",
@@ -361,6 +375,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q5",
+          "conceptIndex": 4,
           "text": "Which proteins make up the histone octamer core of a nucleosome?",
           "options": [
             "H1, H2, H3, H4",
@@ -376,6 +391,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q6",
+          "conceptIndex": 6,
           "text": "Why do cancer cells avoid replicative senescence while healthy cells eventually stop dividing?",
           "options": [
             "Cancer cells have shorter telomeres from the start",
@@ -391,6 +407,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q7",
+          "conceptIndex": 7,
           "text": "Which enzyme relieves the torsional stress (the 'winding problem') ahead of the replication fork by creating transient single-strand breaks?",
           "options": [
             "Helicase",
@@ -406,6 +423,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q8",
+          "conceptIndex": 7,
           "text": "Select the TRUE statements about the leading vs lagging strand during replication.",
           "options": [
             "The leading strand is synthesized continuously",
@@ -425,6 +443,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q9",
+          "conceptIndex": 8,
           "text": "Match the 2015 Nobel-Prize repair mechanisms: which pairing is correct?",
           "options": [
             "Paul Modrich – nucleotide excision repair of UV damage",
@@ -440,6 +459,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q10",
+          "conceptIndex": 6,
           "text": "The Philadelphia chromosome, which causes chronic myelogenous leukemia, results from a translocation between which two chromosomes?",
           "options": [
             "Chromosomes 9 and 22",
@@ -455,6 +475,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q11",
+          "conceptIndex": 8,
           "text": "Approximately how much of the human genome is protein-coding?",
           "options": [
             "About 50%",
@@ -557,6 +578,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L3Q1",
+          "conceptIndex": 0,
           "text": "Which feature distinguishes RNA from DNA?",
           "options": [
             "RNA contains ribose and uracil; DNA contains deoxyribose and thymine",
@@ -572,6 +594,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q2",
+          "conceptIndex": 3,
           "text": "Match the eukaryotic RNA polymerase to its products. Which statements are correct?",
           "options": [
             "RNA Pol II transcribes all protein-coding genes plus miRNA and lncRNA genes",
@@ -590,6 +613,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q3",
+          "conceptIndex": 3,
           "text": "A student claims RNA polymerase needs a primer just like DNA polymerase. Why is this incorrect?",
           "options": [
             "RNA polymerase initiates synthesis de novo, without a primer",
@@ -605,6 +629,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q4",
+          "conceptIndex": 4,
           "text": "Regarding topoisomerases relieving transcription torsional stress, which are TRUE?",
           "options": [
             "Topoisomerase I makes single-strand breaks and is ATP-independent",
@@ -623,6 +648,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q5",
+          "conceptIndex": 7,
           "text": "Which process is NOT catalyzed by a ribozyme (RNA), but instead entirely by a protein enzyme?",
           "options": [
             "Transcription (RNA synthesis)",
@@ -638,6 +664,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q6",
+          "conceptIndex": 2,
           "text": "What is the correct order and outcome of the three phases of eukaryotic transcription?",
           "options": [
             "Initiation (DNA melted, Pol recruited) → Elongation (RNA-DNA hybrid extended) → Termination (Pol and RNA released)",
@@ -653,6 +680,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q7",
+          "conceptIndex": 6,
           "text": "Which statements about eukaryotic mRNA processing are correct?",
           "options": [
             "The 5' cap is a 7-methylguanosine joined by a 5'-to-5' triphosphate bridge",
@@ -672,6 +700,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q8",
+          "conceptIndex": 8,
           "text": "How do microRNAs (miRNAs) silence gene expression?",
           "options": [
             "By binding mRNA (e.g. 3'UTR) to block translation or trigger mRNA degradation",
@@ -687,6 +716,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q9",
+          "conceptIndex": 8,
           "text": "Which were the discoveries behind the RNA-related Nobel Prizes mentioned in the lecture?",
           "options": [
             "1989 Chemistry: Altman & Cech for catalytic RNA (ribozymes)",
@@ -704,6 +734,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q10",
+          "conceptIndex": 8,
           "text": "According to the lecture, why did life likely move away from RNA toward DNA as genetic material?",
           "options": [
             "The reactive 2'-OH of ribose causes spontaneous autocleavage of RNA",
@@ -807,6 +838,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L4Q1",
+          "conceptIndex": 1,
           "text": "How many codons specify amino acids, and how many are stop codons in the standard genetic code?",
           "options": [
             "64 sense codons, 0 stop codons",
@@ -822,6 +854,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q2",
+          "conceptIndex": 0,
           "text": "Which statements about the 'central dogma is obsolete' slide are correct?",
           "options": [
             "Reverse transcription can convert RNA back into DNA",
@@ -839,6 +872,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q3",
+          "conceptIndex": 2,
           "text": "What is the role of the wobble position and inosine in translation?",
           "options": [
             "They force one codon to be read by exactly one tRNA",
@@ -855,6 +889,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q4",
+          "conceptIndex": 3,
           "text": "At physiological pH (~7), the amino and carboxyl groups of a free amino acid are:",
           "options": [
             "Both uncharged",
@@ -870,6 +905,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q5",
+          "conceptIndex": 5,
           "text": "Which forces stabilize protein folding according to the 'forces behind protein folding' slide?",
           "options": [
             "Hydrogen bonds",
@@ -887,6 +923,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q6",
+          "conceptIndex": 6,
           "text": "Which correctly pairs a degradation system with its described role?",
           "options": [
             "Ubiquitin–proteasome = bulk recycling of whole organelles",
@@ -903,6 +940,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q7",
+          "conceptIndex": 8,
           "text": "A protein kinase and a protein phosphatase do which of the following?",
           "options": [
             "Kinase removes phosphate; phosphatase adds it",
@@ -918,6 +956,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q8",
+          "conceptIndex": 7,
           "text": "Enzymes accelerate reactions by:",
           "options": [
             "Lowering the activation energy of the reaction",
@@ -933,6 +972,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q9",
+          "conceptIndex": 8,
           "text": "Which describes allosteric regulation as shown in the slides?",
           "options": [
             "A regulatory molecule binds at the active site and is converted to product",
@@ -949,6 +989,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q10",
+          "conceptIndex": 1,
           "text": "Regarding the genetic code and protein synthesis, which statement is FALSE?",
           "options": [
             "The same amino acid can be encoded by more than one codon (redundancy)",
@@ -1051,6 +1092,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L5Q1",
+          "conceptIndex": 1,
           "text": "Why are cis-unsaturated fatty acids typically liquid at room temperature while saturated fatty acids are solid?",
           "options": [
             "The cis double bond introduces a kink that prevents tight packing of chains",
@@ -1066,6 +1108,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q2",
+          "conceptIndex": 2,
           "text": "Which fatty acids are described as ESSENTIAL because the body cannot make them?",
           "options": [
             "Omega-3 fatty acids (e.g., α-linolenic acid)",
@@ -1082,6 +1125,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q3",
+          "conceptIndex": 3,
           "text": "A triglyceride is composed of:",
           "options": [
             "Glycerol plus three fatty acids",
@@ -1097,6 +1141,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q4",
+          "conceptIndex": 6,
           "text": "How does cholesterol affect membrane fluidity at HIGH temperature?",
           "options": [
             "It increases rigidity, preventing the membrane from becoming too fluid",
@@ -1112,6 +1157,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q5",
+          "conceptIndex": 5,
           "text": "Which statements about phospholipid movement in a bilayer are correct?",
           "options": [
             "Lateral diffusion within a leaflet occurs readily",
@@ -1129,6 +1175,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q6",
+          "conceptIndex": 4,
           "text": "Which phospholipid is the MOST abundant in mammalian cell membranes?",
           "options": [
             "Phosphatidylcholine",
@@ -1144,6 +1191,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q7",
+          "conceptIndex": 2,
           "text": "What does the notation C18:3 cis-9,12,15 (α-linolenic acid) tell you?",
           "options": [
             "18 carbons and 3 cis double bonds",
@@ -1159,6 +1207,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q8",
+          "conceptIndex": 4,
           "text": "Why is the formation of a sealed vesicle from a planar bilayer energetically favorable?",
           "options": [
             "It shields the hydrophobic tails from water by eliminating exposed edges",
@@ -1174,6 +1223,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q9",
+          "conceptIndex": 6,
           "text": "Which features correctly describe cholesterol's structure?",
           "options": [
             "Four fused carbon rings (rigid planar ring system)",
@@ -1191,6 +1241,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q10",
+          "conceptIndex": 5,
           "text": "What is the functional significance of lipid asymmetry between the two membrane leaflets?",
           "options": [
             "It supports protein binding and helps distinguish live from dead cells",
@@ -1305,6 +1356,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L6Q1",
+          "conceptIndex": 0,
           "text": "Which structure carries the bacterial chromosome in a prokaryotic cell?",
           "options": [
             "A membrane-bound nucleus",
@@ -1320,6 +1372,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q2",
+          "conceptIndex": 2,
           "text": "What is the primary function of the nucleolus?",
           "options": [
             "DNA replication",
@@ -1335,6 +1388,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q3",
+          "conceptIndex": 10,
           "text": "Which statements about mitochondrial DNA (mtDNA) are correct? (Select all that apply.)",
           "options": [
             "It is a circular molecule about 16.5 kilobases long",
@@ -1354,6 +1408,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q4",
+          "conceptIndex": 7,
           "text": "A student says 'rough ER makes lipids and smooth ER makes proteins.' What is the correct assignment?",
           "options": [
             "Rough ER → protein synthesis/folding; Smooth ER → lipid and FA synthesis",
@@ -1369,6 +1424,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q5",
+          "conceptIndex": 5,
           "text": "During mitosis, which microtubules attach directly to chromosomes to pull sister chromatids toward the poles?",
           "options": [
             "Astral microtubules",
@@ -1384,6 +1440,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q6",
+          "conceptIndex": 6,
           "text": "Match the Nobel Prize 2001 laureates to their contributions. Which pairings are correct? (Select all that apply.)",
           "options": [
             "Leland Hartwell — discovered CDC genes and the 'checkpoint' concept",
@@ -1401,6 +1458,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q7",
+          "conceptIndex": 9,
           "text": "Approximately how much ATP is produced by aerobic respiration of one glucose versus anaerobic fermentation?",
           "options": [
             "Aerobic ~2 ATP; anaerobic ~30+ ATP",
@@ -1416,6 +1474,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q8",
+          "conceptIndex": 7,
           "text": "In ER-mediated calcium signaling, what is the immediate trigger that opens the IP₃ receptor to release Ca²⁺ from the ER store?",
           "options": [
             "DAG binding the IP₃R",
@@ -1431,6 +1490,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q9",
+          "conceptIndex": 10,
           "text": "What does mitochondrial heteroplasmy describe?",
           "options": [
             "The presence of two or more different versions of mtDNA within the same cell/tissue/individual",
@@ -1446,6 +1506,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q10",
+          "conceptIndex": 1,
           "text": "Which features correctly characterize the nuclear envelope and pores? (Select all that apply.)",
           "options": [
             "It consists of two membrane layers (outer and inner)",
@@ -1552,6 +1613,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L7Q1",
+          "conceptIndex": 1,
           "text": "Which monosaccharide is a KETOSE rather than an aldose?",
           "options": [
             "Glucose",
@@ -1567,6 +1629,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q2",
+          "conceptIndex": 0,
           "text": "What is the general chemical formula of a monosaccharide, and what does n represent?",
           "options": [
             "(CH₂O)ₙ, where n can be 3, 5, 6, 7 or 8 (number of carbons)",
@@ -1582,6 +1645,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q3",
+          "conceptIndex": 3,
           "text": "Match the stereoisomer relationships correctly. Select ALL true statements.",
           "options": [
             "Enantiomers have ALL chiral centers inverted (e.g. D-glucose vs L-glucose)",
@@ -1599,6 +1663,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q4",
+          "conceptIndex": 4,
           "text": "In the Haworth ring drawing, a glucose molecule is the β-anomer when…",
           "options": [
             "the C1 –OH and the CH₂OH group are on the SAME side",
@@ -1614,6 +1679,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q5",
+          "conceptIndex": 5,
           "text": "Which disaccharide is correctly paired with its monosaccharide building blocks?",
           "options": [
             "Maltose = galactose + glucose",
@@ -1629,6 +1695,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q6",
+          "conceptIndex": 5,
           "text": "How is a glycosidic bond formed between two monosaccharides?",
           "options": [
             "By a condensation (dehydration) reaction that releases one H₂O",
@@ -1644,6 +1711,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q7",
+          "conceptIndex": 6,
           "text": "In glycogen, which glycosidic bonds form the linear backbone versus the branch points?",
           "options": [
             "α-1,4 bonds form the linear chain; α-1,6 bonds form the branch points",
@@ -1659,6 +1727,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q8",
+          "conceptIndex": 6,
           "text": "Select ALL polysaccharides that the lecture classifies as STRUCTURAL (rather than storage).",
           "options": [
             "Cellulose",
@@ -1675,6 +1744,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q9",
+          "conceptIndex": 8,
           "text": "What is the key chemical difference between the sugar in DNA and the sugar in RNA?",
           "options": [
             "DNA uses deoxyribose (no –OH at the 2′ carbon); RNA uses ribose (–OH at 2′)",
@@ -1690,6 +1760,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q10",
+          "conceptIndex": 3,
           "text": "Glucose, galactose and mannose all share the formula C₆H₁₂O₆ yet behave differently in the body. Why do these small structural differences matter biologically?",
           "options": [
             "They are recognized by enzymes and other proteins, producing major biological effects",
