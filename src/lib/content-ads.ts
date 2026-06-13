@@ -43,6 +43,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L1Q1',
+          conceptIndex: 0,
           text: 'Which three knowledge areas form the foundation of a data scientist working in medicine and psychology, according to this course?',
           options: [
             'Statistical knowledge, programming (Python), and knowledge of human experience & behavior',
@@ -56,6 +57,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q2',
+          conceptIndex: 2,
           text: 'What are the five learning goals of this course? Select ALL that apply.',
           options: [
             'Load and format data',
@@ -71,6 +73,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q3',
+          conceptIndex: 1,
           text: 'Which research group does Prof. Dr. Björn Eskofier lead, and what are its primary research topics?',
           options: [
             'Chair of Health Psychology — stress, inflammation, and sleep',
@@ -84,6 +87,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q4',
+          conceptIndex: 5,
           text: 'A Medical Engineering student scores 93 % on the exercises. Which exam bonus do they receive?',
           options: [
             '−0.7 grade bonus',
@@ -97,6 +101,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q5',
+          conceptIndex: 6,
           text: 'How many module courses must a student pass to receive the bidt DigiKolleg certificate?',
           options: [
             'One — any single module suffices',
@@ -111,6 +116,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q6',
+          conceptIndex: 3,
           text: 'Which of the following disciplines are explicitly listed as suitable target audiences for this course? Select ALL that apply.',
           options: [
             'Medical Engineering',
@@ -125,6 +131,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q7',
+          conceptIndex: 7,
           text: 'In what order should a student seek help when they encounter a problem during the course?',
           options: [
             'Email the teaching team → check StudOn → ask a peer',
@@ -139,6 +146,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q8',
+          conceptIndex: 4,
           text: 'What is the exercise submission deadline for each weekly exercise?',
           options: [
             'Sunday 23:59 of the same week the exercise is released',
@@ -153,6 +161,7 @@ export const content: Content = {
         },
         {
           id: 'L1Q9',
+          conceptIndex: 3,
           text: 'Which statement best explains why an interdisciplinary course like this is challenging to design?',
           options: [
             'The technical content changes every year, making it hard to prepare materials',
@@ -253,6 +262,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L2Q1',
+          conceptIndex: 2,
           text: 'What does the following code print?\n\n```python\nx = 7\ny = 2\nprint(x % y)\n```',
           options: ['3', '1', '3.5', '0'],
           correct: [1],
@@ -262,6 +272,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q2',
+          conceptIndex: 1,
           text: 'Which statement correctly assigns the value 42 to a variable named `answer`?',
           options: [
             '`42 = answer`',
@@ -276,6 +287,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q3',
+          conceptIndex: 2,
           text: 'What is the output of this snippet?\n\n```python\na = 10\na += 5\na //= 3\nprint(a)\n```',
           options: ['5', '4', '3', '4.5'],
           correct: [0],
@@ -285,6 +297,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q4',
+          conceptIndex: 2,
           text: 'Which of the following correctly describes what `//` (floor division) does in Python?',
           options: [
             'Divides two numbers and returns the remainder',
@@ -299,6 +312,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q5',
+          conceptIndex: 3,
           text: 'Evaluate the following boolean expression:\n\n```python\na = True\nb = False\nresult = (a or b) and (not a)\nprint(result)\n```\n\nWhat does this print?',
           options: ['`True`', '`False`', '`None`', 'A syntax error is raised'],
           correct: [1],
@@ -308,6 +322,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q6',
+          conceptIndex: 7,
           text: 'In a Jupyter notebook, which two types of cells can a notebook contain? Select ALL that apply.',
           options: [
             'Markdown cells',
@@ -321,6 +336,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q7',
+          conceptIndex: 6,
           text: 'What does the following `if`/`elif`/`else` block print?\n\n```python\nscore = 72\n\nif score >= 90:\n    print("A")\nelif score >= 80:\n    print("B")\nelif score >= 70:\n    print("C")\nelse:\n    print("F")\n```',
           options: ['"A"', '"B"', '"C"', '"F"'],
           correct: [2],
@@ -330,6 +346,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q8',
+          conceptIndex: 5,
           text: 'Which of the following is the correct way to write an inline comment in Python?',
           options: [
             '`// This is a comment`',
@@ -344,6 +361,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q9',
+          conceptIndex: 7,
           text: 'What is the key advantage of Google Colab for this course?',
           options: [
             'It provides a faster Python interpreter than a local installation',
@@ -357,6 +375,7 @@ export const content: Content = {
         },
         {
           id: 'L2Q10',
+          conceptIndex: 4,
           text: 'Which of the following comparison operators returns `True` when two values are **not** equal?',
           options: ['`==`', '`=`', '`!=`', '`!`'],
           correct: [2],
@@ -453,6 +472,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L3Q1',
+          conceptIndex: 0,
           text: 'Which of the following is the correct Python datatype for the value `\'hello\'`?',
           options: ['`int`', '`bool`', '`str`', '`list`'],
           correct: [2],
@@ -462,6 +482,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q2',
+          conceptIndex: 1,
           text: 'What does the following code print?\n\n```python\nexample = list(str(float(int(3.4))))\nprint(example)\n```',
           options: [
             '`[3, 4]`',
@@ -476,6 +497,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q3',
+          conceptIndex: 1,
           text: 'Which built-in function tells you the datatype of a value at runtime?',
           options: ['`dtype()`', '`type()`', '`kind()`', '`typeof()`'],
           correct: [1],
@@ -484,6 +506,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q4',
+          conceptIndex: 2,
           text: 'What is the output of the following function call?\n\n```python\ndef square(x):\n    return x ** 2\n\nprint(square(4))\n```',
           options: ['`8`', '`16`', '`4`', '`None`'],
           correct: [1],
@@ -493,6 +516,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q5',
+          conceptIndex: 4,
           text: 'What does a `for` loop do in Python?',
           options: [
             'Repeats a block of code as long as a condition is True',
@@ -506,6 +530,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q6',
+          conceptIndex: 5,
           text: 'Which of the following `while` loop examples will produce an **infinite loop**?\n\n```python\n# Option A\nn = 1\nwhile n < 5:\n    print(n)\n    n += 1\n\n# Option B\ni = 1\nwhile i < 5:\n    print(i)\n```',
           options: [
             'Option A — it never increments `n`',
@@ -520,6 +545,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q7',
+          conceptIndex: 6,
           text: 'Which of the following are valid ways to import a library in Python? Select ALL that apply.',
           options: [
             '`import math`',
@@ -534,6 +560,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q8',
+          conceptIndex: 4,
           text: 'What does the following nested loop print?\n\n```python\nfor i in [1, 2]:\n    for j in [10, 20]:\n        print(i + j)\n```',
           options: [
             '`11`, `21`, `12`, `22`',
@@ -548,6 +575,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q9',
+          conceptIndex: 2,
           text: 'What is the purpose of `return` inside a function definition?',
           options: [
             'It prints the result to the console',
@@ -561,6 +589,7 @@ export const content: Content = {
         },
         {
           id: 'L3Q10',
+          conceptIndex: 7,
           text: 'Consider the two code blocks below. Which statement correctly describes how they differ?\n\n```python\n# Block A\nif a == b:\n    a = 0\n    b = 1\n\n# Block B\nif a == b:\n    a = 0\nb = 1\n```',
           options: [
             'Block A and Block B produce the same result in all cases',
@@ -658,6 +687,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L4Q1',
+          conceptIndex: 0,
           text: 'What does the following code print?\n\n```python\nx = 7\nif x > 5:\n    print("A")\nelif x > 3:\n    print("B")\nelif x > 0:\n    print("C")\nelse:\n    print("D")\n```',
           options: ['"A"', '"B"', '"C"', '"A" and "B"'],
           correct: [0],
@@ -667,6 +697,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q2',
+          conceptIndex: 0,
           text: 'What does the following code print?\n\n```python\nx = 7\nif x > 5:\n    print("A")\nif x > 3:\n    print("B")\nif x > 0:\n    print("C")\nelse:\n    print("D")\n```',
           options: [
             'Only "A"',
@@ -681,6 +712,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q3',
+          conceptIndex: 1,
           text: 'Which statement correctly describes Python\'s short-circuit evaluation for `a and b`?',
           options: [
             'Both `a` and `b` are always evaluated before the result is determined',
@@ -695,6 +727,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q4',
+          conceptIndex: 2,
           text: 'What does `list(range(3, 10, 2))` produce?',
           options: [
             '`[3, 4, 5, 6, 7, 8, 9, 10]`',
@@ -709,6 +742,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q5',
+          conceptIndex: 3,
           text: 'What does the following code print?\n\n```python\nfor i in range(5):\n    if i == 2:\n        continue\n    print(i)\n```',
           options: [
             '`0 1 2 3 4`',
@@ -723,6 +757,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q6',
+          conceptIndex: 3,
           text: 'What is the key difference between `pass` and `continue` inside a loop body?',
           options: [
             '`pass` skips to the next iteration; `continue` does nothing',
@@ -737,6 +772,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q7',
+          conceptIndex: 4,
           text: 'Consider the following code:\n\n```python\ndef convert(x):\n    try:\n        result = int(x)\n    except ValueError:\n        result = -1\n    finally:\n        print("done")\n    return result\n\nconvert("hello")\n```\n\nWhat is printed and what does the function return?',
           options: [
             'Nothing is printed; the function raises a `ValueError`',
@@ -751,6 +787,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q8',
+          conceptIndex: 2,
           text: 'Which of the following are valid uses of the `range()` function? Select ALL that apply.',
           options: [
             '`range(10)` — integers from 0 to 9',
@@ -765,6 +802,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q9',
+          conceptIndex: 5,
           text: 'What is the purpose of `raise Exception("message")` in Python?',
           options: [
             'It prints a warning message and continues execution',
@@ -778,6 +816,7 @@ export const content: Content = {
         },
         {
           id: 'L4Q10',
+          conceptIndex: 3,
           text: 'What does the following code print?\n\n```python\nfor i in range(1, 5):\n    if i == 2:\n        pass\n    print(i)\n```',
           options: [
             '`1 3 4`',
@@ -875,6 +914,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L5Q1',
+          conceptIndex: 0,
           text: 'What does the following code print?\n\n```python\ncourse = {\'name\': \'ADS\', \'ECTS\': 5, \'term\': \'summer\'}\nprint(course[\'ECTS\'])\n```',
           options: ['`\'ADS\'`', '`5`', '`\'summer\'`', 'A `KeyError` is raised'],
           correct: [1],
@@ -884,6 +924,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q2',
+          conceptIndex: 0,
           text: 'Which of the following are valid ways to iterate over a dictionary named `d`? Select ALL that apply.',
           options: [
             '`d.keys()` — returns all keys',
@@ -898,6 +939,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q3',
+          conceptIndex: 1,
           text: 'What happens when you execute the following code?\n\n```python\ndata = {\'x\': 10, \'y\': 20}\ndata[\'z\'] = 30\ndata[\'x\'] = 99\nprint(data)\n```',
           options: [
             '`{\'x\': 10, \'y\': 20}` — dictionaries are immutable',
@@ -912,6 +954,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q4',
+          conceptIndex: 3,
           text: 'In Python\'s object-oriented model, what is an **instance** of a class?',
           options: [
             'The body of the class definition itself',
@@ -925,6 +968,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q5',
+          conceptIndex: 4,
           text: 'Consider this class definition:\n\n```python\nclass Counter:\n    def __init__(self):\n        self.count = 0\n\n    def increment(self):\n        self.count += 1\n\nc = Counter()\nc.increment()\nc.increment()\nprint(c.count)\n```\n\nWhat does this print?',
           options: ['`0`', '`1`', '`2`', 'A `TypeError` is raised'],
           correct: [2],
@@ -934,6 +978,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q6',
+          conceptIndex: 4,
           text: 'What is the role of `self` in a Python class method?',
           options: [
             'It is a keyword that makes the method static so it can be called without an instance',
@@ -947,6 +992,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q7',
+          conceptIndex: 5,
           text: 'Which of the following correctly describes what **inheritance** allows you to do in Python?',
           options: [
             'Share variables between two unrelated functions defined in the same module',
@@ -960,6 +1006,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q8',
+          conceptIndex: 5,
           text: 'Look at this code involving a subclass:\n\n```python\nclass Counter:\n    def __init__(self):\n        self.count = 0\n    def increment(self):\n        self.count += 1\n\nclass LimitedCounter(Counter):\n    def __init__(self, limit):\n        self.count = 0\n        self.limit = limit\n    def increment(self):\n        if self.count < self.limit:\n            self.count += 1\n\nlc = LimitedCounter(2)\nlc.increment()\nlc.increment()\nlc.increment()\nprint(lc.count)\n```\n\nWhat does this print?',
           options: ['`1`', '`2`', '`3`', '`0`'],
           correct: [1],
@@ -969,6 +1016,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q9',
+          conceptIndex: 6,
           text: 'What does Python\'s concept of **variable scope** (workspaces) explain about the following code?\n\n```python\nx = 10\ndef double():\n    return x * 2\n\nprint(double())\n```',
           options: [
             'It raises a `NameError` because `x` is not defined inside `double()`',
@@ -983,6 +1031,7 @@ export const content: Content = {
         },
         {
           id: 'L5Q10',
+          conceptIndex: 1,
           text: 'Which of the following statements about Python dictionaries are correct? Select ALL that apply.',
           options: [
             'Dictionary values can themselves be dictionaries or lists',
@@ -1092,6 +1141,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L6Q1',
+          conceptIndex: 4,
           text: 'In pandas, what type is returned when you select a single column with `df[\'subject\']`?',
           options: ['`pd.DataFrame`', '`pd.Series`', '`np.ndarray`', '`list`'],
           correct: [1],
@@ -1101,6 +1151,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q2',
+          conceptIndex: 4,
           text: 'What is the key difference between `df.loc[]` and `df.iloc[]`?',
           options: [
             '`loc` selects by integer position; `iloc` selects by label',
@@ -1115,6 +1166,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q3',
+          conceptIndex: 5,
           text: 'Which expression correctly returns only the rows where the `subject` value is greater than 30?',
           options: [
             '`df.subject > 30`',
@@ -1129,6 +1181,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q4',
+          conceptIndex: 7,
           text: 'What does the `pd.DataFrame.stack()` method do?',
           options: [
             'It concatenates two DataFrames vertically',
@@ -1142,6 +1195,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q5',
+          conceptIndex: 7,
           text: 'Why is long ("stacked") format usually preferred for statistics and plotting?',
           options: [
             'It uses less memory than wide format in all cases',
@@ -1155,6 +1209,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q6',
+          conceptIndex: 2,
           text: 'Which of the following are valid ways to create or read a pandas DataFrame? Select ALL that apply.',
           options: [
             '`pd.DataFrame(numpy_array)`',
@@ -1169,6 +1224,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q7',
+          conceptIndex: 8,
           text: 'What does `df.groupby(\'condition\').mean()` compute?',
           options: [
             'The overall mean of every numeric column, ignoring the condition',
@@ -1182,6 +1238,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q8',
+          conceptIndex: 8,
           text: 'In a groupby, what distinguishes `transform()` from a reduction like `agg()` / `mean()`?',
           options: [
             '`transform()` returns one row per group; `agg()` returns the original number of rows',
@@ -1195,6 +1252,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q9',
+          conceptIndex: 9,
           text: 'You have two tables — measurements keyed by `subject` and demographics keyed by `subject` — and want to attach demographics to each measurement row. Which is the appropriate pandas operation?',
           options: [
             '`pd.concat([measurements, demographics], axis=0)`',
@@ -1208,6 +1266,7 @@ export const content: Content = {
         },
         {
           id: 'L6Q10',
+          conceptIndex: 9,
           text: 'Which statements about handling missing data (`NaN`) in pandas are correct? Select ALL that apply.',
           options: [
             '`df.dropna()` removes rows that contain missing values',
@@ -1317,6 +1376,7 @@ export const content: Content = {
       questions: [
         {
           id: 'L7Q1',
+          conceptIndex: 0,
           text: 'Why is a NumPy ndarray usually preferred over a plain Python list for numerical data?',
           options: [
             'Lists cannot store numbers at all',
@@ -1330,6 +1390,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q2',
+          conceptIndex: 1,
           text: 'What is the difference between `np.arange` and `np.linspace`?',
           options: [
             'They are identical aliases for the same function',
@@ -1344,6 +1405,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q3',
+          conceptIndex: 2,
           text: 'What does `np.reshape(b, (5, -1))` do when `b` has 20 elements?',
           options: [
             'Raises an error because -1 is not a valid dimension',
@@ -1358,6 +1420,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q4',
+          conceptIndex: 3,
           text: 'What does the following code produce?\n\n```python\na = np.arange(10)\nmask = (a % 3) == 0\nprint(a[mask])\n```',
           options: [
             '`[0 3 6 9]`',
@@ -1372,6 +1435,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q5',
+          conceptIndex: 6,
           text: 'For a 2-D array `x`, what does `x.sum(axis=0)` compute?',
           options: [
             'The sum of every element in the whole array',
@@ -1385,6 +1449,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q6',
+          conceptIndex: 4,
           text: 'What is vectorization in NumPy, and why does it matter?',
           options: [
             'Converting an array into a Python list for easier iteration',
@@ -1398,6 +1463,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q7',
+          conceptIndex: 5,
           text: 'Which statements about broadcasting are correct? Select ALL that apply.',
           options: [
             'A scalar can be combined with an array of any shape (e.g. `a + 1`)',
@@ -1412,6 +1478,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q8',
+          conceptIndex: 7,
           text: 'What does the following print?\n\n```python\nx = np.array([1, 2, 3, np.nan, 5, 6])\nprint(np.mean(x))\n```',
           options: [
             '`3.4`',
@@ -1426,6 +1493,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q9',
+          conceptIndex: 7,
           text: 'You need to compute the mean of an array that contains some `np.nan` values, ignoring the missing entries. Which is the cleanest approach?',
           options: [
             'Replace each NaN with -77 and then call `np.mean`',
@@ -1439,6 +1507,7 @@ export const content: Content = {
         },
         {
           id: 'L7Q10',
+          conceptIndex: 8,
           text: 'Which SciPy submodules match their purpose? Select ALL correct pairings.',
           options: [
             '`scipy.stats` — probability distributions and statistical tests',
