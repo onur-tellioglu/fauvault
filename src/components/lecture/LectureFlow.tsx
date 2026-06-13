@@ -11,14 +11,20 @@ type Stage =
   | { kind: 'final'; qi: number }
   | { kind: 'done'; score: number; total: number }
 
-// Map first N questions as mini-quiz (one per concept), rest go to final quiz
+// Each question is tagged with the concept it checks (conceptIndex). The first
+// question for a concept becomes that concept's mini "Concept Check"; any further
+// questions (extras, or with an out-of-range index) go to the final quiz.
 export function split(lecture: Lecture) {
   const miniMap: Record<number, typeof lecture.questions[number][]> = {}
-  let qi = 0
-  for (let ci = 0; ci < lecture.concepts.length && qi < lecture.questions.length; ci++) {
-    miniMap[ci] = [lecture.questions[qi++]]
+  const finalQs: typeof lecture.questions[number][] = []
+  for (const q of lecture.questions) {
+    const ci = q.conceptIndex
+    if (ci >= 0 && ci < lecture.concepts.length && !miniMap[ci]) {
+      miniMap[ci] = [q]
+    } else {
+      finalQs.push(q)
+    }
   }
-  const finalQs = lecture.questions.slice(qi)
   return { miniMap, finalQs }
 }
 

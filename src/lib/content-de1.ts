@@ -49,6 +49,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L0Q1",
+          "conceptIndex": 1,
           "text": "A dataset contains ZIP codes (e.g. 90210, 10115). How should this variable be classified?",
           "options": [
             "Quantitative — continuous, because ZIP codes are real numbers",
@@ -62,6 +63,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q2",
+          "conceptIndex": 1,
           "text": "Which statements about Finite and Categorical variables are correct? Select ALL that apply.",
           "options": [
             "Every categorical variable is finite",
@@ -75,6 +77,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q3",
+          "conceptIndex": 3,
           "text": "Why is label encoding wrong for nominal variables? Select ALL correct reasons.",
           "options": [
             "It implies a false magnitude — Sun=6 means Sunday is '6× larger' than Monday=0",
@@ -88,6 +91,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q4",
+          "conceptIndex": 4,
           "text": "A dataset has a 'Month of Birth' column (Jan–Dec). Which encoding is most appropriate?",
           "options": [
             "Label encoding (Jan=1, …, Dec=12) — integers are simple and fast",
@@ -101,6 +105,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q5",
+          "conceptIndex": 4,
           "text": "What is the cyclic encoding of the 3rd category (i=3) among K=12 categories?",
           "options": [
             "x = cos(2π·3/12),  y = sin(2π·3/12)",
@@ -115,6 +120,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q6",
+          "conceptIndex": 5,
           "text": "What is the equal-width bin width for BMI values in the range [15, 45] divided into K=4 bins?",
           "options": [
             "5",
@@ -128,6 +134,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q7",
+          "conceptIndex": 6,
           "text": "What is the tensor shape of a color video that is 720px tall, 1280px wide, recorded for 30 seconds at 24 fps?",
           "options": [
             "[720 × 1280 × 3]",
@@ -141,6 +148,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q8",
+          "conceptIndex": 7,
           "text": "A protein interaction network has 5,000 proteins, each interacting with only 3–5 others on average. Which representation is most space-efficient?",
           "options": [
             "Adjacency matrix — O(1) edge lookup is critical for biological analysis",
@@ -154,6 +162,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q9",
+          "conceptIndex": 6,
           "text": "Which of the following correctly explain why images are non-tabular data? Select ALL that apply.",
           "options": [
             "Adjacent pixels are spatially dependent — neighboring pixels tend to have similar color values",
@@ -167,6 +176,7 @@ export const content: Content = {
         },
         {
           "id": "L0Q10",
+          "conceptIndex": 6,
           "text": "Which of the following datasets are non-tabular? Select ALL that apply.",
           "options": [
             "A table of 500 patients with columns: age, weight, height, diagnosis",
@@ -312,6 +322,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L1Q1",
+          "conceptIndex": 0,
           "text": "A company stores employee records in separate flat files — one per department. What is the PRIMARY architectural problem a DBMS solves here?",
           "options": [
             "Flat files are always corrupted over time",
@@ -325,6 +336,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q2",
+          "conceptIndex": 2,
           "text": "`Student(studno, name, address)` is an example of a:",
           "options": [
             "Schema — it defines the structure (table headers), not actual data",
@@ -338,6 +350,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q3",
+          "conceptIndex": 3,
           "text": "Which scenarios are valid reasons to use a NoSQL database instead of a relational one? Select ALL that apply.",
           "options": [
             "Data is relationship-heavy — traversing deep multi-hop connections (e.g., protein interaction networks)",
@@ -351,6 +364,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q4",
+          "conceptIndex": 4,
           "text": "An EMPLOYEE entity has a `College_degrees` attribute. Which attribute type BEST describes it?",
           "options": [
             "Atomic — a degree is a single indivisible value",
@@ -364,6 +378,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q5",
+          "conceptIndex": 6,
           "text": "Why can the ternary SUPPLY(SUPPLIER, PART, PROJECT) relationship NOT be replaced by three binary relationships?",
           "options": [
             "Ternary relationships always perform better than binary ones",
@@ -377,6 +392,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q6",
+          "conceptIndex": 7,
           "text": "EMPLOYEE has total participation in WORKS_FOR (EMPLOYEE ↔ DEPARTMENT, N:1). What does total participation mean here?",
           "options": [
             "Every department must have at least one employee",
@@ -390,6 +406,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q7",
+          "conceptIndex": 8,
           "text": "DEPENDENT is a weak entity with `Name` as partial key, connected to EMPLOYEE via the DEPENDENTS_OF identifying relationship. What does 'partial key' mean?",
           "options": [
             "Name alone uniquely identifies any DEPENDENT across the entire database",
@@ -403,6 +420,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q8",
+          "conceptIndex": 8,
           "text": "Which statements about standard ER diagram notation are correct? Select ALL that apply.",
           "options": [
             "A double-border rectangle represents a weak entity type",
@@ -483,6 +501,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L2Q1",
+          "conceptIndex": 2,
           "text": "Which of the following correctly describes the relationship between a relation schema and a relation instance?",
           "options": [
             "A schema is the set of current tuples; an instance is the structural blueprint.",
@@ -496,6 +515,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q2",
+          "conceptIndex": 4,
           "text": "Consider relation Product(Name, Price, Manufacturer). Which of the following attribute sets are superkeys? Select ALL that apply.",
           "options": [
             "{Name} — given that product names are unique across all products",
@@ -509,6 +529,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q3",
+          "conceptIndex": 5,
           "text": "Relation Emp(EmpID, Name, Phone, Position) has tuples: (E0045, Smith, 1234, Clerk), (E1847, Jones, 9876, Salesrep), (E1111, Smith, 9876, Salesrep), (E9999, Brown, 1234, Lawyer). Which FD does this instance satisfy?",
           "options": [
             "Name → Position",
@@ -522,6 +543,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q4",
+          "conceptIndex": 4,
           "text": "What is the difference between a candidate key and a superkey?",
           "options": [
             "A candidate key can contain null values; a superkey cannot.",
@@ -535,6 +557,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q5",
+          "conceptIndex": 6,
           "text": "Foreign key FK: Student(tutor) references Staff(lecturer). Which of the following insertions into Student VIOLATE referential integrity?",
           "options": [
             "Inserting (s7, jones, cis, null, 3) — tutor is null",
@@ -548,6 +571,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q6",
+          "conceptIndex": 6,
           "text": "A staff member 'kahn' is deleted from Staff. Student contains tuples with tutor='kahn'. What are valid DBMS reactions? Select ALL that apply.",
           "options": [
             "Reject the deletion — it would leave Student tuples with a dangling reference",
@@ -561,6 +585,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q7",
+          "conceptIndex": 7,
           "text": "A student record has thesis_title = NULL. Which interpretations of this NULL are possible? Select ALL that apply.",
           "options": [
             "The student has not written a thesis yet (not applicable — missing by design)",
@@ -574,6 +599,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q8",
+          "conceptIndex": 3,
           "text": "In the Cartesian-product model of relations, which statement is correct?",
           "options": [
             "Row order matters — swapping two rows produces a different relation",
@@ -587,6 +613,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q9",
+          "conceptIndex": 2,
           "text": "Schema update vs. instance update — which statements are correct? Select ALL that apply.",
           "options": [
             "Instance updates (INSERT, DELETE, UPDATE) are frequent and expected in normal database operation",
@@ -600,6 +627,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q10",
+          "conceptIndex": 5,
           "text": "Which of the following is the correct definition of a functional dependency A → B on a relation?",
           "options": [
             "There exists at least one tuple in the relation where the A-value determines the B-value.",
@@ -704,6 +732,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L3Q1",
+          "conceptIndex": 1,
           "text": "Which of the following correctly states when a relation instance satisfies the FD X → Y?",
           "options": [
             "There exists at least one tuple where the X-value determines the Y-value.",
@@ -717,6 +746,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q2",
+          "conceptIndex": 2,
           "text": "Relation EMP_PROJ has composite primary key {Ssn, Pnumber} and attributes Ename, Pname, Plocation, Hours. Which FDs are PARTIAL dependencies on this key? Select ALL that apply.",
           "options": [
             "{Ssn, Pnumber} → Hours",
@@ -730,6 +760,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q3",
+          "conceptIndex": 4,
           "text": "Given R = (A, B, C, D, E) and F = {A → B, BC → D, B → E, E → C}, compute A⁺ (closure of A under F). Which result is correct?",
           "options": [
             "{A, B}",
@@ -744,6 +775,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q4",
+          "conceptIndex": 4,
           "text": "Given U = {A, B, C, D} and F = {A → B, B → C, A → D}, is {A, B} a superkey for R?",
           "options": [
             "Yes — because {A, B}⁺ = {A, B, C, D} = U",
@@ -757,6 +789,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q5",
+          "conceptIndex": 3,
           "text": "Which of Armstrong's three primary axioms states: 'If X → Y, then XZ → YZ'?",
           "options": [
             "IR1 — Reflexivity",
@@ -770,6 +803,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q6",
+          "conceptIndex": 2,
           "text": "Ssn → Dname holds in EMP_DEPT. Why is this a transitive dependency rather than a direct one?",
           "options": [
             "Because Ssn and Dname are in different tables",
@@ -783,6 +817,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q7",
+          "conceptIndex": 6,
           "text": "Given F = {A → B, B → C, AC → D, A → D}, is the FD A → D redundant in F?",
           "options": [
             "Yes — D is already reachable from A via A → B, B → C, and AC → D without using A → D",
@@ -796,6 +831,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q8",
+          "conceptIndex": 6,
           "text": "A set of FDs F is minimal (canonical). Which of the following properties must it satisfy? Select ALL that apply.",
           "options": [
             "Every FD in F has exactly one attribute on the right-hand side",
@@ -809,6 +845,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q9",
+          "conceptIndex": 5,
           "text": "Relation R has U = {A, B, C, D, E} and F = {A → E, B → C, C → D, A → D}. Using the candidate key finding algorithm starting from K = {A, B, C, D, E}, what is a candidate key?",
           "options": [
             "{A, B, C, D, E}",
@@ -823,6 +860,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q10",
+          "conceptIndex": 7,
           "text": "Which of the following correctly describes when a decomposition of R into R₁ and R₂ is guaranteed to be lossless?",
           "options": [
             "When R₁ ∪ R₂ = R (all attributes are preserved between the two pieces)",
@@ -923,6 +961,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L4Q1",
+          "conceptIndex": 0,
           "text": "Which set of relational algebra operators is considered a complete set — meaning all other RA operators can be derived from them?",
           "options": [
             "{σ, π, ∪, ρ, −, ×}",
@@ -936,6 +975,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q2",
+          "conceptIndex": 1,
           "text": "Consider tables A(X, Y) and B(X, Y) below.\n\nA: {(1, a), (2, b)}\nB: {(1, a), (3, c)}\n\nWhat does A − B return?",
           "options": [
             "{(1, a), (2, b), (3, c)}",
@@ -949,6 +989,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q3",
+          "conceptIndex": 2,
           "text": "Which SQL query is the correct translation of the relational algebra expression π_{Fname, Lname}(σ_{Salary > 40000}(EMPLOYEE))?",
           "options": [
             "SELECT Fname, Lname FROM Employee;",
@@ -962,6 +1003,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q4",
+          "conceptIndex": 4,
           "text": "You have EMPLOYEE(Ssn, Fname, Dno) and DEPARTMENT(Dnumber, Dname). Which relational algebra expression correctly retrieves the first name and department name for every employee?",
           "options": [
             "π_{Fname, Dname}(EMPLOYEE × DEPARTMENT)",
@@ -975,6 +1017,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q5",
+          "conceptIndex": 4,
           "text": "Which statements about the natural join R ⋈ S are correct? Select ALL that apply.",
           "options": [
             "It matches tuples on all attributes whose names appear in both R and S",
@@ -988,6 +1031,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q6",
+          "conceptIndex": 4,
           "text": "Given the following SQL query, which relational algebra expression does it correspond to?\n\n```sql\nSELECT E.Fname, E.Salary\nFROM Employee E\nJOIN Bonus B ON E.Salary > B.Threshold;\n```",
           "options": [
             "π_{Fname,Salary}(EMPLOYEE ⋈ BONUS)",
@@ -1001,6 +1045,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q7",
+          "conceptIndex": 5,
           "text": "A database has STUDENT(StudentID, Name) and ENROLLMENT(StudentID, CourseID). Which query retrieves ALL students, including those enrolled in no courses, along with any courses they may be taking?",
           "options": [
             "SELECT S.Name, E.CourseID FROM Student S INNER JOIN Enrollment E ON S.StudentID = E.StudentID;",
@@ -1014,6 +1059,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q8",
+          "conceptIndex": 6,
           "text": "The selection operator σ distributes over set operators. Which of the following equivalences are correct? Select ALL that apply.",
           "options": [
             "σ_C(R ∪ S) ≡ σ_C(R) ∪ σ_C(S)",
@@ -1027,6 +1073,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q9",
+          "conceptIndex": 6,
           "text": "In query optimisation, which of the following transformations reduce the size of intermediate results and are therefore generally beneficial? Select ALL that apply.",
           "options": [
             "Pushing selection operations closer to the leaf (base relation) nodes in the query tree",
@@ -1040,6 +1087,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q10",
+          "conceptIndex": 6,
           "text": "Consider the query: find the names of all departments that have at least one project located in Houston.\n\nDEPARTMENT(Dnumber, Dname) and PROJECT(Pnumber, Plocation, Dnum).\n\nWhich relational algebra expression is correct?",
           "options": [
             "π_{Dname}(DEPARTMENT ⋈_{Dnumber=Dnum} σ_{Plocation='Houston'}(PROJECT))",
@@ -1140,6 +1188,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L5Q1",
+          "conceptIndex": 0,
           "text": "Which of the following correctly describes an update anomaly in an unnormalized relation?",
           "options": [
             "Adding a new entity requires a separate INSERT statement for each attribute",
@@ -1153,6 +1202,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q2",
+          "conceptIndex": 1,
           "text": "A decomposition of R(A, B, C) into R₁(A, B) and R₂(B, C) is lossless-join iff:",
           "options": [
             "A is a superkey of R₁ or R₂",
@@ -1166,6 +1216,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q3",
+          "conceptIndex": 3,
           "text": "Consider R(Ssn, Pnumber, Hours, Ename, Pname, Plocation) with candidate key {Ssn, Pnumber} and FDs: {Ssn,Pnumber}→Hours, Ssn→Ename, Pnumber→{Pname,Plocation}. What is the highest normal form of R?",
           "options": [
             "1NF — because all attribute values are atomic",
@@ -1179,6 +1230,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q4",
+          "conceptIndex": 1,
           "text": "R(Employee, Level, Salary) has FDs F = {Employee→Level, Employee→Salary, Level→Salary}. Consider decomposition D1: R₁(Employee, Level), R₂(Level, Salary). Which properties does D1 have? Select ALL that apply.",
           "options": [
             "Lossless-join",
@@ -1192,6 +1244,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q5",
+          "conceptIndex": 4,
           "text": "A relation schema R is in 3NF. Which of the following can we conclude? Select ALL that apply.",
           "options": [
             "R is in 2NF",
@@ -1205,6 +1258,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q6",
+          "conceptIndex": 5,
           "text": "LOTS1A(Property_id#, County_name, Lot#, Area) has FDs: FD1: Property_id#→{County_name,Lot#,Area}; FD2: {County_name,Lot#}→{Property_id#,Area}; FD5: Area→County_name. What is the highest normal form of LOTS1A?",
           "options": [
             "1NF",
@@ -1218,6 +1272,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q7",
+          "conceptIndex": 6,
           "text": "The 3NF synthesis algorithm guarantees which of the following properties? Select ALL that apply.",
           "options": [
             "Lossless-join decomposition",
@@ -1231,6 +1286,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q8",
+          "conceptIndex": 5,
           "text": "When should you prefer a 3NF decomposition over a BCNF decomposition?",
           "options": [
             "When storage space is a primary concern, since 3NF leaves more redundancy",
@@ -1244,6 +1300,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q9",
+          "conceptIndex": 6,
           "text": "R(A, B, C, D) has FDs F = {A→B, B→C, C→D}. Apply the 3NF synthesis algorithm. Which database schema D does the algorithm produce (assuming no redundant schemas)?",
           "options": [
             "{(A,B,C,D)} — the original relation is already in 3NF",
@@ -1257,6 +1314,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q10",
+          "conceptIndex": 5,
           "text": "Consider decomposing LOTS1A(Property_id#, County_name, Lot#, Area) into LOTS1AX(Property_id#, Area, Lot#) and LOTS1AY(Area, County_name) to eliminate the BCNF violation Area→County_name. Which statement is correct?",
           "options": [
             "The decomposition is lossy because Area is not a superkey of either schema",
@@ -1361,6 +1419,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L6Q1",
+          "conceptIndex": 2,
           "text": "What is the key architectural difference between how relational and native graph databases handle relationships?",
           "options": [
             "Relational databases store edges as first-class objects; graph databases compute joins at query time",
@@ -1374,6 +1433,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q2",
+          "conceptIndex": 0,
           "text": "The formal definition of a graph in this course is G = (V, E, λ_V, λ_E). What do λ_V and λ_E represent?",
           "options": [
             "λ_V is the set of vertex labels; λ_E is the set of edge labels",
@@ -1387,6 +1447,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q3",
+          "conceptIndex": 6,
           "text": "Which of the following Cypher snippets correctly creates a directed ACTED_IN edge with a role property from a matched Person node to a new Movie node?",
           "options": [
             "MATCH (c:Person {name: 'Charlie Sheen'}) CREATE (c)-[:ACTED_IN {role: 'Bud Fox'}]->(ws:Movie {title: 'Wall Street'})",
@@ -1401,6 +1462,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q4",
+          "conceptIndex": 5,
           "text": "Consider this Cypher query:\n```\nMATCH (n:Person {name: 'Anna'})-[:KNOWS*1..5]-(friend:Person WHERE n.born < friend.born)\nRETURN DISTINCT friend.name\n```\nWhat does this query return?",
           "options": [
             "The names of all Person nodes exactly 1 to 5 hops from Anna via KNOWS edges, where the friend was born after Anna — duplicates removed",
@@ -1414,6 +1476,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q5",
+          "conceptIndex": 3,
           "text": "In an ER diagram, you have a ternary relationship type SUPPLY connecting SUPPLIER, PART, and PROJECT with an attribute 'quantity'. How should this be mapped to a graph schema?",
           "options": [
             "Create three binary edge types: SUPPLIER-[:SUPPLIES]->PART, SUPPLIER-[:SUPPLIES]->PROJECT, PART-[:USED_IN]->PROJECT",
@@ -1427,6 +1490,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q6",
+          "conceptIndex": 7,
           "text": "Which of the following statements about Cypher's schema enforcement are correct? Select ALL that apply.",
           "options": [
             "Cypher can enforce that a property value is unique across all nodes with a given label",
@@ -1440,6 +1504,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q7",
+          "conceptIndex": 5,
           "text": "Consider this Cypher query:\n```\nMATCH (:Person {name: 'Anna'})-[r:KNOWS WHERE r.since < 2020]->(friend:Person)\nRETURN count(r) AS numberOfFriends\n```\nDoes the result variable `numberOfFriends` accurately count Anna's friends? Why or why not?",
           "options": [
             "Yes — it counts all outgoing KNOWS edges from Anna, which equals her friend count",
@@ -1453,6 +1518,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q8",
+          "conceptIndex": 4,
           "text": "You want to apply graph schema transformation Rule 3 (Property Displacement) to move a property from edge (:T1)-[:E]->(:T2) to vertex type T1. What condition must hold?",
           "options": [
             "The edge E must have an M:N cardinality constraint",
@@ -1466,6 +1532,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q9",
+          "conceptIndex": 6,
           "text": "Which of the following correctly apply the Cypher DETACH DELETE vs DELETE distinction? Select ALL that apply.",
           "options": [
             "DETACH DELETE n removes node n along with all its incident edges",
@@ -1479,6 +1546,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q10",
+          "conceptIndex": 5,
           "text": "A social network stores FOLLOWS edges between Person nodes. A query needs to find all accounts reachable from 'Ruth' by following between 2 and 4 FOLLOWS edges. Which Cypher MATCH clause is correct?",
           "options": [
             "MATCH (ruth:Person {name: 'Ruth'})-[:FOLLOWS*2..4]->(reachable:Person)",
@@ -1580,6 +1648,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L7Q1",
+          "conceptIndex": 1,
           "text": "Given the dataset [3, 7, 7, 9, 11], what are the mean, median, and mode?",
           "options": [
             "Mean = 7.4, Median = 7, Mode = 7",
@@ -1593,6 +1662,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q2",
+          "conceptIndex": 2,
           "text": "For the dataset [2, 4, 4, 6, 6, 8], compute the IQR.",
           "options": [
             "IQR = 2",
@@ -1606,6 +1676,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q3",
+          "conceptIndex": 6,
           "text": "A dataset has mean μ = 50 and standard deviation σ = 10. What is the z-score for the value x = 35?",
           "options": [
             "z = −1.5",
@@ -1619,6 +1690,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q4",
+          "conceptIndex": 6,
           "text": "Apply min-max scaling to x = 40 given a dataset with min = 20 and max = 60.",
           "options": [
             "0.25",
@@ -1632,6 +1704,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q5",
+          "conceptIndex": 6,
           "text": "Which normalization technique is MOST robust to outliers?",
           "options": [
             "Min-max scaling, because it bounds all values to [0, 1]",
@@ -1645,6 +1718,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q6",
+          "conceptIndex": 4,
           "text": "A distribution has positive skewness. Which ordering of mean, median, and mode is generally expected?",
           "options": [
             "mean < median < mode",
@@ -1658,6 +1732,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q7",
+          "conceptIndex": 5,
           "text": "Which statements about Pearson's correlation coefficient r are correct? Select ALL that apply.",
           "options": [
             "r can detect non-linear monotone relationships",
@@ -1671,6 +1746,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q8",
+          "conceptIndex": 5,
           "text": "What is the key advantage of Spearman's rank correlation over Pearson's?",
           "options": [
             "Spearman's coefficient always has a larger absolute value than Pearson's",
@@ -1684,6 +1760,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q9",
+          "conceptIndex": 6,
           "text": "You are preprocessing a gene expression dataset where most genes have low counts but a few have extremely high counts (heavily right-skewed). Which normalization approach is most appropriate?",
           "options": [
             "Min-max scaling — because it brings all values to [0, 1]",
@@ -1697,6 +1774,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q10",
+          "conceptIndex": 6,
           "text": "Which of the following are TRUE about min-max scaling? Select ALL that apply.",
           "options": [
             "It always maps data to the range [0, 1]",
