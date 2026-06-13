@@ -8,9 +8,10 @@ export type Question = {
   text: string
   options: string[]
   correct: number[]    // 0-indexed, array supports multiple-correct
-  explanation: string  // Turkish explanation
+  explanation: string  // explanation shown after answering
   type: 'single' | 'multiple'
   shuffle?: false      // when false, options are displayed in original order
+  conceptIndex: number // 0-based index of the concept this question checks
 }
 
 export type Flashcard = {

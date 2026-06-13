@@ -37,6 +37,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L1Q1",
+          "conceptIndex": 0,
           "text": "Which sequence correctly represents the four-pillar pipeline of the Applied Programming course?",
           "options": [
             "Signal Processing → Signal Acquisition → Physiology → Systems Control",
@@ -50,6 +51,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q2",
+          "conceptIndex": 2,
           "text": "Which component of the Applied Programming course is MANDATORY and contributes to the exam grade?",
           "options": [
             "Weekly exercise attendance",
@@ -63,6 +65,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q3",
+          "conceptIndex": 5,
           "text": "What does MyoGestic provide out of the box? Select ALL that apply.",
           "options": [
             "Live LSL biosignal ingest and on-disk recording",
@@ -76,6 +79,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q4",
+          "conceptIndex": 3,
           "text": "Which Python package manager does the Applied Programming 2026 course use for dependency management?",
           "options": [
             "pip",
@@ -89,6 +93,7 @@ export const content: Content = {
         },
         {
           "id": "L1Q5",
+          "conceptIndex": 2,
           "text": "The oral exam in Applied Programming is 20 minutes long. What are its two segments?",
           "options": [
             "10 min written test + 10 min oral defence",
@@ -169,6 +174,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L2Q1",
+          "conceptIndex": 1,
           "text": "A researcher maps temperature at every point on a patient's skin. What type of mathematical object is this?",
           "options": [
             "A vector field — temperature has direction",
@@ -182,6 +188,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q2",
+          "conceptIndex": 4,
           "text": "The torque produced by the biceps at the elbow is T = F·l·sin(θ), where θ is the angle between the radius bone and the muscle fibres, and l is the length of the radius bone. At which angle is torque maximum?",
           "options": [
             "θ = 0° — the muscle is fully extended",
@@ -195,6 +202,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q3",
+          "conceptIndex": 5,
           "text": "Most human joints (e.g., the elbow with biceps contraction) function as which lever type?",
           "options": [
             "Type I — fulcrum between effort and resistance",
@@ -208,6 +216,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q4",
+          "conceptIndex": 0,
           "text": "Which of the following are derived physical quantities (not fundamental)? Select ALL that apply.",
           "options": [
             "Mass [kg]",
@@ -221,6 +230,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q5",
+          "conceptIndex": 6,
           "text": "A basketball and a 10 kg cannonball are dropped from the same height in a vacuum. Which statement correctly explains why they hit the ground at the same time?",
           "options": [
             "Gravity exerts the same force on all objects regardless of mass",
@@ -234,6 +244,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q6",
+          "conceptIndex": 2,
           "text": "In polar coordinates (ρ, θ), how do you convert to Cartesian (Px, Py)?",
           "options": [
             "Px = ρ·sin(θ),  Py = ρ·cos(θ)",
@@ -311,6 +322,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L3Q1",
+          "conceptIndex": 3,
           "text": "Which NumPy expression correctly computes the RMS (Root Mean Square) of array `x`?",
           "options": [
             "np.mean(x**2)",
@@ -324,6 +336,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q2",
+          "conceptIndex": 6,
           "text": "An EMG signal has frequency content up to 450 Hz. What is the MINIMUM sampling rate required to avoid aliasing according to the Nyquist theorem?",
           "options": [
             "225 Hz",
@@ -337,6 +350,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q3",
+          "conceptIndex": 1,
           "text": "Which of the following is a stochastic (random) signal?",
           "options": [
             "A pure sinusoid: y(t) = A·sin(2πft)",
@@ -350,6 +364,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q4",
+          "conceptIndex": 4,
           "text": "Why is Welch's method preferred over a single FFT for estimating the power spectrum of surface EMG?",
           "options": [
             "Welch's method is faster than FFT for long signals",
@@ -363,6 +378,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q5",
+          "conceptIndex": 5,
           "text": "A researcher wants to remove slow baseline drift (below 20 Hz) and powerline interference at 50 Hz from an EMG recording. Which filter combination is correct?",
           "options": [
             "Low-pass at 20 Hz, then notch at 50 Hz",
@@ -447,6 +463,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L4Q1",
+          "conceptIndex": 1,
           "text": "Which of the following CORRECTLY uses the dot product? Select ALL that apply.",
           "options": [
             "Artificial neuron output: y = w · x + b",
@@ -460,6 +477,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q2",
+          "conceptIndex": 2,
           "text": "A medical dataset has 500 patients, each described by 12 clinical features. What is `X.shape` in NumPy, following the standard ML convention?",
           "options": [
             "(12, 500)",
@@ -473,6 +491,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q3",
+          "conceptIndex": 3,
           "text": "Which kernel applied in `np.convolve(x, h)` produces a moving-average smoothing of a 1D signal?",
           "options": [
             "h = np.ones(W) / W",
@@ -486,6 +505,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q4",
+          "conceptIndex": 4,
           "text": "Why is a Hanning window applied to a signal before computing an FFT?",
           "options": [
             "To increase the signal's amplitude and improve signal-to-noise ratio",
@@ -499,6 +519,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q5",
+          "conceptIndex": 5,
           "text": "A motor-unit spike train is a discrete binary vector (1 = spike, 0 = silence). What operation converts it into a smooth continuous firing-rate signal suitable for driving a robot joint?",
           "options": [
             "FFT — transform the spike train to the frequency domain",
@@ -583,6 +604,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L5Q1",
+          "conceptIndex": 0,
           "text": "Which statement correctly defines a motor unit?",
           "options": [
             "A group of alpha motor neurons that collectively innervate one muscle",
@@ -596,6 +618,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q2",
+          "conceptIndex": 3,
           "text": "EMG signals arise from which source?",
           "options": [
             "Extracellular current fields generated by action potentials propagating along muscle fibres",
@@ -609,6 +632,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q3",
+          "conceptIndex": 4,
           "text": "In the live-coding demo, the line `emg = data['emg'][:32, :] * 0.0002861` is used. What does multiplying by 0.0002861 accomplish?",
           "options": [
             "Normalises the signal to the range [0, 1] for ML input",
@@ -622,6 +646,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q4",
+          "conceptIndex": 6,
           "text": "Why should `filtfilt` be used instead of `lfilter` for EMG filtering?",
           "options": [
             "filtfilt is faster because it processes the signal in one pass",
@@ -635,6 +660,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q5",
+          "conceptIndex": 6,
           "text": "In Europe, a notch filter is applied to EMG recordings at 50 Hz. Why specifically 50 Hz?",
           "options": [
             "50 Hz is the resonant frequency of the EMG electrode-skin interface",
@@ -648,6 +674,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q6",
+          "conceptIndex": 1,
           "text": "Select ALL mechanisms the nervous system uses to grade muscle force.",
           "options": [
             "Motor unit recruitment — activating additional motor units as force demand increases",

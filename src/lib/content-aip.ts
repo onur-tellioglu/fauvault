@@ -15,6 +15,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L1Q1",
+          "conceptIndex": 0,
           "text": "Which of the following facts about the AI Perspectives course and FAU AI are correct? Select ALL that apply.",
           "options": [
             "The exam lasts 90 minutes",
@@ -47,6 +48,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L2Q1",
+          "conceptIndex": 0,
           "text": "Which of the following is NOT listed as a category of medical robotics?",
           "options": [
             "Exoskeletons",
@@ -62,6 +64,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q2",
+          "conceptIndex": 0,
           "text": "In the context of medical robotics, what does \"co-adaptation\" mean?",
           "options": [
             "Two robots working together on the same patient",
@@ -77,6 +80,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q3",
+          "conceptIndex": 0,
           "text": "According to Castellini, what is the MAIN challenge specific to prosthetics compared to other medical robots?",
           "options": [
             "High computational requirements",
@@ -92,6 +96,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q4",
+          "conceptIndex": 0,
           "text": "Which of the following best describes the role of the user in Castellini's view of prosthetics development?",
           "options": [
             "A passive recipient of technology",
@@ -107,6 +112,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q5",
+          "conceptIndex": 0,
           "text": "Medical robotics is described as \"an unusual combination.\" Which field is NOT explicitly mentioned as part of this combination?",
           "options": [
             "Psychology",
@@ -122,6 +128,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q6",
+          "conceptIndex": 0,
           "text": "What type of sensors does Castellini emphasize for improving data quality in medical robotics?",
           "options": [
             "Implantable, high-power, stationary sensors",
@@ -137,6 +144,7 @@ export const content: Content = {
         },
         {
           "id": "L2Q7",
+          "conceptIndex": 0,
           "text": "Which of the following are listed as categories of medical robotics? Select ALL that apply.",
           "options": [
             "Exoskeletons",
@@ -171,6 +179,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L3Q1",
+          "conceptIndex": 0,
           "text": "In what year did the concept of \"Foundation Models\" (Generative AI based on pretrained transformers) emerge?",
           "options": [
             "1980",
@@ -186,6 +195,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q2",
+          "conceptIndex": 0,
           "text": "Which of the following correctly represents the relationship between AI, Machine Learning, and Deep Learning?",
           "options": [
             "They are three completely separate and unrelated fields",
@@ -201,6 +211,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q3",
+          "conceptIndex": 0,
           "text": "Which AI system was specifically designed as an earthquake early warning system using smartphones?",
           "options": [
             "AlphaFold",
@@ -216,6 +227,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q4",
+          "conceptIndex": 0,
           "text": "What is \"Error Consistency\" in the context of comparing DNNs and humans?",
           "options": [
             "The percentage of errors a DNN makes on a test set",
@@ -231,6 +243,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q5",
+          "conceptIndex": 0,
           "text": "According to Zanca, what are the two main remaining challenges of current AI systems?",
           "options": [
             "Speed and memory usage",
@@ -246,6 +259,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q6",
+          "conceptIndex": 0,
           "text": "What is the key distinction between a \"Tool\" and a \"Model\" in the context of AI systems?",
           "options": [
             "A tool is faster; a model is more accurate",
@@ -261,6 +275,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q7",
+          "conceptIndex": 0,
           "text": "Which statement about AI and consciousness is most consistent with Zanca's presentation?",
           "options": [
             "LLMs are definitively conscious because they produce human-like text",
@@ -276,6 +291,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q8",
+          "conceptIndex": 0,
           "text": "Approximately how many artificial neurons are needed to simulate a single biological neuron?",
           "options": [
             "10",
@@ -291,6 +307,7 @@ export const content: Content = {
         },
         {
           "id": "L3Q9",
+          "conceptIndex": 0,
           "text": "Which of the following are listed as specific AI success stories in Zanca's lecture? Select ALL that apply.",
           "options": [
             "AlphaGo — mastering the game of Go",
@@ -323,6 +340,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L4Q1",
+          "conceptIndex": 0,
           "text": "In MRI acquisition, what does \"k-space\" refer to?",
           "options": [
             "The physical space inside the MRI scanner",
@@ -338,6 +356,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q2",
+          "conceptIndex": 0,
           "text": "What is the fundamental 3-way trade-off in MRI scanning?",
           "options": [
             "Cost, accuracy, and safety",
@@ -353,6 +372,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q3",
+          "conceptIndex": 0,
           "text": "Which AI-based MRI reconstruction approach works by recovering missing data directly in the frequency domain?",
           "options": [
             "Image processing based",
@@ -368,6 +388,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q4",
+          "conceptIndex": 0,
           "text": "In DL iterative MRI reconstruction, what is the key innovation compared to image processing approaches?",
           "options": [
             "It uses only convolutional filters with no physics",
@@ -383,6 +404,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q5",
+          "conceptIndex": 0,
           "text": "What is a major safety concern specifically highlighted regarding AI MRI reconstruction?",
           "options": [
             "The models are too slow for clinical use",
@@ -398,6 +420,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q6",
+          "conceptIndex": 0,
           "text": "What is the primary purpose of \"Bayesian Uncertainty Estimation\" in the context of AI MRI reconstruction?",
           "options": [
             "To speed up the reconstruction process",
@@ -413,6 +436,7 @@ export const content: Content = {
         },
         {
           "id": "L4Q7",
+          "conceptIndex": 0,
           "text": "Which of the following are AI-based MRI reconstruction approaches described by Knoll? Select ALL that apply.",
           "options": [
             "Image processing based (treat reconstruction as a denoising/post-processing problem)",
@@ -444,6 +468,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L5Q1",
+          "conceptIndex": 0,
           "text": "What percentage of people worldwide are affected by hearing and communication disorders?",
           "options": [
             "5%",
@@ -459,6 +484,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q2",
+          "conceptIndex": 0,
           "text": "Which EEG frequency band does the brain primarily use to synchronize with the syllable-level rhythm of speech?",
           "options": [
             "Delta (1–4 Hz)",
@@ -474,6 +500,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q3",
+          "conceptIndex": 0,
           "text": "In Reichenbach's framework, what is the difference between decoding \"clarity\" and \"comprehension\" from EEG?",
           "options": [
             "Clarity refers to the volume, comprehension refers to the language",
@@ -489,6 +516,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q4",
+          "conceptIndex": 0,
           "text": "What is the ultimate clinical application of \"auditory attention decoding\" from EEG?",
           "options": [
             "Replacing cochlear implants entirely with brain implants",
@@ -504,6 +532,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q5",
+          "conceptIndex": 0,
           "text": "A GAN (Generative Adversarial Network) was used by Reichenbach's group to generate talking-face videos. What was a key finding from the Turing test conducted on these videos?",
           "options": [
             "Participants easily identified the synthetic videos",
@@ -519,6 +548,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q6",
+          "conceptIndex": 0,
           "text": "Which sensory modality, beyond hearing and vision, was shown to enhance speech-in-noise comprehension in Reichenbach's research?",
           "options": [
             "Olfaction (smell)",
@@ -534,6 +564,7 @@ export const content: Content = {
         },
         {
           "id": "L5Q7",
+          "conceptIndex": 0,
           "text": "According to Reichenbach, which of the following can be decoded from EEG brain activity? Select ALL that apply.",
           "options": [
             "Clarity — acoustic/physical quality of the speech signal",
@@ -565,6 +596,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L6Q1",
+          "conceptIndex": 0,
           "text": "What proportion of body weight does the brain account for, despite its extremely high resource demands?",
           "options": [
             "5%",
@@ -580,6 +612,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q2",
+          "conceptIndex": 0,
           "text": "Which of the following is NOT listed as an MRI marker of cerebral small vessel disease (cSVD)?",
           "options": [
             "Microbleeds",
@@ -595,6 +628,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q3",
+          "conceptIndex": 0,
           "text": "According to Bernal, what percentage of ischaemic strokes worldwide is caused by cSVD?",
           "options": [
             "5%",
@@ -610,6 +644,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q4",
+          "conceptIndex": 0,
           "text": "What is \"domain randomisation\" in the context of medical AI?",
           "options": [
             "Randomly splitting patients into training and test groups",
@@ -625,6 +660,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q5",
+          "conceptIndex": 0,
           "text": "What is the main DISADVANTAGE of using domain randomisation for training medical AI models?",
           "options": [
             "It requires too much real patient data",
@@ -640,6 +676,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q6",
+          "conceptIndex": 0,
           "text": "What does the \"tipping point\" concept in Bernal's cSVD framework represent?",
           "options": [
             "The moment a patient is diagnosed with diabetes",
@@ -655,6 +692,7 @@ export const content: Content = {
         },
         {
           "id": "L6Q7",
+          "conceptIndex": 0,
           "text": "Which of the following are listed as MRI markers of cerebral small vessel disease (cSVD)? Select ALL that apply.",
           "options": [
             "White matter hyperintensities",
@@ -689,6 +727,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L7Q1",
+          "conceptIndex": 0,
           "text": "In graph theory, what does the notation G = (V, E) represent?",
           "options": [
             "A machine learning model with V variables and E epochs",
@@ -704,6 +743,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q2",
+          "conceptIndex": 0,
           "text": "In Protein-Protein Interaction (PPI) networks, what do the nodes and edges represent?",
           "options": [
             "Nodes = genes, Edges = mutations",
@@ -719,6 +759,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q3",
+          "conceptIndex": 0,
           "text": "What is \"data leakage\" in the context of ML model evaluation according to Blumenthal?",
           "options": [
             "When training data is accidentally deleted from the server",
@@ -734,6 +775,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q4",
+          "conceptIndex": 0,
           "text": "When Blumenthal's group applied \"hard splits\" (without sequence similarity shortcuts) to PPI prediction benchmarks, what was the key finding?",
           "options": [
             "Deep learning models achieved even higher accuracy than with random splits",
@@ -749,6 +791,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q5",
+          "conceptIndex": 0,
           "text": "Which of the following is NOT one of Blumenthal's BIONETS Lab research areas?",
           "options": [
             "Algorithmic network medicine",
@@ -764,6 +807,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q6",
+          "conceptIndex": 0,
           "text": "For which use case is \"random data splitting\" an appropriate evaluation protocol in PPI prediction?",
           "options": [
             "Predicting interactions between proteins with no known homologs",
@@ -779,6 +823,7 @@ export const content: Content = {
         },
         {
           "id": "L7Q7",
+          "conceptIndex": 0,
           "text": "Which of the following correctly describe the TWO data leakage shortcuts found in naive PPI prediction benchmark evaluation? Select ALL that apply.",
           "options": [
             "Topology-based shortcut: the model memorizes which proteins appear only in positive pairs in training and predicts interaction for all their test pairs",
@@ -808,6 +853,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L8Q1",
+          "conceptIndex": 0,
           "text": "What is the fundamental frequency range of the human voice during phonation?",
           "options": [
             "10–100 Hz",
@@ -823,6 +869,7 @@ export const content: Content = {
         },
         {
           "id": "L8Q2",
+          "conceptIndex": 0,
           "text": "Which of the following best describes \"Organic Dysphonia\"?",
           "options": [
             "A voice disorder caused by incorrect vocal technique with no structural damage",
@@ -838,6 +885,7 @@ export const content: Content = {
         },
         {
           "id": "L8Q3",
+          "conceptIndex": 0,
           "text": "What is the key limitation of clinical phonation diagnostics mentioned by Kniesburges?",
           "options": [
             "Laryngoscopes are too large to fit in the human throat",
@@ -853,6 +901,7 @@ export const content: Content = {
         },
         {
           "id": "L8Q4",
+          "conceptIndex": 0,
           "text": "What are the three main tasks that deep learning performs in laryngoscopy?",
           "options": [
             "Recording, filtering, and playback",
@@ -868,6 +917,7 @@ export const content: Content = {
         },
         {
           "id": "L8Q5",
+          "conceptIndex": 0,
           "text": "What is \"SIREN\" in the context of AI-supported CFD simulations of the larynx?",
           "options": [
             "A clinical alarm system for detecting vocal fold pathologies",
@@ -883,6 +933,7 @@ export const content: Content = {
         },
         {
           "id": "L8Q6",
+          "conceptIndex": 0,
           "text": "Comparing the three larynx model types, which has the HIGHEST degree of reality but the LOWEST data density?",
           "options": [
             "Computational (CFD) models",
@@ -898,6 +949,7 @@ export const content: Content = {
         },
         {
           "id": "L8Q7",
+          "conceptIndex": 0,
           "text": "Which of the following are listed as clinical diagnostic methods for dysphonia (voice disorders)? Select ALL that apply.",
           "options": [
             "Laryngoscopy",
@@ -932,6 +984,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L9Q1",
+          "conceptIndex": 0,
           "text": "According to Hutter, what percentage of all pregnancies end before the 37th week?",
           "options": [
             "2%",
@@ -947,6 +1000,7 @@ export const content: Content = {
         },
         {
           "id": "L9Q2",
+          "conceptIndex": 0,
           "text": "What is unique about the placenta as an organ?",
           "options": [
             "It is the only organ that produces hormones",
@@ -962,6 +1016,7 @@ export const content: Content = {
         },
         {
           "id": "L9Q3",
+          "conceptIndex": 0,
           "text": "In T2* mapping of the placenta, what does a LONG T2* value indicate?",
           "options": [
             "Low oxygen content",
@@ -977,6 +1032,7 @@ export const content: Content = {
         },
         {
           "id": "L9Q4",
+          "conceptIndex": 0,
           "text": "What is the main strategy used to correct for fetal motion in MRI?",
           "options": [
             "Sedating the fetus before scanning",
@@ -992,6 +1048,7 @@ export const content: Content = {
         },
         {
           "id": "L9Q5",
+          "conceptIndex": 0,
           "text": "Which combination of biomarkers was identified as most important for preterm birth prediction in Hutter's model?",
           "options": [
             "Maternal age, weight, and blood pressure",
@@ -1007,6 +1064,7 @@ export const content: Content = {
         },
         {
           "id": "L9Q6",
+          "conceptIndex": 0,
           "text": "Which of the following are listed as key imaging challenges specific to fetal and placental MRI? Select ALL that apply.",
           "options": [
             "Motion (fetal movement and uterine contractions)",
@@ -1041,6 +1099,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L10Q1",
+          "conceptIndex": 0,
           "text": "In mathematics, what does a \"dynamical system\" consist of?",
           "options": [
             "A database and a query function",
@@ -1056,6 +1115,7 @@ export const content: Content = {
         },
         {
           "id": "L10Q2",
+          "conceptIndex": 0,
           "text": "What is an \"absorbing set\" (trapping region) in the context of learned dynamical models?",
           "options": [
             "A region of the state space where the model ignores noisy data",
@@ -1071,6 +1131,7 @@ export const content: Content = {
         },
         {
           "id": "L10Q3",
+          "conceptIndex": 0,
           "text": "What does \"GPT\" stand for in the context of large language models?",
           "options": [
             "General Purpose Technology",
@@ -1086,6 +1147,7 @@ export const content: Content = {
         },
         {
           "id": "L10Q4",
+          "conceptIndex": 0,
           "text": "Which layer type is described as \"the key feature of transformers\"?",
           "options": [
             "Normalization layers",
@@ -1101,6 +1163,7 @@ export const content: Content = {
         },
         {
           "id": "L10Q5",
+          "conceptIndex": 0,
           "text": "According to Fantuzzi's mathematical analysis, what does the geometric behavior of transformer blocks correspond to in language models?",
           "options": [
             "Gradient descent in parameter space",
@@ -1116,6 +1179,7 @@ export const content: Content = {
         },
         {
           "id": "L10Q6",
+          "conceptIndex": 0,
           "text": "Which of the following are the three building block layer types of a Transformer architecture? Select ALL that apply.",
           "options": [
             "Feed-Forward layers (multi-layer perceptrons)",
@@ -1147,6 +1211,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L11Q1",
+          "conceptIndex": 0,
           "text": "What does \"Edge AI\" mean compared to \"Cloud AI\"?",
           "options": [
             "AI running exclusively on high-performance servers in data centres",
@@ -1162,6 +1227,7 @@ export const content: Content = {
         },
         {
           "id": "L11Q2",
+          "conceptIndex": 0,
           "text": "In the Fraunhofer IIS Edge AI fast track, what is \"NAS\" used for?",
           "options": [
             "Network Access Security for IoT devices",
@@ -1177,6 +1243,7 @@ export const content: Content = {
         },
         {
           "id": "L11Q3",
+          "conceptIndex": 0,
           "text": "What are the two main techniques used in \"Deep Compression\" of AI models?",
           "options": [
             "Distillation and transfer learning",
@@ -1192,6 +1259,7 @@ export const content: Content = {
         },
         {
           "id": "L11Q4",
+          "conceptIndex": 0,
           "text": "Why is supervised learning impractical for industrial anomaly detection?",
           "options": [
             "Industrial cameras cannot capture defects with sufficient resolution",
@@ -1207,6 +1275,7 @@ export const content: Content = {
         },
         {
           "id": "L11Q5",
+          "conceptIndex": 0,
           "text": "What is the role of Visual Language Models (VLMs) in the Fraunhofer IIS Edge AI pipeline?",
           "options": [
             "They replace the need for any training data",
@@ -1222,6 +1291,7 @@ export const content: Content = {
         },
         {
           "id": "L11Q6",
+          "conceptIndex": 0,
           "text": "Which of the following are typical characteristics of an embedded system used for Edge AI? Select ALL that apply.",
           "options": [
             "Small size",
@@ -1255,6 +1325,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L12Q1",
+          "conceptIndex": 0,
           "text": "What is \"Normative Representation Learning\" according to Kainz?",
           "options": [
             "A supervised learning method that classifies images into predefined categories",
@@ -1270,6 +1341,7 @@ export const content: Content = {
         },
         {
           "id": "L12Q2",
+          "conceptIndex": 0,
           "text": "What does \"counterfactual analysis\" mean in the context of Kainz's medical imaging research?",
           "options": [
             "Comparing AI predictions to expert radiologist diagnoses",
@@ -1285,6 +1357,7 @@ export const content: Content = {
         },
         {
           "id": "L12Q3",
+          "conceptIndex": 0,
           "text": "According to Kainz, what are the two requirements for safe synthetic medical data sharing?",
           "options": [
             "Data must be high-resolution and must include diverse ethnicities",
@@ -1300,6 +1373,7 @@ export const content: Content = {
         },
         {
           "id": "L12Q4",
+          "conceptIndex": 0,
           "text": "What does the IRS (Image Retrieval Score) measure?",
           "options": [
             "The image quality of reconstructed MRI scans",
@@ -1315,6 +1389,7 @@ export const content: Content = {
         },
         {
           "id": "L12Q5",
+          "conceptIndex": 0,
           "text": "What data characteristics does supervised ML typically FAIL on, according to Kainz?",
           "options": [
             "Uniform data with balanced classes and clearly defined boundaries",
@@ -1330,6 +1405,7 @@ export const content: Content = {
         },
         {
           "id": "L12Q6",
+          "conceptIndex": 0,
           "text": "According to Kainz, which conditions describe when supervised ML typically WORKS well? Select ALL that apply.",
           "options": [
             "Data is uniform and consistent across sources",
@@ -1362,6 +1438,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L13Q1",
+          "conceptIndex": 0,
           "text": "Which type of DNN opacity refers to the fact that even developers cannot explain how their model maps inputs to outputs?",
           "options": [
             "Intentional secrecy",
@@ -1377,6 +1454,7 @@ export const content: Content = {
         },
         {
           "id": "L13Q2",
+          "conceptIndex": 0,
           "text": "What is the main philosophical criticism of Explainable AI (xAI) methods such as LIME?",
           "options": [
             "They are computationally too expensive for real-time use",
@@ -1392,6 +1470,7 @@ export const content: Content = {
         },
         {
           "id": "L13Q3",
+          "conceptIndex": 0,
           "text": "What does the \"Instrumental Convergence Thesis\" claim?",
           "options": [
             "All AI systems will eventually converge on the same architecture",
@@ -1407,6 +1486,7 @@ export const content: Content = {
         },
         {
           "id": "L13Q4",
+          "conceptIndex": 0,
           "text": "Who co-founded the MIT Artificial Intelligence Laboratory in 1959 and originated the term \"artificial intelligence\"?",
           "options": [
             "Alan Turing and Claude Shannon",
@@ -1422,6 +1502,7 @@ export const content: Content = {
         },
         {
           "id": "L13Q5",
+          "conceptIndex": 0,
           "text": "What is a \"responsibility gap\" in the context of AI?",
           "options": [
             "A gap in an AI model's knowledge about legal responsibilities",
@@ -1437,6 +1518,7 @@ export const content: Content = {
         },
         {
           "id": "L13Q6",
+          "conceptIndex": 0,
           "text": "Which of the following are the three types of DNN opacity described by Robertson? Select ALL that apply.",
           "options": [
             "Intentional secrecy — deliberate non-disclosure by companies (Burrell 2016)",
@@ -1468,6 +1550,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L14Q1",
+          "conceptIndex": 0,
           "text": "What is the \"Gender Data Gap\" according to Gengler?",
           "options": [
             "The salary gap between men and women working in the AI industry",
@@ -1483,6 +1566,7 @@ export const content: Content = {
         },
         {
           "id": "L14Q2",
+          "conceptIndex": 0,
           "text": "According to Gengler, what does the concept of \"intersectionality\" (Crenshaw 1989) refer to?",
           "options": [
             "The technical process of combining multiple AI models",
@@ -1498,6 +1582,7 @@ export const content: Content = {
         },
         {
           "id": "L14Q3",
+          "conceptIndex": 0,
           "text": "Which real-world example illustrates AI bias against women in corporate hiring?",
           "options": [
             "Google's image recognition system misidentifying people",
@@ -1513,6 +1598,7 @@ export const content: Content = {
         },
         {
           "id": "L14Q4",
+          "conceptIndex": 0,
           "text": "What is the core distinction Gengler draws between \"power-over\" and \"power-to\" in AI?",
           "options": [
             "Power-over refers to computational power; power-to refers to renewable energy",
@@ -1528,6 +1614,7 @@ export const content: Content = {
         },
         {
           "id": "L14Q5",
+          "conceptIndex": 0,
           "text": "Which statement is most consistent with Gengler's central argument?",
           "options": [
             "AI is inherently neutral and can be easily fixed with better data",
@@ -1543,6 +1630,7 @@ export const content: Content = {
         },
         {
           "id": "L14Q6",
+          "conceptIndex": 0,
           "text": "Which of the following are real-world examples of oppressive or biased AI that Gengler specifically mentions? Select ALL that apply.",
           "options": [
             "Amazon's AI recruiting tool was scrapped because it systematically showed bias against women",
@@ -1575,6 +1663,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L15Q1",
+          "conceptIndex": 0,
           "text": "What is \"High-Density surface EMG\" (HD-sEMG)?",
           "options": [
             "An EMG recording with high electrical voltage",
@@ -1590,6 +1679,7 @@ export const content: Content = {
         },
         {
           "id": "L15Q2",
+          "conceptIndex": 0,
           "text": "What is \"Targeted Muscle Reinnervation\" (TMR)?",
           "options": [
             "A rehabilitation technique that uses electrical stimulation to retrain muscles",
@@ -1605,6 +1695,7 @@ export const content: Content = {
         },
         {
           "id": "L15Q3",
+          "conceptIndex": 0,
           "text": "What was the key finding from Del Vecchio's spinal cord–computer interface research in paralyzed patients?",
           "options": [
             "That complete spinal cord injury always results in zero motor neuron activity",
@@ -1620,6 +1711,7 @@ export const content: Content = {
         },
         {
           "id": "L15Q4",
+          "conceptIndex": 0,
           "text": "What is \"Functional Electrical Stimulation\" (FES) in the context of neural interfaces?",
           "options": [
             "A non-invasive brain stimulation technique for treating depression",
@@ -1635,6 +1727,7 @@ export const content: Content = {
         },
         {
           "id": "L15Q5",
+          "conceptIndex": 0,
           "text": "Which of the following are neural interface applications specifically described by Del Vecchio? Select ALL that apply.",
           "options": [
             "Neuroprosthetic control of a robotic arm for tetraplegic patients via BCI",
@@ -1667,6 +1760,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L16Q1",
+          "conceptIndex": 0,
           "text": "According to the Swedish Two-County Trial, what is the impact of mammography screening on breast cancer mortality?",
           "options": [
             "No statistically significant effect",
@@ -1682,6 +1776,7 @@ export const content: Content = {
         },
         {
           "id": "L16Q2",
+          "conceptIndex": 0,
           "text": "What is a \"Maximum Intensity Projection\" (MIP) in breast MRI?",
           "options": [
             "A measure of the maximum pixel intensity in a raw MRI scan",
@@ -1697,6 +1792,7 @@ export const content: Content = {
         },
         {
           "id": "L16Q3",
+          "conceptIndex": 0,
           "text": "What is \"Virtual Contrast Enhancement\" (vCE) in the context of breast MRI?",
           "options": [
             "A technique for digitally enhancing the brightness of existing contrast-enhanced scans",
@@ -1712,6 +1808,7 @@ export const content: Content = {
         },
         {
           "id": "L16Q4",
+          "conceptIndex": 0,
           "text": "Which model type produced more realistic virtual contrast enhancement images in Kapsner's Turing test?",
           "options": [
             "U-Net",
@@ -1727,6 +1824,7 @@ export const content: Content = {
         },
         {
           "id": "L16Q5",
+          "conceptIndex": 0,
           "text": "What makes thoracic aortic aneurysm (TAA) a particularly important \"incidental finding\" to detect in breast MRI scans?",
           "options": [
             "It is extremely common, affecting over 30% of the population",
@@ -1742,6 +1840,7 @@ export const content: Content = {
         },
         {
           "id": "L16Q6",
+          "conceptIndex": 0,
           "text": "Which of the following are listed as the three main challenges in breast cancer screening? Select ALL that apply.",
           "options": [
             "False-positive findings (leading to unnecessary biopsies)",
@@ -1773,6 +1872,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L17Q1",
+          "conceptIndex": 0,
           "text": "Which of the following is NOT a primary component of a water distribution system?",
           "options": [
             "Collection",
@@ -1788,6 +1888,7 @@ export const content: Content = {
         },
         {
           "id": "L17Q2",
+          "conceptIndex": 0,
           "text": "What is a major limitation of using \"Pure AI Models\" for thermohydraulic simulation?",
           "options": [
             "They are too simple to implement",
@@ -1803,6 +1904,7 @@ export const content: Content = {
         },
         {
           "id": "L17Q3",
+          "conceptIndex": 0,
           "text": "How does a Physics Informed Graph Neural Network (PIGNN) incorporate physical laws?",
           "options": [
             "By replacing all neural network layers with hard-coded physics equations",
@@ -1818,6 +1920,7 @@ export const content: Content = {
         },
         {
           "id": "L17Q4",
+          "conceptIndex": 0,
           "text": "In a Graph Neural Network, what are the two steps of \"Message Passing\"?",
           "options": [
             "Encode and Decode",
@@ -1833,6 +1936,7 @@ export const content: Content = {
         },
         {
           "id": "L17Q5",
+          "conceptIndex": 0,
           "text": "Which application of AI is specifically mentioned to improve \"Pure Physical Models\" of water networks?",
           "options": [
             "Increasing water pressure in pipes",
@@ -1848,6 +1952,7 @@ export const content: Content = {
         },
         {
           "id": "L17Q6",
+          "conceptIndex": 0,
           "text": "What is the difference between a \"Branching\" and a \"Gridiron\" water network?",
           "options": [
             "Branching uses metal pipes; Gridiron uses plastic",
@@ -1863,6 +1968,7 @@ export const content: Content = {
         },
         {
           "id": "L17Q7",
+          "conceptIndex": 0,
           "text": "Which of the following correctly describe the Physics-Informed Graph Neural Network (PIGNN) approach? Select ALL that apply.",
           "options": [
             "Uses graph structure to represent water network topology (pipes = edges, junctions = nodes)",
@@ -1894,6 +2000,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L18Q1",
+          "conceptIndex": 0,
           "text": "What is the correct definition of \"research\" according to Lennartz?",
           "options": [
             "Reading and summarizing existing scientific papers",
@@ -1909,6 +2016,7 @@ export const content: Content = {
         },
         {
           "id": "L18Q2",
+          "conceptIndex": 0,
           "text": "In the evidence hierarchy pyramid, which type of evidence is considered the STRONGEST?",
           "options": [
             "Expert opinions",
@@ -1924,6 +2032,7 @@ export const content: Content = {
         },
         {
           "id": "L18Q3",
+          "conceptIndex": 0,
           "text": "What is the correct order of the peer review process?",
           "options": [
             "Publication → Peer Review → Submission → Acceptance",
@@ -1939,6 +2048,7 @@ export const content: Content = {
         },
         {
           "id": "L18Q4",
+          "conceptIndex": 0,
           "text": "Which literature database is BEST suited for finding medical and biomedical publications?",
           "options": [
             "Google Scholar",
@@ -1954,6 +2064,7 @@ export const content: Content = {
         },
         {
           "id": "L18Q5",
+          "conceptIndex": 0,
           "text": "Why is using LLMs (like ChatGPT) to write research papers problematic?",
           "options": [
             "LLMs are too slow to write academic text",
@@ -1969,6 +2080,7 @@ export const content: Content = {
         },
         {
           "id": "L18Q6",
+          "conceptIndex": 0,
           "text": "What distinguishes ArXiv from a peer-reviewed journal?",
           "options": [
             "ArXiv only publishes mathematics papers",
@@ -1997,6 +2109,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L19Q1",
+          "conceptIndex": 0,
           "text": "What is the FIRST step when preparing any presentation according to Lennartz?",
           "options": [
             "Design slides with consistent colors and fonts",
@@ -2012,6 +2125,7 @@ export const content: Content = {
         },
         {
           "id": "L19Q2",
+          "conceptIndex": 0,
           "text": "According to the lecture, how should a scientific presentation be structured in terms of time allocation?",
           "options": [
             "Introduction 30%, Methods 30%, Results 30%, Conclusion 10%",
@@ -2027,6 +2141,7 @@ export const content: Content = {
         },
         {
           "id": "L19Q3",
+          "conceptIndex": 0,
           "text": "What does the \"Inverted Triangle\" structure in a presentation introduction represent?",
           "options": [
             "Going from specific details to broad generalizations",
@@ -2042,6 +2157,7 @@ export const content: Content = {
         },
         {
           "id": "L19Q4",
+          "conceptIndex": 0,
           "text": "What does \"DAU\" stand for in the context of slide design?",
           "options": [
             "Data Analysis Unit",
@@ -2057,6 +2173,7 @@ export const content: Content = {
         },
         {
           "id": "L19Q5",
+          "conceptIndex": 0,
           "text": "Which of the following are characteristics of a GOOD slide according to the Presentation Methods lecture? Select ALL that apply.",
           "options": [
             "Every slide has one key message",
@@ -2077,6 +2194,7 @@ export const content: Content = {
         },
         {
           "id": "L19Q6",
+          "conceptIndex": 0,
           "text": "According to Lennartz, what should you NEVER do at the beginning of a presentation?",
           "options": [
             "Show a title slide",
@@ -2105,6 +2223,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L20Q1",
+          "conceptIndex": 0,
           "text": "What is a \"spin-off\" company in the context of a university?",
           "options": [
             "A subsidiary company created when a large corporation splits into two",
@@ -2120,6 +2239,7 @@ export const content: Content = {
         },
         {
           "id": "L20Q2",
+          "conceptIndex": 0,
           "text": "How many spin-offs has FAU produced since 2000, and what is their approximate success rate?",
           "options": [
             "100+ spin-offs, ~50% still active",
@@ -2135,6 +2255,7 @@ export const content: Content = {
         },
         {
           "id": "L20Q3",
+          "conceptIndex": 0,
           "text": "What is the DTA (Digital Tech Academy) at FAU?",
           "options": [
             "A research institute for digital transformation and AI",
@@ -2150,6 +2271,7 @@ export const content: Content = {
         },
         {
           "id": "L20Q4",
+          "conceptIndex": 0,
           "text": "What does \"MVP\" stand for in the context of start-up methodology?",
           "options": [
             "Most Valuable Product",
@@ -2165,6 +2287,7 @@ export const content: Content = {
         },
         {
           "id": "L20Q5",
+          "conceptIndex": 0,
           "text": "Which of the following is listed as a common reason why start-ups fail?",
           "options": [
             "Having too many investors",
@@ -2193,6 +2316,7 @@ export const content: Content = {
       "questions": [
         {
           "id": "L21Q1",
+          "conceptIndex": 0,
           "text": "What is \"dysphagia\" and why is it clinically important?",
           "options": [
             "A neurological disorder causing memory loss",
@@ -2208,6 +2332,7 @@ export const content: Content = {
         },
         {
           "id": "L21Q2",
+          "conceptIndex": 0,
           "text": "What imaging technique is the clinical gold standard for analyzing swallowing disorders?",
           "options": [
             "MRI (Magnetic Resonance Imaging)",
@@ -2223,6 +2348,7 @@ export const content: Content = {
         },
         {
           "id": "L21Q3",
+          "conceptIndex": 0,
           "text": "What is \"semantic segmentation\" in computer vision?",
           "options": [
             "Classifying an entire image into a single category",
@@ -2238,6 +2364,7 @@ export const content: Content = {
         },
         {
           "id": "L21Q4",
+          "conceptIndex": 0,
           "text": "According to Kist's framework, what is the \"central dogma\" applied to AI in communication disorders?",
           "options": [
             "Data → Model → Prediction",
@@ -2253,6 +2380,7 @@ export const content: Content = {
         },
         {
           "id": "L21Q5",
+          "conceptIndex": 0,
           "text": "Developmental speech disorders affect approximately what percentage of children?",
           "options": [
             "1–2%",
@@ -2268,6 +2396,7 @@ export const content: Content = {
         },
         {
           "id": "L21Q6",
+          "conceptIndex": 0,
           "text": "Which of the following correctly describe the TWO main types of developmental speech disorders? Select ALL that apply.",
           "options": [
             "Sensory type: the child cannot correctly perceive their own speech (auditory feedback problem)",
@@ -2286,6 +2415,7 @@ export const content: Content = {
         },
         {
           "id": "L21Q7",
+          "conceptIndex": 0,
           "text": "What does \"TTS\" stand for and what does it do?",
           "options": [
             "Training and Testing System — used to evaluate AI model performance",
