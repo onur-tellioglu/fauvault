@@ -28,6 +28,34 @@ export function split(lecture: Lecture) {
   return { miniMap, finalQs }
 }
 
+export function canGoBack(ci: number): boolean {
+  return ci > 0
+}
+
+export type ForwardAction = {
+  kind: 'quiz' | 'startQuiz' | 'advance'
+  label: string
+}
+
+/**
+ * Decides what the concept page's forward button does and what it reads.
+ * Below the frontier the concept's Quick Check was already cleared, so we always
+ * advance without re-showing it. At the frontier we keep the original gate:
+ * Quick Check (a mini question exists), Next (no mini, more concepts remain), or
+ * Start Quiz (last concept).
+ */
+export function forwardAction(
+  ci: number,
+  frontier: number,
+  conceptCount: number,
+  hasMini: boolean,
+): ForwardAction {
+  if (ci < frontier) return { kind: 'advance', label: 'Next →' }
+  if (hasMini) return { kind: 'quiz', label: 'Quick Check →' }
+  if (ci + 1 < conceptCount) return { kind: 'advance', label: 'Next →' }
+  return { kind: 'startQuiz', label: 'Start Quiz →' }
+}
+
 type Props = {
   lecture: Lecture
   course: Course
