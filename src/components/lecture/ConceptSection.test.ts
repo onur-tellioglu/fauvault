@@ -261,3 +261,41 @@ describe('renderInline — inline math rendering', () => {
     expect(html).not.toMatch(/ b\$$/)
   })
 })
+
+describe('parseBody — escaped pipe in table cells', () => {
+  it('splits a row on unescaped pipes only — escaped \\| stays inside its cell', () => {
+    const blocks = parseBody('| Op | Cost |\n|---|---|\n| Space | O(\\|V\\|²) |')
+    const table = blocks.find(b => b.type === 'table') as { type: 'table'; rows: string[][] }
+    expect(table).toBeDefined()
+    expect(table.rows).toHaveLength(2)
+    expect(table.rows[1]).toHaveLength(2)
+    expect(table.rows[1][1].trim()).toBe('O(\\|V\\|²)')
+  })
+
+  it('keeps a multi-pipe cell intact', () => {
+    const blocks = parseBody('| A | B |\n|---|---|\n| x | O(\\|V\\| + \\|E\\|) |')
+    const table = blocks.find(b => b.type === 'table') as { type: 'table'; rows: string[][] }
+    expect(table.rows[1]).toHaveLength(2)
+    expect(table.rows[1][1].trim()).toBe('O(\\|V\\| + \\|E\\|)')
+  })
+})
+
+describe('renderInline — escaped pipe unescaping', () => {
+  it('renders \\| as a literal | in plain text', () => {
+    const html = renderInlineToHtml('\\|E\\| ≈ \\|V\\|²')
+    expect(html).toContain('|E| ≈ |V|²')
+    expect(html).not.toContain('\\')
+  })
+
+  it('renders \\| as a literal | inside bold', () => {
+    const html = renderInlineToHtml('**O(\\|V\\|²)**')
+    expect(html).toContain('O(|V|²)')
+    expect(html).not.toContain('\\')
+  })
+
+  it('regression: does NOT unescape \\| inside inline math (KaTeX norm symbol)', () => {
+    const html = renderInlineToHtml('$\\|x\\|$')
+    expect(html).toContain('katex')
+    expect(() => renderInlineToHtml('$\\|x\\|$')).not.toThrow()
+  })
+})

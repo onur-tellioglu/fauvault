@@ -181,14 +181,18 @@ function KatexBlock({ tex }: { tex: string }) {
   )
 }
 
+/** Convert the GFM escape `\|` back to a literal pipe for display.
+ *  Applied only to non-code, non-math segments — LaTeX `\|` (norm ‖) is preserved. */
+const unescapePipe = (s: string): string => s.replace(/\\\|/g, '|')
+
 /** Render inline markdown: **bold**, *italic*, `code`, $math$ */
 export function renderInline(text: string): ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\$(?!\s)(?:\\.|[^$\n])+(?<!\s)\$)/g)
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**'))
-      return <strong key={i} style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{part.slice(2, -2)}</strong>
+      return <strong key={i} style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{unescapePipe(part.slice(2, -2))}</strong>
     if (part.startsWith('*') && part.endsWith('*'))
-      return <em key={i}>{part.slice(1, -1)}</em>
+      return <em key={i}>{unescapePipe(part.slice(1, -1))}</em>
     if (part.startsWith('`') && part.endsWith('`'))
       return <code key={i} style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.875em', background: 'var(--bg-elevated)', padding: '1px 5px', borderRadius: 4 }}>{part.slice(1, -1)}</code>
     if (part.startsWith('$') && part.endsWith('$') && part.length > 2 && /^\$(?!\s)(?:\\.|[^$\n])+(?<!\s)\$$/.test(part)) {
@@ -201,7 +205,7 @@ export function renderInline(text: string): ReactNode[] {
       }
       return <span key={i} dangerouslySetInnerHTML={{ __html: html }} />
     }
-    return part
+    return unescapePipe(part)
   })
 }
 
@@ -329,7 +333,7 @@ export function parseBody(body: string): Block[] {
       // skip separator rows
     } else if (isTableRow) {
       flushBullets()
-      const cells = line.trim().slice(1, -1).split('|')
+      const cells = line.trim().slice(1, -1).split(/(?<!\\)\|/)
       pendingTableRows.push(cells)
     } else {
       flushTable()
