@@ -43,6 +43,9 @@ export type ForwardAction = {
  * advance without re-showing it. At the frontier we keep the original gate:
  * Quick Check (a mini question exists), Next (no mini, more concepts remain), or
  * Start Quiz (last concept).
+ *
+ * Caller contract: `ci <= frontier` always holds — you can never view a concept
+ * beyond the furthest unlocked one.
  */
 export function forwardAction(
   ci: number,
@@ -51,6 +54,8 @@ export function forwardAction(
   hasMini: boolean,
 ): ForwardAction {
   if (ci < frontier) return { kind: 'advance', label: 'Next →' }
+  // ci === frontier here: callers never view a concept beyond the furthest
+  // unlocked one, so the remaining cases are the frontier gate.
   if (hasMini) return { kind: 'quiz', label: 'Quick Check →' }
   if (ci + 1 < conceptCount) return { kind: 'advance', label: 'Next →' }
   return { kind: 'startQuiz', label: 'Start Quiz →' }
