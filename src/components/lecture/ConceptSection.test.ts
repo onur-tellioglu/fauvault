@@ -294,8 +294,15 @@ describe('renderInline — escaped pipe unescaping', () => {
   })
 
   it('regression: does NOT unescape \\| inside inline math (KaTeX norm symbol)', () => {
-    const html = renderInlineToHtml('$\\|x\\|$')
-    expect(html).toContain('katex')
+    const normHtml  = renderInlineToHtml('$\\|x\\|$')   // \\| = LaTeX norm ‖
+    const pipedHtml = renderInlineToHtml('$|x|$')        // plain | pipes
+    expect(normHtml).toContain('katex')
     expect(() => renderInlineToHtml('$\\|x\\|$')).not.toThrow()
+    expect(normHtml).not.toBe(pipedHtml)                 // proves \\| was NOT unescaped into |
+  })
+
+  it('renders \\| as a literal | inside italic', () => {
+    const html = renderInlineToHtml('*O(\\|V\\|²)*')
+    expect(html).toContain('O(|V|²)')
   })
 })
