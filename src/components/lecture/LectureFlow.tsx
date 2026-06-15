@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { Lecture } from '@/lib/types'
 import type { Course } from '@/lib/courses'
 import { ConceptSection } from './ConceptSection'
@@ -80,6 +80,27 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
   const [answered, setAnswered] = useState(false)
   const [finalAnswers, setFinalAnswers] = useState<{ selected: number[]; score: number }[]>([])
   const [miniScores, setMiniScores] = useState<number[]>([])
+
+  useEffect(() => {
+    if (stage.kind !== 'concept') return
+    const ci = stage.ci
+    function onKey(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement | null)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+      if (e.key === 'ArrowLeft' && canGoBack(ci)) {
+        e.preventDefault()
+        goToConcept(ci - 1)
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        goForward(ci)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // Re-binds whenever the viewed concept or frontier changes; the handlers
+    // close over exactly those, so the deps below are sufficient.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, frontier])
 
   const btnStyle: React.CSSProperties = {
     marginTop: '1.5rem', padding: '10px 22px',
@@ -198,6 +219,18 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
         <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.7rem', color: 'var(--accent)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Concept Check
         </p>
+        {!answered && (
+          <button
+            onClick={() => goToConcept(stage.ci)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', background: 'none', border: 'none',
+              color: 'var(--text-secondary)', cursor: 'pointer', padding: 0, marginBottom: 14,
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem',
+            }}
+          >
+            ← Back to concept
+          </button>
+        )}
         <QuizQuestion question={q} onAnswer={(_, score) => { setMiniScores(prev => [...prev, score]); setAnswered(true) }} />
         {answered && (
           <button style={btnStyle} onClick={() => { nextAfterMini(stage.ci); setAnswered(false) }}>
