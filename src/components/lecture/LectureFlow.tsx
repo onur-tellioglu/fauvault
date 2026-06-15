@@ -76,6 +76,7 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
     [miniMap]
   )
   const [stage, setStage] = useState<Stage>({ kind: 'concept', ci: initialConceptIndex })
+  const [frontier, setFrontier] = useState(initialConceptIndex)
   const [answered, setAnswered] = useState(false)
   const [finalAnswers, setFinalAnswers] = useState<{ selected: number[]; score: number }[]>([])
   const [miniScores, setMiniScores] = useState<number[]>([])
@@ -85,6 +86,26 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
     background: 'var(--accent)', color: '#0C0C10',
     border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer',
     fontFamily: 'var(--font-body)',
+  }
+  const controlRowStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '1.5rem',
+  }
+  const backBtnStyle: React.CSSProperties = {
+    display: 'inline-flex', alignItems: 'center', minHeight: 44,
+    padding: '10px 22px', background: 'transparent',
+    border: '1px solid var(--border-default)', color: 'var(--text-secondary)',
+    borderRadius: 8, cursor: 'pointer',
+    fontFamily: 'var(--font-body)', fontSize: '0.9rem',
+  }
+
+  function goToConcept(ci: number) {
+    setStage({ kind: 'concept', ci })
+    // Frontier only grows. Backward / within-range navigation never lowers it,
+    // so saved progress is never regressed.
+    if (ci > frontier) {
+      setFrontier(ci)
+      onProgress({ concept_index: ci })
+    }
   }
 
   function afterConcept(ci: number) {
@@ -97,8 +118,7 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
 
   function nextAfterMini(ci: number) {
     if (ci + 1 < lecture.concepts.length) {
-      setStage({ kind: 'concept', ci: ci + 1 })
-      onProgress({ concept_index: ci + 1 })
+      goToConcept(ci + 1)
     } else if (finalQs.length === 0) {
       // All questions were used as mini-quizzes — skip final, go to done
       const avg = miniScores.length > 0
@@ -111,6 +131,16 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
       setStage({ kind: 'done', score: avg, total: lecture.questions.length })
     } else {
       setStage({ kind: 'final', qi: 0 }); setAnswered(false)
+    }
+  }
+
+  function goForward(ci: number) {
+    // Below the frontier the concept is already cleared — advance directly,
+    // skipping its Quick Check. At the frontier, keep the existing gate.
+    if (ci < frontier) {
+      goToConcept(ci + 1)
+    } else {
+      afterConcept(ci)
     }
   }
 
@@ -141,12 +171,22 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
 
   if (stage.kind === 'concept') {
     const c = lecture.concepts[stage.ci]
+    const action = forwardAction(
+      stage.ci, frontier, lecture.concepts.length, !!miniMap[stage.ci]?.length,
+    )
     return (
       <div>
         <ConceptSection heading={c.heading} body={c.body} index={stage.ci} total={lecture.concepts.length} />
-        <button style={btnStyle} onClick={() => afterConcept(stage.ci)}>
-          {miniMap[stage.ci]?.length ? 'Quick Check →' : stage.ci + 1 < lecture.concepts.length ? 'Next →' : 'Start Quiz →'}
-        </button>
+        <div style={controlRowStyle}>
+          {canGoBack(stage.ci) && (
+            <button style={backBtnStyle} onClick={() => goToConcept(stage.ci - 1)}>
+              ← Previous
+            </button>
+          )}
+          <button style={{ ...btnStyle, marginTop: 0, marginLeft: 'auto' }} onClick={() => goForward(stage.ci)}>
+            {action.label}
+          </button>
+        </div>
       </div>
     )
   }
