@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { split } from './LectureFlow'
+import { split, canGoBack, forwardAction } from './LectureFlow'
 import type { Lecture } from '@/lib/types'
 
 // conceptIndices[i] = the concept index that question i checks
@@ -55,5 +55,32 @@ describe('split', () => {
   it('preserves array order among final questions', () => {
     const { finalQs } = split(makeLecture(1, [0, 0, 0]))
     expect(finalQs.map(q => q.id)).toEqual(['q1', 'q2'])
+  })
+})
+
+describe('canGoBack', () => {
+  it('is false on the first concept', () => {
+    expect(canGoBack(0)).toBe(false)
+  })
+  it('is true on any later concept', () => {
+    expect(canGoBack(1)).toBe(true)
+    expect(canGoBack(7)).toBe(true)
+  })
+})
+
+describe('forwardAction', () => {
+  // signature: forwardAction(ci, frontier, conceptCount, hasMini)
+  it('at the frontier with a mini question → Quick Check', () => {
+    expect(forwardAction(2, 2, 5, true)).toEqual({ kind: 'quiz', label: 'Quick Check →' })
+  })
+  it('at the frontier, last concept, no mini → Start Quiz', () => {
+    expect(forwardAction(4, 4, 5, false)).toEqual({ kind: 'startQuiz', label: 'Start Quiz →' })
+  })
+  it('at the frontier, no mini, more concepts remain → Next', () => {
+    expect(forwardAction(1, 1, 5, false)).toEqual({ kind: 'advance', label: 'Next →' })
+  })
+  it('below the frontier always advances without a quiz', () => {
+    expect(forwardAction(1, 4, 5, true)).toEqual({ kind: 'advance', label: 'Next →' })
+    expect(forwardAction(0, 4, 5, false)).toEqual({ kind: 'advance', label: 'Next →' })
   })
 })
