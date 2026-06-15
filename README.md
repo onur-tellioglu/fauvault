@@ -10,6 +10,18 @@ Live: **[fauvault.space](https://fauvault.space)**
 > course-agnostic — anyone can add their own course (see
 > [Contributing](#contributing)).
 
+<p align="center">
+  <a href="https://fauvault.space">
+    <img src=".github/screenshots/landing.png" alt="FAUVault — choose a course" width="820">
+  </a>
+</p>
+
+<p align="center">
+  <img src=".github/screenshots/quiz.png" alt="Practice quiz with multiple-correct questions and explanations" width="49%">
+  &nbsp;
+  <img src=".github/screenshots/lecture.png" alt="Lecture concept summary with key facts to memorize" width="49%">
+</p>
+
 ## Features
 
 - **Lectures** — readable, Markdown-rendered concept summaries per lecture, with
