@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { Lecture } from '@/lib/types'
 import type { Course } from '@/lib/courses'
 import { ConceptSection } from './ConceptSection'
@@ -28,6 +28,39 @@ export function split(lecture: Lecture) {
   return { miniMap, finalQs }
 }
 
+export function canGoBack(ci: number): boolean {
+  return ci > 0
+}
+
+export type ForwardAction = {
+  kind: 'quiz' | 'startQuiz' | 'advance'
+  label: string
+}
+
+/**
+ * Decides what the concept page's forward button does and what it reads.
+ * Below the frontier the concept's Quick Check was already cleared, so we always
+ * advance without re-showing it. At the frontier we keep the original gate:
+ * Quick Check (a mini question exists), Next (no mini, more concepts remain), or
+ * Start Quiz (last concept).
+ *
+ * Caller contract: `ci <= frontier` always holds — you can never view a concept
+ * beyond the furthest unlocked one.
+ */
+export function forwardAction(
+  ci: number,
+  frontier: number,
+  conceptCount: number,
+  hasMini: boolean,
+): ForwardAction {
+  if (ci < frontier) return { kind: 'advance', label: 'Next →' }
+  // ci === frontier here: callers never view a concept beyond the furthest
+  // unlocked one, so the remaining cases are the frontier gate.
+  if (hasMini) return { kind: 'quiz', label: 'Quick Check →' }
+  if (ci + 1 < conceptCount) return { kind: 'advance', label: 'Next →' }
+  return { kind: 'startQuiz', label: 'Start Quiz →' }
+}
+
 type Props = {
   lecture: Lecture
   course: Course
@@ -43,15 +76,57 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
     [miniMap]
   )
   const [stage, setStage] = useState<Stage>({ kind: 'concept', ci: initialConceptIndex })
+  const [frontier, setFrontier] = useState(initialConceptIndex)
   const [answered, setAnswered] = useState(false)
   const [finalAnswers, setFinalAnswers] = useState<{ selected: number[]; score: number }[]>([])
   const [miniScores, setMiniScores] = useState<number[]>([])
+
+  useEffect(() => {
+    if (stage.kind !== 'concept') return
+    const ci = stage.ci
+    function onKey(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement | null)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+      if (e.key === 'ArrowLeft' && canGoBack(ci)) {
+        e.preventDefault()
+        goToConcept(ci - 1)
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        goForward(ci)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // Re-binds whenever the viewed concept or frontier changes; the handlers
+    // close over exactly those, so the deps below are sufficient.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, frontier])
 
   const btnStyle: React.CSSProperties = {
     marginTop: '1.5rem', padding: '10px 22px',
     background: 'var(--accent)', color: '#0C0C10',
     border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer',
     fontFamily: 'var(--font-body)',
+  }
+  const controlRowStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '1.5rem',
+  }
+  const backBtnStyle: React.CSSProperties = {
+    display: 'inline-flex', alignItems: 'center', minHeight: 44,
+    padding: '10px 22px', background: 'transparent',
+    border: '1px solid var(--border-default)', color: 'var(--text-secondary)',
+    borderRadius: 8, cursor: 'pointer',
+    fontFamily: 'var(--font-body)', fontSize: '0.9rem',
+  }
+
+  function goToConcept(ci: number) {
+    setStage({ kind: 'concept', ci })
+    // Frontier only grows. Backward / within-range navigation never lowers it,
+    // so saved progress is never regressed.
+    if (ci > frontier) {
+      setFrontier(ci)
+      onProgress({ concept_index: ci })
+    }
   }
 
   function afterConcept(ci: number) {
@@ -64,8 +139,7 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
 
   function nextAfterMini(ci: number) {
     if (ci + 1 < lecture.concepts.length) {
-      setStage({ kind: 'concept', ci: ci + 1 })
-      onProgress({ concept_index: ci + 1 })
+      goToConcept(ci + 1)
     } else if (finalQs.length === 0) {
       // All questions were used as mini-quizzes — skip final, go to done
       const avg = miniScores.length > 0
@@ -78,6 +152,16 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
       setStage({ kind: 'done', score: avg, total: lecture.questions.length })
     } else {
       setStage({ kind: 'final', qi: 0 }); setAnswered(false)
+    }
+  }
+
+  function goForward(ci: number) {
+    // Below the frontier the concept is already cleared — advance directly,
+    // skipping its Quick Check. At the frontier, keep the existing gate.
+    if (ci < frontier) {
+      goToConcept(ci + 1)
+    } else {
+      afterConcept(ci)
     }
   }
 
@@ -108,12 +192,22 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
 
   if (stage.kind === 'concept') {
     const c = lecture.concepts[stage.ci]
+    const action = forwardAction(
+      stage.ci, frontier, lecture.concepts.length, !!miniMap[stage.ci]?.length,
+    )
     return (
       <div>
         <ConceptSection heading={c.heading} body={c.body} index={stage.ci} total={lecture.concepts.length} />
-        <button style={btnStyle} onClick={() => afterConcept(stage.ci)}>
-          {miniMap[stage.ci]?.length ? 'Quick Check →' : stage.ci + 1 < lecture.concepts.length ? 'Next →' : 'Start Quiz →'}
-        </button>
+        <div style={controlRowStyle}>
+          {canGoBack(stage.ci) && (
+            <button style={backBtnStyle} onClick={() => goToConcept(stage.ci - 1)}>
+              ← Previous
+            </button>
+          )}
+          <button style={{ ...btnStyle, marginTop: 0, marginLeft: 'auto' }} onClick={() => goForward(stage.ci)}>
+            {action.label}
+          </button>
+        </div>
       </div>
     )
   }
@@ -125,6 +219,18 @@ export function LectureFlow({ lecture, course, initialConceptIndex, onProgress, 
         <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.7rem', color: 'var(--accent)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Concept Check
         </p>
+        {!answered && (
+          <button
+            onClick={() => goToConcept(stage.ci)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', background: 'none', border: 'none',
+              color: 'var(--text-secondary)', cursor: 'pointer', padding: 0, marginBottom: 14,
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem',
+            }}
+          >
+            ← Back to concept
+          </button>
+        )}
         <QuizQuestion question={q} onAnswer={(_, score) => { setMiniScores(prev => [...prev, score]); setAnswered(true) }} />
         {answered && (
           <button style={btnStyle} onClick={() => { nextAfterMini(stage.ci); setAnswered(false) }}>
