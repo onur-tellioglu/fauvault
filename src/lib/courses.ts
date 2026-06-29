@@ -19,8 +19,9 @@ export const COURSES: Record<Course, {
   label: string
   shortLabel: string
   description: string
-  examDate: string   // ISO date string e.g. "2026-04-10T08:00:00"
+  examDate: string   // ISO date string e.g. "2026-04-10T08:00:00"; midnight (T00:00:00) means time TBA
   examLocation?: string   // per-course venue; falls back to global EXAM_LOCATION when absent
+  submissionDate?: string   // optional separate deadline (e.g. project hand-in) shown alongside the exam date
   content: Content
 }> = {
   aip: {
@@ -41,21 +42,22 @@ export const COURSES: Record<Course, {
     label: 'Data Engineering 1',
     shortLabel: 'DE1',
     description: 'FAU · 8 Lectures',
-    examDate: '',   // TBD — update when exam date is announced
+    examDate: '2026-07-22T00:00:00',   // time TBA
     content: de1Content,
   },
   ap: {
     label: 'Applied Programming',
     shortLabel: 'AP',
     description: 'FAU · 5 Lectures',
-    examDate: '',   // TBD — oral exam, date not yet announced
+    examDate: '2026-09-14T00:00:00',         // written or oral exam; time TBA
+    submissionDate: '2026-07-31T00:00:00',   // project hand-in (course achievement); time TBA
     content: apContent,
   },
   bio: {
     label: 'Introduction to Molecular Biology',
     shortLabel: 'BIO',
     description: 'FAU · 7 Lectures',
-    examDate: '',   // TBD — update when exam date is announced
+    examDate: '2026-07-30T14:00:00',
     content: bioContent,
   },
   ads: {
@@ -69,7 +71,7 @@ export const COURSES: Record<Course, {
     label: 'Electronic Human Resources Management',
     shortLabel: 'E-HRM',
     description: 'FAU · 9 Lectures',
-    examDate: '2026-07-03T13:00:00',
+    examDate: '2026-07-02T13:00:00',
     examLocation: 'H4 · Lange Gasse, Nürnberg',
     content: ehrmContent,
   },

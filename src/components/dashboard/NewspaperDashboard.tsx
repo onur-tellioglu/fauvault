@@ -15,11 +15,22 @@ export interface NewspaperDashboardProps {
   courseSlug: string
   examDate: string
   examLocation?: string
+  submissionDate?: string
   currentLecture: CurrentLectureInfo | null
   completedCount: number
   totalLectures: number
   hasFlashcards: boolean
   daysUntilExam: number | null
+}
+
+// Format an exam/deadline date; omit the time when it is midnight (our "time TBA" sentinel).
+function formatExamDate(iso: string): string {
+  const d = new Date(iso)
+  const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0
+  return d.toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+    ...(hasTime ? { hour: '2-digit', minute: '2-digit' } : {}),
+  })
 }
 
 function getLectureProgress(pct: number): string {
@@ -34,7 +45,7 @@ function getEstimatedMinutes(conceptCount: number, conceptIndex: number): number
 
 export function NewspaperDashboard(props: NewspaperDashboardProps) {
   const {
-    courseSlug, examDate, examLocation,
+    courseSlug, examDate, examLocation, submissionDate,
     currentLecture, completedCount, totalLectures,
     hasFlashcards, daysUntilExam,
   } = props
@@ -243,10 +254,13 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
               }}>
                 {examLocation ?? EXAM_LOCATION}
                 <br />
-                {new Date(examDate).toLocaleDateString('en-US', {
-                  month: 'short', day: 'numeric', year: 'numeric',
-                  hour: '2-digit', minute: '2-digit',
-                })}
+                {submissionDate ? `Exam · ${formatExamDate(examDate)}` : formatExamDate(examDate)}
+                {submissionDate && (
+                  <>
+                    <br />
+                    {`Submission · ${formatExamDate(submissionDate)}`}
+                  </>
+                )}
               </div>
             </div>
           )}
