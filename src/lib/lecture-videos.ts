@@ -32,6 +32,7 @@ const LECTURE_VIDEOS: Record<Course, CourseVideos> = {
     seriesUrl: 'https://www.fau.tv/series/applied-data-science-in-medicine-amp-psychology-s25',
     byLecture: {},
   },
+  ehrm: { byLecture: {} },
 }
 
 export function getLectureVideos(course: Course): CourseVideos {
