@@ -8,6 +8,7 @@ import { content as bioContent } from './content-bio'
 import { content as adsContent } from './content-ads'
 import { content as ehrmContent } from './content-ehrm'
 import './exam-prep-re'
+import './mock-exam-ehrm'
 
 export type Course = 'aip' | 're' | 'de1' | 'ap' | 'bio' | 'ads' | 'ehrm'
 
