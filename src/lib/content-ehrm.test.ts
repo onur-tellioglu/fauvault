@@ -34,4 +34,20 @@ describe('content-ehrm structure', () => {
       }
     }
   })
+
+  it('each lecture meets minimum content counts', () => {
+    for (const l of content.lectures) {
+      expect(l.concepts.length, `L${l.id} needs >=6 concepts`).toBeGreaterThanOrEqual(6)
+      expect(l.questions.length, `L${l.id} needs >=5 questions`).toBeGreaterThanOrEqual(5)
+    }
+  })
+
+  it('every flashcard has a non-empty front and back', () => {
+    for (const l of content.lectures) {
+      for (const f of l.flashcards ?? []) {
+        expect(f.front.length, `L${l.id} flashcard front`).toBeGreaterThan(0)
+        expect(f.back.length, `L${l.id} flashcard back`).toBeGreaterThan(0)
+      }
+    }
+  })
 })
