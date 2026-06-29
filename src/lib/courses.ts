@@ -19,8 +19,9 @@ export const COURSES: Record<Course, {
   label: string
   shortLabel: string
   description: string
-  examDate: string   // ISO date string e.g. "2026-04-10T08:00:00"
+  examDate: string   // ISO date string e.g. "2026-04-10T08:00:00"; midnight (T00:00:00) means time TBA
   examLocation?: string   // per-course venue; falls back to global EXAM_LOCATION when absent
+  submissionDate?: string   // optional separate deadline (e.g. project hand-in) shown alongside the exam date
   content: Content
 }> = {
   aip: {
