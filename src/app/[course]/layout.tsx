@@ -6,6 +6,7 @@ import { AuthModalProvider } from '@/components/layout/AuthModalContext'
 import { AuthModal } from '@/components/layout/AuthModal'
 import { GuestCarryOverPrompt } from '@/components/layout/GuestCarryOverPrompt'
 import { getExamPrepExams } from '@/lib/exam-prep'
+import { getMockExam } from '@/lib/mock-exam'
 import { version } from '../../../package.json'
 
 export default async function CourseLayout({
@@ -25,6 +26,7 @@ export default async function CourseLayout({
     (l: { flashcards?: unknown[] }) => l.flashcards?.length
   )
   const hasExamPrep = getExamPrepExams(course as Course).length > 0
+  const hasMockExam = getMockExam(course as Course) !== undefined
 
   return (
     <AuthModalProvider>
@@ -34,6 +36,7 @@ export default async function CourseLayout({
         username={session?.username ?? null}
         hasFlashcards={hasFlashcards}
         hasExamPrep={hasExamPrep}
+        hasMockExam={hasMockExam}
         appVersion={version}
       >
         {children}
