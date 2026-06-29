@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -78,7 +79,11 @@ function OpenTaskView({ task, onScore }: { task: MockOpenTask; onScore: (pts: nu
     <div>
       <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-geist-mono)', marginBottom: 8 }}>{task.points} pts · open / self-assessed</p>
       <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', lineHeight: 1.6, marginBottom: 12 }}>{task.text}</p>
-      {task.image && <img src={task.image} alt="" style={{ maxWidth: '100%', borderRadius: 8, marginBottom: 12, background: '#fff' }} />}
+      {task.image && (
+        <div style={{ position: 'relative', width: '100%', maxWidth: 480, height: 320, marginBottom: 12 }}>
+          <Image src={task.image} alt={`Diagram for task ${task.id}`} fill style={{ objectFit: 'contain', borderRadius: 8, background: '#fff' }} />
+        </div>
+      )}
       {!revealed
         ? <button onClick={() => setRevealed(true)} style={{ padding: '8px 18px', borderRadius: 7, border: '1px solid var(--border-default)', background: 'var(--bg-surface)', color: 'var(--text-secondary)', cursor: 'pointer' }}>Reveal model answer</button>
         : (
@@ -106,10 +111,9 @@ export function MockExamClient({ exam, backHref }: { exam: MockExam; backHref: s
 
   useEffect(() => {
     if (!started) return
-    if (remaining <= 0) return
     const id = setInterval(() => setRemaining(r => Math.max(0, r - 1)), 1000)
     return () => clearInterval(id)
-  }, [started, remaining])
+  }, [started])
 
   const activeParts = exam.parts.filter(p => selected.has(p.id))
   const setScore = (taskId: string, pts: number) => setEarned(prev => ({ ...prev, [taskId]: pts }))
