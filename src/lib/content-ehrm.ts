@@ -825,9 +825,9 @@ export const content: Content = {
     
     **How ties form — antecedents by ESM tool type:**
     
-    - **Wiki ties:** A wiki author who publishes content that colleagues read generates directed information ties from author to reader. When two employees co-edit the same wiki page, a mutual collaboration tie emerges.
-    - **Blog ties:** A blog post creates potential directed ties to every reader. When a reader posts a comment, a mutual interaction tie forms between writer and commenter.
-    - **Social networking ties:** Following another employee creates a directed tie; mutual following creates a bidirectional tie. Social networking applications are especially powerful for building a sense of togetherness in large, dispersed organizations.
+- **Wiki ties:** A wiki author who publishes content that colleagues read generates directed information ties from author to reader. When two employees co-edit the same wiki page, a mutual collaboration tie emerges.
+- **Blog ties:** A blog post creates potential directed ties to every reader. When a reader posts a comment, a mutual interaction tie forms between writer and commenter.
+- **Social networking ties:** Following another employee creates a directed tie; mutual following creates a bidirectional tie. Social networking applications are especially powerful for building a sense of togetherness in large, dispersed organizations.
     
     **Four characteristics that distinguish ESM networks from offline communication networks:**
     1. Nodes are represented by digital profiles — constructed by the employee, by peers, or by the platform itself.
@@ -847,11 +847,11 @@ export const content: Content = {
     
     Consider five employees with the following direct connections:
     
-    - P1 connects to: P2, P3, P4
-    - P2 connects to: P1, P3
-    - P3 connects to: P1, P2, P4, P5
-    - P4 connects to: P1, P3
-    - P5 connects to: P3 only
+- P1 connects to: P2, P3, P4
+- P2 connects to: P1, P3
+- P3 connects to: P1, P2, P4, P5
+- P4 connects to: P1, P3
+- P5 connects to: P3 only
     
     | Employee | Direct connections | Degree centrality |
     |----------|-------------------|------------------|
@@ -865,9 +865,9 @@ export const content: Content = {
     
     **HRM use — job satisfaction indication.** Research reveals a nuanced relationship:
     
-    - **Very low degree centrality** → the employee is socially isolated → associated with **lower job satisfaction** (feels unseen, lacking influence)
-    - **Moderate-to-high degree centrality** → the employee is well-connected and often respected as an informal leader → associated with **higher job satisfaction**
-    - **Excessively high degree centrality** → the employee faces constant demands, requests, and information streams → can cause **lower job satisfaction** through overwork and stress
+- **Very low degree centrality** → the employee is socially isolated → associated with **lower job satisfaction** (feels unseen, lacking influence)
+- **Moderate-to-high degree centrality** → the employee is well-connected and often respected as an informal leader → associated with **higher job satisfaction**
+- **Excessively high degree centrality** → the employee faces constant demands, requests, and information streams → can cause **lower job satisfaction** through overwork and stress
     
     HRM can use degree centrality as a proactive indicator to identify at-risk employees at both extremes: those too isolated to feel engaged, and those so over-connected that burnout becomes likely.`,
         },
@@ -886,9 +886,9 @@ export const content: Content = {
     
     Imagine two internally well-connected clusters and one link between them:
     
-    - Cluster A: employees A1, A2, A3 — all directly connected to each other
-    - Cluster B: employees B1, B2, B3 — all directly connected to each other
-    - Single bridge: the tie between **A2 and B1**
+- Cluster A: employees A1, A2, A3 — all directly connected to each other
+- Cluster B: employees B1, B2, B3 — all directly connected to each other
+- Single bridge: the tie between **A2 and B1**
     
     Every shortest path from any node in Cluster A to any node in Cluster B must travel through the A2—B1 edge. Therefore:
     
@@ -901,9 +901,9 @@ export const content: Content = {
     The A2—B1 edge is a **fragile structure**: if this single tie breaks — for example, because A2 leaves the organization — Clusters A and B become entirely disconnected, causing severe communication disruption across the network.
     
     **HRM implications:**
-    - Team performance is significantly **higher** when knowledge brokers are present — they prevent information asymmetries and power imbalances between subgroups.
-    - Removing a knowledge broker **damages team performance** by cutting off inter-cluster information flow.
-    - HRM should identify knowledge brokers using betweenness centrality and act to retain them — and also foster additional bridging ties to reduce network fragility.`,
+- Team performance is significantly **higher** when knowledge brokers are present — they prevent information asymmetries and power imbalances between subgroups.
+- Removing a knowledge broker **damages team performance** by cutting off inter-cluster information flow.
+- HRM should identify knowledge brokers using betweenness centrality and act to retain them — and also foster additional bridging ties to reduce network fragility.`,
         },
         {
           heading:
@@ -919,9 +919,9 @@ export const content: Content = {
     
     **Formal transparency evaluation** compares the formal organizational hierarchy with the actual ESM network. The formal hierarchy tends to foster connections within departments and between employees of similar rank, suppressing cross-boundary ties. ESM network analysis can reveal:
     
-    - **Horizontal brokers** — employees who connect different departments at the same hierarchical level
-    - **Vertical brokers** — employees who connect different hierarchical levels within the same department
-    - **Dual brokers** — employees who bridge both departmental and hierarchical boundaries simultaneously
+- **Horizontal brokers** — employees who connect different departments at the same hierarchical level
+- **Vertical brokers** — employees who connect different hierarchical levels within the same department
+- **Dual brokers** — employees who bridge both departmental and hierarchical boundaries simultaneously
     
     HRM can use this to determine whether ESM is achieving its transparency goals, and to recognize or support those employees playing key bridging roles.
     
@@ -942,12 +942,12 @@ export const content: Content = {
           shuffle: false,
           text: `In an ESM network at FAUBank, six employees have the following direct connections:
     
-    - E1 connects to: E2 and E3
-    - E2 connects to: E1, E3, and E4
-    - E3 connects to: E1 and E2
-    - E4 connects to: E2, E5, and E6
-    - E5 connects to: E4 only
-    - E6 connects to: E4 only
+- E1 connects to: E2 and E3
+- E2 connects to: E1, E3, and E4
+- E3 connects to: E1 and E2
+- E4 connects to: E2, E5, and E6
+- E5 connects to: E4 only
+- E6 connects to: E4 only
     
     What is the degree centrality of employee E2?`,
           options: ['2', '3', '4', '6'],
@@ -1054,8 +1054,8 @@ export const content: Content = {
             'How do public social media and enterprise social media (ESM) differ?',
           back: `**Organizational social media** is the umbrella term covering both types:
     
-    - **Public social media** — outward-facing; organizations use it to communicate with customers, applicants, and the public (LinkedIn, Twitter, Facebook, YouTube)
-    - **Enterprise social media (ESM)** — inward-facing; supports internal employee communication, knowledge sharing, and collaboration (Confluence, SharePoint, Slack, Microsoft Teams)
+- **Public social media** — outward-facing; organizations use it to communicate with customers, applicants, and the public (LinkedIn, Twitter, Facebook, YouTube)
+- **Enterprise social media (ESM)** — inward-facing; supports internal employee communication, knowledge sharing, and collaboration (Confluence, SharePoint, Slack, Microsoft Teams)
     
     A complete organizational social media strategy addresses both types.`,
         },
@@ -1088,8 +1088,8 @@ export const content: Content = {
         {
           front: 'How does degree centrality relate to job satisfaction?',
           back: `- **Very low** degree centrality → employee feels isolated → **lower** job satisfaction
-    - **Moderate-to-high** degree centrality → employee is well-connected and often respected → **higher** job satisfaction
-    - **Excessively high** degree centrality → constant demands and overload → can cause **lower** job satisfaction (overwork)
+- **Moderate-to-high** degree centrality → employee is well-connected and often respected → **higher** job satisfaction
+- **Excessively high** degree centrality → constant demands and overload → can cause **lower** job satisfaction (overwork)
     
     HRM uses degree centrality to flag at-risk employees at both extremes.`,
         },
@@ -1447,15 +1447,15 @@ export const content: Content = {
     Suppose an HR team trains a decision tree on records from 40 employees, aiming to predict who will pass a compliance certification within 60 days. The algorithm identifies two informative attributes: **department experience** (years) and **e-learning completion rate** (proportion of prior courses completed).
     
     **Root:** Department experience ≥ 2 years?
-    - **Yes branch →** E-learning completion rate ≥ 0.70?
-      - **Yes (leaf):** High completion probability = **0.82**
-      - **No (leaf):** Low completion probability = **0.31**
-    - **No branch (leaf):** Low completion probability = **0.38**
+- **Yes branch →** E-learning completion rate ≥ 0.70?
+- **Yes (leaf):** High completion probability = **0.82**
+- **No (leaf):** Low completion probability = **0.31**
+- **No branch (leaf):** Low completion probability = **0.38**
     
     **Why is "department experience" chosen as the root?** The algorithm measures **information gain** — the reduction in entropy (uncertainty) that each possible split produces. Before any split, 22 of 40 employees pass → entropy ≈ 0.99 bits (high uncertainty). Splitting on "experience ≥ 2 years" yields:
-    - Experienced group (25 employees, 19 pass): entropy ≈ 0.80
-    - Inexperienced group (15 employees, 3 pass): entropy ≈ 0.72
-    - Weighted average entropy after split ≈ 0.77 → **information gain ≈ 0.22 bits**
+- Experienced group (25 employees, 19 pass): entropy ≈ 0.80
+- Inexperienced group (15 employees, 3 pass): entropy ≈ 0.72
+- Weighted average entropy after split ≈ 0.77 → **information gain ≈ 0.22 bits**
     
     The attribute producing the highest information gain is selected first; the process repeats recursively at each branch until the leaves are sufficiently pure or a stopping rule is met. **Critical exam point:** any tree diagram showing labelled attribute splits leading to predicted outcome values is a **decision tree — a machine-learning approach, NOT an expert system.** Expert systems encode rules hand-written by domain specialists; decision trees learn their split conditions from data.
     
@@ -1468,8 +1468,8 @@ export const content: Content = {
           body: `**Voluntary employee turnover** — when a valued employee chooses to leave despite the organization wanting them to stay — is one of the most costly HR challenges. Replacing a departing employee requires months of hiring, training, and socialization effort, and productivity losses extend well beyond the individual who left. Several theoretical frameworks help explain this phenomenon, and people analytics can augment them with data-driven prediction.
     
     **Theory of Organizational Equilibrium (March & Simon, 1958):** Turnover occurs when an employee perceives that their contributions to the organization outweigh the inducements — pay, recognition, development — they receive in return. Two factors govern this imbalance:
-    - **Desire to move** — broadly a function of dissatisfaction with the work environment
-    - **Ease of movement** — determined by macro-level conditions (labor market) and individual factors (skills, qualifications) that shape external employability
+- **Desire to move** — broadly a function of dissatisfaction with the work environment
+- **Ease of movement** — determined by macro-level conditions (labor market) and individual factors (skills, qualifications) that shape external employability
     
     Porter and Steers (1973) added that **unmet expectations** — the gap between what employees anticipated and what they actually experience — are a key source of dissatisfaction driving this imbalance.
     
@@ -1488,8 +1488,8 @@ export const content: Content = {
     **Multi-level nature of turnover:** Determinants of voluntary turnover span three levels — the **environmental level** (labor market, technological trends, national culture), the **firm level** (strategy, structure, HR practices), and the **individual level** (perceived organizational factors, job-related factors, individual demographics and motivations).
     
     **Data-driven vs theory-driven prediction:** Two approaches compete in practice:
-    - **Theory-driven (deductive):** Start with an established turnover theory and test whether organizational data supports its hypotheses — answers *why* employees leave.
-    - **Data-driven (inductive):** Let machine learning identify patterns in the data without imposing a prior theory — answers *who* is at risk of leaving next.
+- **Theory-driven (deductive):** Start with an established turnover theory and test whether organizational data supports its hypotheses — answers *why* employees leave.
+- **Data-driven (inductive):** Let machine learning identify patterns in the data without imposing a prior theory — answers *who* is at risk of leaving next.
     
     Companies such as Google, Credit Suisse, and Xerox use data-driven machine-learning models to flag at-risk employees early and propose personalized countermeasures (salary adjustments, promotions, targeted retraining). However, a critical caution applies: **biased training data produces biased AI predictions.** Amazon's scrapped recruiting AI — trained on male-dominated historical resumes — systematically disadvantaged female applicants, demonstrating that data-driven approaches still require theoretical grounding and ethical oversight. In HR, one must define "truth" first before searching for it in data.`,
         },
@@ -1672,9 +1672,9 @@ export const content: Content = {
     **Definition:** The general idea of a recommender system is that a **recommendation seeker** receives a recommendation drawn from the **universe of alternatives**. The system uses information and data about the user's preferences and similarities to other users to generate this recommendation.
     
     Three roles appear in every recommender scenario:
-    - **Recommendation seeker** — the person who receives the suggestion
-    - **Preference provider** — other users whose ratings and behavior inform the algorithm
-    - **Recommender** — the system that processes preferences and similarity scores to output a ranked suggestion
+- **Recommendation seeker** — the person who receives the suggestion
+- **Preference provider** — other users whose ratings and behavior inform the algorithm
+- **Recommender** — the system that processes preferences and similarity scores to output a ranked suggestion
     
     The underlying assumption is that past behavior (ratings, purchases, browsing history) is a reliable predictor of future preferences. The more interaction data is available — both for the target user and for similar users — the more accurate the predictions become. This enables personalization at scale: instead of one store for all customers, each customer effectively receives their own curated view of the product catalog.`,
         },
@@ -1683,8 +1683,8 @@ export const content: Content = {
           body: `Recommender systems appear in two principal business contexts, and both apply to HRM.
     
     **B2C (Business-to-Consumer):** Platforms help customers navigate large product catalogs:
-    - **Amazon** — "Customers who bought this also bought…", "You might like these articles", predictive shipping (pre-positioning items before purchase based on predicted orders)
-    - **Netflix** — personalized movie and series suggestions based on viewing history
+- **Amazon** — "Customers who bought this also bought…", "You might like these articles", predictive shipping (pre-positioning items before purchase based on predicted orders)
+- **Netflix** — personalized movie and series suggestions based on viewing history
     
     **B2E (Business-to-Employee):** Organizations use recommenders internally:
     
@@ -1717,8 +1717,8 @@ export const content: Content = {
     
     **Collaborative filtering** is further divided into two sub-types:
     
-    - **Memory-based methods** (also called neighborhood-based): Predict ratings by directly comparing user profiles using a similarity measure such as Pearson correlation. These were the earliest collaborative algorithms.
-    - **Model-based methods**: Use machine learning techniques — decision trees, Bayesian models, latent factor models — to build a predictive model from the rating matrix. They can handle sparse data better than memory-based methods.
+- **Memory-based methods** (also called neighborhood-based): Predict ratings by directly comparing user profiles using a similarity measure such as Pearson correlation. These were the earliest collaborative algorithms.
+- **Model-based methods**: Use machine learning techniques — decision trees, Bayesian models, latent factor models — to build a predictive model from the rating matrix. They can handle sparse data better than memory-based methods.
     
     The two fundamental data sources that underpin these approaches are:
     1. **Interaction data** — ratings, purchases, or other user–item signals (used by collaborative filtering)
@@ -1774,8 +1774,8 @@ export const content: Content = {
     
     Three keywords are relevant: *python* (k1), *machine-learning* (k2), *data* (k3).
     
-    - User profile (built from previously rated items): $\\vec{u} = (1,\; 2,\; 2)$
-    - Candidate item profile (TF-IDF weights): $\\vec{d} = (2,\; 1,\; 2)$
+- User profile (built from previously rated items): $\\vec{u} = (1,\; 2,\; 2)$
+- Candidate item profile (TF-IDF weights): $\\vec{d} = (2,\; 1,\; 2)$
     
     **Step 1 — Dot product:**
     $$\\vec{u} \\cdot \\vec{d} = 1 \\times 2 + 2 \\times 1 + 2 \\times 2 = 2 + 2 + 4 = 8$$
@@ -1902,8 +1902,8 @@ export const content: Content = {
     **Classification accuracy — Precision and Recall:**
     
     When recommendations are binary (selected / not selected), two metrics apply:
-    - **Precision** $P = N_{rs} / N_s$ — of all items selected, what fraction are relevant?
-    - **Recall** $R = N_{rs} / N_r$ — of all relevant items, what fraction were selected?
+- **Precision** $P = N_{rs} / N_s$ — of all items selected, what fraction are relevant?
+- **Recall** $R = N_{rs} / N_r$ — of all relevant items, what fraction were selected?
     
     where $N_{rs}$ = relevant and selected, $N_s$ = total selected, $N_r$ = total relevant items in the database.
     
@@ -1934,11 +1934,11 @@ export const content: Content = {
     
     **Fit concepts:**
     
-    - **Supplementary fit**: the individual shares characteristics similar to other members of the environment (person–person similarity; shared values, interests, attitudes)
-    - **Complementary fit**: the individual adds what the environment currently lacks:
-      - *Needs-supplies fit* — the job or team supplies what the individual needs
-      - *Demands-abilities fit* — the individual's abilities meet the job's or team's demands
-    - **Perceived fit** (subjective) vs. **actual fit** (objective, measured indirectly via interaction scores or polynomial regression)
+- **Supplementary fit**: the individual shares characteristics similar to other members of the environment (person–person similarity; shared values, interests, attitudes)
+- **Complementary fit**: the individual adds what the environment currently lacks:
+- *Needs-supplies fit* — the job or team supplies what the individual needs
+- *Demands-abilities fit* — the individual's abilities meet the job's or team's demands
+- **Perceived fit** (subjective) vs. **actual fit** (objective, measured indirectly via interaction scores or polynomial regression)
     
     **Matching characteristics:**
     
@@ -1951,9 +1951,9 @@ export const content: Content = {
     
     **Three HRM recommender types:**
     
-    - **CV/Talent recommender** — candidate searches for relevant positions; matches on *demands-abilities* (can the person do the job?)
-    - **Job recommender** — employer searches for candidates; matches on *needs-supplies* (does the job provide what the person needs?)
-    - **Team recommender** — system suggests candidates who best complement the existing team composition (P-T fit, balancing supplementary and complementary dimensions)`,
+- **CV/Talent recommender** — candidate searches for relevant positions; matches on *demands-abilities* (can the person do the job?)
+- **Job recommender** — employer searches for candidates; matches on *needs-supplies* (does the job provide what the person needs?)
+- **Team recommender** — system suggests candidates who best complement the existing team composition (P-T fit, balancing supplementary and complementary dimensions)`,
         },
       ],
       questions: [
