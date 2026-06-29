@@ -65,6 +65,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ cour
     <NewspaperDashboard
       courseSlug={course}
       examDate={COURSES[course as Course].examDate}
+      examLocation={COURSES[course as Course].examLocation}
       currentLecture={currentLecture}
       completedCount={completed}
       totalLectures={content.lectures.length}

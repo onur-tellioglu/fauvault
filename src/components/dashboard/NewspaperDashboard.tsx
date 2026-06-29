@@ -14,6 +14,7 @@ export interface CurrentLectureInfo {
 export interface NewspaperDashboardProps {
   courseSlug: string
   examDate: string
+  examLocation?: string
   currentLecture: CurrentLectureInfo | null
   completedCount: number
   totalLectures: number
@@ -33,7 +34,7 @@ function getEstimatedMinutes(conceptCount: number, conceptIndex: number): number
 
 export function NewspaperDashboard(props: NewspaperDashboardProps) {
   const {
-    courseSlug, examDate,
+    courseSlug, examDate, examLocation,
     currentLecture, completedCount, totalLectures,
     hasFlashcards, daysUntilExam,
   } = props
@@ -240,7 +241,7 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
                 letterSpacing: '0.08em',
                 lineHeight: 1.6,
               }}>
-                {EXAM_LOCATION}
+                {examLocation ?? EXAM_LOCATION}
                 <br />
                 {new Date(examDate).toLocaleDateString('en-US', {
                   month: 'short', day: 'numeric', year: 'numeric',
