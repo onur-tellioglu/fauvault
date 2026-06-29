@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useAuthModal } from './AuthModalContext'
 import { ACCENT_COLORS } from '@/lib/constants'
 
-const SHELL_SEGMENTS = ['/dashboard', '/lectures', '/quiz', '/flashcard', '/forum', '/leaderboard', '/exam-prep']
+const SHELL_SEGMENTS = ['/dashboard', '/lectures', '/quiz', '/flashcard', '/forum', '/leaderboard', '/exam-prep', '/mock-exam']
 
 function splitTitle(label: string) {
   const i = label.lastIndexOf(' ')
@@ -18,11 +18,12 @@ export interface CourseShellProps {
   username: string | null
   hasFlashcards: boolean
   hasExamPrep: boolean
+  hasMockExam: boolean
   appVersion: string
   children: React.ReactNode
 }
 
-export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, hasExamPrep, appVersion, children }: CourseShellProps) {
+export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, hasExamPrep, hasMockExam, appVersion, children }: CourseShellProps) {
   const pathname = usePathname()
   const { triggerAuthModal } = useAuthModal()
   const [showTweaks, setShowTweaks] = useState(false)
@@ -60,6 +61,7 @@ export function CourseShell({ courseSlug, courseLabel, username, hasFlashcards, 
     { label: 'Lectures', href: `/${courseSlug}/lectures` },
     { label: 'Practice', href: `/${courseSlug}/quiz` },
     ...(hasExamPrep ? [{ label: 'Exam Prep', href: `/${courseSlug}/exam-prep` }] : []),
+    ...(hasMockExam ? [{ label: 'Mock Exam', href: `/${courseSlug}/mock-exam` }] : []),
     ...(hasFlashcards ? [{ label: 'Flashcards', href: `/${courseSlug}/flashcard` }] : []),
     { label: 'Forum', href: `/${courseSlug}/forum` },
     { label: 'Leaderboard', href: `/${courseSlug}/leaderboard` },
