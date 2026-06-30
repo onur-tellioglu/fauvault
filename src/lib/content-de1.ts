@@ -1837,6 +1837,534 @@ export const content: Content = {
           "back": "σ² = (1/n) Σ (x_i − μ)². Squaring serves two purposes: it makes all deviations positive (so positive and negative deviations do not cancel) and it penalizes larger deviations more heavily, making variance sensitive to extreme values."
         }
       ]
+    },
+    {
+      "id": 8,
+      "title": "Data Bias: Modalities, Detection, and Mitigation",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "What Is Data Bias? Definition, Consequences, and the Data-vs-Algorithmic Distinction",
+          "body": "**Data bias:** a *systematic distortion in the data*. It arises from how data is **collected, measured, labeled, or represented**, and often reflects and perpetuates existing social, historical, or institutional inequities. It is typically **unintentional and hard to detect** without critical analysis.\n\n**Core principle:** *Systematic distortion in the data (data bias) can lead to systematic distortion in the results.*\n\n**Bias vs. variance (archery-target analogy):**\n- **Bias** = how far the cluster of shots sits from the bullseye (a systematic offset).\n- **Variance** = how scattered the shots are around their own center (random spread).\n\n**Real-world consequences:**\n\n| Domain | Example consequence |\n|--------|--------------------|\n| Healthcare | Diagnostic algorithms misdiagnose certain populations due to non-representative training data |\n| Criminal justice | Predictive policing reinforces racial profiling and over-policing in marginalized communities |\n| Finance | Credit scoring denies loans via proxies correlated with socio-economic background (e.g., zip code) |\n| Hiring | Resume screening perpetuates socio-economic, ethnic, or gender biases in historical hiring data |\n\n**Bottom line:** biased data is *not just a technical issue* — it is a societal and ethical challenge with tangible impacts on people's lives.\n\n**Data bias vs. algorithmic bias:**\n\n| | Data bias | Algorithmic bias |\n|--|-----------|------------------|\n| Origin | The data collection process | How algorithms process data |\n| Nature | Reflects existing prejudices / systemic inequalities | Can amplify or introduce *new* biases, even with unbiased data |\n| Examples | Biased survey responses, underrepresented groups | Biased recommenders, unfair credit-scoring models |\n\nIn ML, where algorithms learn from data, **data bias often leads to algorithmic bias**.\n\n**Three modalities of data bias** (the structure of this lecture): **structural bias**, **measurement bias**, and **representational bias**."
+        },
+        {
+          "heading": "Structural Bias: Sampling, Historical, Availability, Survivorship, and Imbalance",
+          "body": "**Structural bias:** systematic distortion in data that arises from **social, institutional, or historical structures**. It is embedded in the design of systems, policies, and institutions, and is **often invisible or normalized** within data-generating processes (e.g., funding incentives overrepresenting cancer-associated proteins in protein databases; criminal-justice data overrepresenting groups due to biased policing; mortgage data reflecting historical redlining).\n\nSeveral specific bias types fall under this umbrella:\n\n**Sampling bias** — the data collection process yields a dataset *not representative of the full population*. Driven by experimental design, logistical, historical, or institutional constraints.\n- Medical research relying on urban hospitals, underrepresenting rural populations.\n- Overrepresentation of university students in behavioral studies.\n- Surveys during work hours missing people with full-time jobs.\n\n**Historical bias** — bias embedded in data due to **past social norms, policies, or practices**.\n- *Not* caused by data-collection errors but by reflecting biased realities of the past.\n- Persists even if current practices are unbiased; hard to detect if debiasing happened gradually.\n- Example: employment records reflecting past gender discrimination in hiring.\n\n**Label imbalance** — some classes are heavily over-/underrepresented → models perform poorly on minority classes (e.g., fraud detection with far more non-fraud than fraud cases).\n\n**Missing annotations** — instances lack annotations → degraded performance and *hidden, undetectable biases* (e.g., missing demographic annotations let results claim general-population validity while only valid for the represented subgroup).\n\n**Availability bias** — data collected from the sources easiest to access/observe → overrepresentation of visible, well-documented cases (e.g., social-media analysis using only public posts).\n\n**Survivorship bias** — only *surviving*/successful instances are included → conclusions skewed by ignoring failures (e.g., analyzing only successful startups). Classic illustration: WWII planes — the red dots mark where *returning* planes were hit, so the *unmarked* areas are where downed planes were actually struck."
+        },
+        {
+          "heading": "Measurement Bias: Experimental/Technical, Annotation, Proxy Variables, and Temporal Drift",
+          "body": "**Measurement bias** stems from **how data is captured or labeled** — the specifics of measurement instruments or inconsistent labelling (e.g., imaging data from different scanners showing systematic differences). Its sub-types:\n\n**Experimental and technical bias** — introduced by the *design or setup* of the data-generation process: the tools, technologies, or raw-data transformation algorithms used; the selection of variables; experimenter influence; or controlled conditions that do not reflect reality.\n- *Example — tissue fixation in histopathology:* fixation prior to staining can change tissue properties. **Consequence 1 (misrepresentation):** analysis may misrepresent *in vivo* tissue properties. **Consequence 2 (inconsistency):** different fixation protocols change tissue differently, so data from different labs may be inconsistent (same tissue + same microscope + different fixation → different images).\n\n**Annotation / human labeling bias** — introduced during *manual* labeling, due to human subjectivity, inconsistency, or lack of context. Sources: unclear guidelines / ambiguous criteria, inattention, or annotators' cultural background, beliefs, or implicit biases.\n- **There is almost no manually labeled dataset entirely free of labeling bias!**\n- *Impact:* strong annotation bias → inconsistent ground truth and unreliable training/evaluation. When benchmarking on manually annotated data, **it makes no sense to compare model accuracy beyond the expected error of the manual annotation process**.\n\n**Proxy variables** — an *indirect measure used as a substitute* for a concept hard to observe or quantify directly. Proxies may carry hidden biases, may correlate with sensitive attributes (e.g., socio-cultural background, gender) even unintentionally, and the proxy–target relationship can vary across contexts.\n- *Example:* $\\text{BMI} = \\dfrac{\\text{body mass [kg]}}{(\\text{body height [m]})^2}$ is widely used as a proxy for metabolic health, but **does not distinguish body fat from muscle**.\n\n**Temporal bias (data drift)** — data collected at one point in time no longer reflects current patterns → degraded performance or flawed conclusions. Sources: changes in population behavior/environment/technology; shifts in clinical practice, diagnostic criteria, or coding standards; new policies/medications/treatments. Examples: gradual shift to mobile shopping; evolving credit risk where the same factors no longer predict creditworthiness."
+        },
+        {
+          "heading": "Representational Bias: Underrepresentation, Aggregation Bias, and Foundation Models",
+          "body": "**Representational bias** occurs when some **demographic groups are underrepresented in the data**, leading to **poor generalizability** of a model or result to those underrepresented populations.\n\n**Skin-cancer case study (Daneshjou et al., 2022):** Most skin-cancer image datasets contain far more light- than dark-skinned patients, so models risk performing worse on dark skin. Three state-of-the-art classifiers with excellent *reported* performance — **ModelDerm** (ROC-AUC 0.94), **DeepDerm** (0.88), **HAM10000** (0.92) — were re-tested on new data with light (FST I–II) and dark (FST V–VI) skin tones. **Performance dropped massively, especially for dark skin** (on the DDI dataset, ROC-AUC fell to roughly 0.50–0.57 for FST V–VI).\n\n**Under-/overrepresentation of subpopulations:**\n- *Demographic imbalance:* data reflects the demographics of its source → overrepresentation of majority/dominant groups (e.g., facial-recognition datasets overrepresenting lighter-skinned individuals).\n- Overrepresentation is **not always tied to demographics**, and can even affect datasets that are **not human-related**.\n- Text corpora may lack linguistic diversity or dialectal variation.\n\n**Aggregation bias** — a model is trained on **pooled data without accounting for group-specific differences**. It assumes one-size-fits-all and fails to capture group-driven variability, causing **systematically worse performance for minority groups** *or even bad performance for all groups* (e.g., a diagnostic model good for adults but poor for children due to physiology). **Solutions:** group-aware modeling and stratified evaluation.\n\n**Biased representations in LLMs / foundation models** — language reflects societal norms, stereotypes, and power structures. LLMs represent language as **embeddings (numeric vectors) of tokens (subwords)**:\n- *Tokenization-stage bias:* more efficient representation for words from languages that dominate the training corpora.\n- *Embedding-stage bias:* word embeddings associating \"doctor\" with \"he\" and \"nurse\" with \"she\".\n- *Impact:* downstream models may behave in biased ways and work better for dominant languages. Similar problems affect foundation models for other data modalities."
+        },
+        {
+          "heading": "Detection and Quantification: Fairness Metrics and Modality-Specific Audits",
+          "body": "To assess whether a predictive model outputting prediction $\\hat{Y}$ is biased by a potential **confounder $A$** (for simplicity, assume both target $Y$ and confounder $A$ are binary), the lecture lists four group-fairness criteria:\n\n| Criterion | Intuition | Condition |\n|-----------|-----------|-----------|\n| **Demographic / statistical parity** | Outcome independent of the protected attribute | $P(\\hat{Y}=1 \\mid A=a) = P(\\hat{Y}=1 \\mid A=b)$ |\n| **Equalized odds** | Both TPR *and* FPR equal across groups | $P(\\hat{Y}=y \\mid Y=y, A=a) = P(\\hat{Y}=y \\mid Y=y, A=b)$ for all $y$ |\n| **Equal opportunity** | True-positive rates equal across groups | $P(\\hat{Y}=1 \\mid Y=1, A=a) = P(\\hat{Y}=1 \\mid Y=1, A=b)$ |\n| **Predictive parity** | Precision equal across groups | $P(Y=1 \\mid \\hat{Y}=1, A=a) = P(Y=1 \\mid \\hat{Y}=1, A=b)$ |\n\n**Note:** which criterion is most relevant **depends on the specific use case** — they generally cannot all be satisfied simultaneously.\n\n**Modality-specific detection:**\n- **Text:** analyze word embeddings for stereotype associations, e.g., via **WEAT (Word Embedding Association Test)** — compute (cosine) similarity between *target words* (e.g., male vs. female names) and *attribute words* (e.g., career vs. family). If one target group is systematically closer to one attribute group, the embedding is said to exhibit bias.\n- **Image:** check for over-/under-representation of demographic groups; use **saliency maps** and other explainable-AI techniques to reveal model attention biases.\n- **Tabular:** audit feature correlations with potential bias sources; apply fairness metrics (e.g., demographic parity, equal opportunity); use feature-attribution and other explainable-AI methods to explain biased outcomes."
+        },
+        {
+          "heading": "Mitigation Strategies: Preprocessing, Reweighing, Resampling/SMOTE, and Awareness",
+          "body": "**Data preprocessing techniques:**\n- **Principal Component Analysis (PCA):** an unsupervised method that linearly transforms numeric data into directions (principal components) capturing variance. **Remove components strongly correlated with known bias sources** (e.g., sex, the laboratory where data was generated), then run downstream analysis on the remaining components.\n- **Normalization / transformation:** standardizing or normalizing features prevents models from favoring attributes with larger scales; log-transformations can reduce skewness tied to group disparities.\n\n**Reweighing** — balance the influence of different groups during training **without changing the data itself**. Assign weights to data points based on known bias sources, adjusted to equalize group-label distributions; if a group is underrepresented in positive outcomes, its samples are **up-weighted**.\n- *Advantages:* preserves original data; works with any model supporting instance weights; easy to implement.\n- *Challenges:* requires knowledge of the group-label distribution; may not perform well on highly imbalanced data.\n\n**Resampling** — modify the dataset by adding/removing samples.\n- **Oversampling:** duplicate or synthetically generate samples from underrepresented groups — in *data space* (e.g., rotating/reflecting minority-class images) or in *feature space* (e.g., interpolating between minority-class samples). Popular techniques: **SMOTE**, variational autoencoders, adversarial networks.\n- **Undersampling:** remove samples from overrepresented groups.\n- *Trade-offs:* oversampling can cause **overfitting**; undersampling may **discard valuable information**.\n\n**SMOTE (Synthetic Minority Oversampling Technique):** for each minority-class sample $x$: (1) compute its $k$ nearest minority-class neighbors; (2) randomly select one neighbor $x'$; (3) draw a number $r \\in [0,1]$; (4) add a new synthetic point at position $r$ on the line between $x$ and $x'$; (5) repeat until enough synthetic samples exist.\n\n**The most important mitigation strategy — be aware of (hidden) biases:** almost all mitigation techniques **only apply when the source of a possible bias is known**. You must understand the **data-generation process** to identify possible bias sources, and **talk to domain experts** about which real-world processes and quantities the features represent. Without understanding your data, you will make serious mistakes."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L8Q1",
+          "conceptIndex": 0,
+          "text": "According to the lecture, what is the relationship between data bias and algorithmic bias?",
+          "options": [
+            "Algorithmic bias always causes data bias, never the other way around",
+            "In ML, where algorithms learn from data, data bias often leads to algorithmic bias",
+            "Algorithmic bias can only occur if the underlying data is also biased",
+            "Data bias and algorithmic bias are simply two names for the same phenomenon"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "The deck distinguishes the two: data bias arises from the data collection process, while algorithmic bias emerges from how algorithms process data and can introduce new biases even with unbiased data. In ML specifically, because algorithms learn from data, data bias often leads to algorithmic bias (B). Option C is wrong because algorithmic bias can appear even with unbiased data. A reverses the typical causal direction, and D conflates two distinct concepts.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q2",
+          "conceptIndex": 0,
+          "text": "Which of the following are the three modalities of data bias used to structure this lecture? Select ALL that apply.",
+          "options": [
+            "Structural bias",
+            "Measurement bias",
+            "Representational bias",
+            "Algorithmic bias"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "The lecture organizes data bias into three modalities: structural, measurement, and representational bias (A, B, C). Algorithmic bias (D) is explicitly contrasted with data bias — it emerges from how algorithms process data, not from the data itself, so it is not one of the data-bias modalities.",
+          "type": "multiple"
+        },
+        {
+          "id": "L8Q3",
+          "conceptIndex": 0,
+          "text": "In the archery-target analogy used to introduce data bias, what distinguishes bias from variance?",
+          "options": [
+            "Bias is the random scatter of shots; variance is the systematic offset from the bullseye",
+            "Bias is the systematic offset of the shots from the bullseye; variance is the scatter of shots around their own center",
+            "Both terms describe the same systematic distortion at different scales",
+            "Bias applies only to categorical data while variance applies only to numeric data"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "The archery target visualizes bias as how far the cluster of shots sits from the bullseye (a systematic offset) and variance as how spread out the shots are around their own center (random scatter). Option A swaps the two definitions; C wrongly equates them; D invents a data-type restriction not in the deck.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q4",
+          "conceptIndex": 1,
+          "text": "Analysts mapped where US planes returning from WWII missions had been hit by enemy fire and proposed reinforcing the most-hit areas. Which bias does this illustrate, and why is the naive conclusion wrong?",
+          "options": [
+            "Sampling bias — the planes were observed only during certain hours",
+            "Survivorship bias — only planes that survived are in the dataset, so the areas WITHOUT hits are where downed planes were actually struck",
+            "Historical bias — the data reflects outdated wartime practices",
+            "Aggregation bias — the planes were pooled without group-specific modeling"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "This is the classic survivorship bias example: the dataset contains only the planes that survived and returned. The areas showing many hits are survivable; the unmarked areas are where hits proved fatal, so those are the regions to reinforce. Sampling bias (A) concerns non-representative collection more broadly, historical bias (C) concerns past norms, and aggregation bias (D) concerns pooling subgroups — none capture the survivor-only mechanism.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q5",
+          "conceptIndex": 1,
+          "text": "Which of the following examples fall under the structural-bias section of the lecture? Select ALL that apply.",
+          "options": [
+            "Mortgage approval data reflecting historical redlining practices",
+            "Fraud detection datasets with far more non-fraud than fraud cases (label imbalance)",
+            "Social media analysis based only on public posts (availability bias)",
+            "A diagnostic model trained on pooled data performing poorly on children"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "Within the structural-bias section, the lecture covers historical bias (A, redlining), label imbalance (B, fraud detection), and availability bias (C, only public posts). Option D describes aggregation bias, which belongs to the representational-bias section, where a model trained on pooled data fails to capture group-specific differences.",
+          "type": "multiple"
+        },
+        {
+          "id": "L8Q6",
+          "conceptIndex": 2,
+          "text": "Why does the lecture present BMI as a problematic proxy variable for metabolic health?",
+          "options": [
+            "It cannot be computed for very tall individuals",
+            "It does not distinguish between body fat and muscle mass",
+            "It is measured on a scale where zero has no meaning",
+            "It changes too rapidly over time to be reliable"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "A proxy is an indirect measure substituting for a hard-to-observe concept. BMI = mass / height squared is widely used as a proxy for metabolic health, but its stated problem is that it does not distinguish body fat from muscle (B) — a muscular person and an obese person can share the same BMI. The other options are not the issue raised in the deck.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q7",
+          "conceptIndex": 2,
+          "text": "What is the key implication of annotation / human labeling bias for benchmarking AI models on manually annotated data?",
+          "options": [
+            "Manual annotation should always be replaced by fully automated labeling",
+            "It does not make sense to compare model accuracy beyond the expected error in the manual annotation process",
+            "A model accuracy above 95% proves the annotations were unbiased",
+            "Annotation bias affects only training, never evaluation"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "The deck states that because almost no manually labeled dataset is free of labeling bias, when benchmarking models on such data it makes no sense to compare accuracy beyond the expected error of the manual annotation process (B) — the ground truth itself is noisy/biased. Option D is wrong: annotation bias affects both training and evaluation. A and C are not claims made in the lecture.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q8",
+          "conceptIndex": 3,
+          "text": "A medical diagnostic model is trained on pooled data and performs well for adults but poorly for children due to physiological differences. Which bias is this, and what does the lecture recommend?",
+          "options": [
+            "Temporal bias — retrain on more recent data",
+            "Aggregation bias — use group-aware modeling and stratified evaluation",
+            "Measurement bias — recalibrate the measurement instruments",
+            "Sampling bias — collect more adult data"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "This is aggregation bias: the model is trained on pooled data without accounting for group-specific differences, so it can perform systematically worse for some subgroups (or even all groups). The recommended solutions are group-aware modeling and stratified evaluation (B). The other biases and remedies do not match the pooled-subgroup mechanism described.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q9",
+          "conceptIndex": 4,
+          "text": "Which statements about the fairness criteria for a predictive model are correct? Select ALL that apply.",
+          "options": [
+            "Demographic parity requires the outcome to be independent of the protected attribute: P(Ŷ=1|A=a) = P(Ŷ=1|A=b)",
+            "Equal opportunity requires equal true-positive rates across groups",
+            "Predictive parity requires equal false-positive rates across groups",
+            "Every use case must satisfy all four criteria simultaneously to be considered fair"
+          ],
+          "correct": [
+            0,
+            1
+          ],
+          "explanation": "Demographic (statistical) parity means the outcome is independent of the protected attribute, P(Ŷ=1|A=a)=P(Ŷ=1|A=b) (A correct). Equal opportunity requires equal true-positive rates across groups (B correct). Predictive parity is about equal precision, not equal FPR — equalized odds is the criterion involving FPR — so C is wrong. The deck notes which criterion matters depends on the use case and that they generally cannot all hold at once, so D is wrong.",
+          "type": "multiple"
+        },
+        {
+          "id": "L8Q10",
+          "conceptIndex": 5,
+          "text": "How does SMOTE generate a new synthetic minority-class sample from an existing sample x?",
+          "options": [
+            "By duplicating x exactly k times to inflate the minority class",
+            "By selecting a random nearest minority-class neighbor x', drawing r in [0,1], and adding a point at position r on the line between x and x'",
+            "By rotating or reflecting the image of x in data space",
+            "By removing x and replacing it with the majority-class centroid"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "SMOTE interpolates in feature space: for each minority sample x it finds the k nearest minority neighbors, randomly picks one neighbor x', draws r in [0,1], and places a new synthetic point at position r along the segment from x to x' (B). Option C describes synthetic generation in data space (a different oversampling approach, not SMOTE). Option A is plain duplication; D is not a resampling method described in the deck.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is data bias?",
+          "back": "A systematic distortion in the data, arising from how data is collected, measured, labeled, or represented. Often unintentional and hard to detect, and it reflects/perpetuates existing social, historical, or institutional inequities. Core principle: systematic distortion in the data can lead to systematic distortion in the results."
+        },
+        {
+          "front": "Data bias vs. algorithmic bias?",
+          "back": "Data bias arises from the data collection process and reflects existing prejudices/inequalities. Algorithmic bias emerges from how algorithms process data and can introduce new biases even with unbiased data. In ML, data bias often leads to algorithmic bias."
+        },
+        {
+          "front": "What are the three modalities of data bias in this lecture?",
+          "back": "Structural bias, measurement bias, and representational bias."
+        },
+        {
+          "front": "What is structural bias?",
+          "back": "Systematic distortion arising from social, institutional, or historical structures; embedded in the design of systems/policies/institutions and often invisible or normalized within data-generating processes. Example: funding incentives overrepresenting cancer-associated proteins in protein databases."
+        },
+        {
+          "front": "Sampling bias vs. historical bias?",
+          "back": "Sampling bias: the data collection process yields a dataset not representative of the full population (e.g., only urban hospitals). Historical bias: bias embedded due to past norms/policies/practices; not a collection error; persists even if current practices are unbiased and is hard to detect if debiasing was gradual."
+        },
+        {
+          "front": "What is survivorship bias, and what does the WWII plane example teach?",
+          "back": "Only surviving/successful instances are included, skewing conclusions by ignoring failures. WWII planes: red dots show where RETURNING planes were hit, so the unmarked areas are where downed planes were actually struck — those are the parts to reinforce."
+        },
+        {
+          "front": "Label imbalance vs. missing annotations?",
+          "back": "Label imbalance: some classes are heavily over-/underrepresented (e.g., far more non-fraud than fraud), so models perform poorly on minority classes. Missing annotations: instances lack annotations, degrading performance and introducing hidden, undetectable biases (e.g., missing demographic labels make subgroup-only results look general)."
+        },
+        {
+          "front": "What is experimental/technical bias? (histopathology example)",
+          "back": "Bias introduced by the design/setup of the data-generation process (tools, technologies, transformations, controlled conditions). Tissue fixation before staining changes tissue properties → (1) misrepresents in vivo properties; (2) different fixation protocols make data from different labs inconsistent."
+        },
+        {
+          "front": "Key warning about annotation bias and benchmarking?",
+          "back": "There is almost no manually labeled dataset entirely free of labeling bias. Therefore, when benchmarking on manually annotated data, it makes no sense to compare model accuracy beyond the expected error of the manual annotation process."
+        },
+        {
+          "front": "What is a proxy variable, and what is wrong with BMI as one?",
+          "back": "A proxy is an indirect measure substituting for a concept that is hard to observe directly; it may carry hidden biases and correlate with sensitive attributes. BMI = body mass / (body height)^2 is used as a proxy for metabolic health but does NOT distinguish body fat from muscle."
+        },
+        {
+          "front": "What is temporal bias (data drift)?",
+          "back": "Data collected at one point in time no longer reflects current patterns, degrading model performance or conclusions. Sources: changes in behavior/environment/technology; shifts in clinical practice, diagnostic criteria, or coding standards; new policies/medications. Example: shift from desktop to mobile shopping."
+        },
+        {
+          "front": "What is representational bias? (skin cancer example)",
+          "back": "Some demographic groups are underrepresented, causing poor generalizability to them. Daneshjou et al. 2022: ModelDerm/DeepDerm/HAM10000 (reported ROC-AUC 0.94/0.88/0.92) dropped massively on dark skin tones (FST V–VI, roughly 0.50–0.57 on the DDI dataset)."
+        },
+        {
+          "front": "What is aggregation bias, and how is it mitigated?",
+          "back": "Training a model on pooled data without accounting for group-specific differences; assumes one-size-fits-all and can give systematically worse performance for minority groups, or even bad performance for all groups (e.g., good for adults, poor for children). Solutions: group-aware modeling and stratified evaluation."
+        },
+        {
+          "front": "How does bias propagate in LLMs (tokenization vs. embedding stage)?",
+          "back": "LLMs represent language as embeddings (numeric vectors) of tokens (subwords). Tokenization-stage bias: more efficient representation for words from dominant-corpus languages. Embedding-stage bias: associations like 'doctor'→'he', 'nurse'→'she'. Impact: biased downstream behavior; works better for dominant languages."
+        },
+        {
+          "front": "Name the four fairness criteria for a predictive model with prediction Ŷ and confounder A.",
+          "back": "Demographic/statistical parity: P(Ŷ=1|A=a)=P(Ŷ=1|A=b). Equalized odds: equal TPR and FPR across groups. Equal opportunity: equal TPR across groups. Predictive parity: equal precision across groups. Which is most relevant depends on the use case."
+        },
+        {
+          "front": "Outline the main bias-mitigation strategies, including the SMOTE steps and the single most important one.",
+          "back": "Preprocessing (PCA to remove bias-correlated components; normalization/log-transform). Reweighing (up-weight underrepresented groups without changing data). Resampling (over-/undersampling; SMOTE: for sample x, find k minority neighbors, pick neighbor x', draw r∈[0,1], add point at position r between x and x'). Most important: be aware of (hidden) biases — understand the data-generation process and talk to domain experts, since mitigation only works when the bias source is known."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Outlier Detection: Isolation Forests and the Local Outlier Factor",
+      "speaker": "Prof. Dr. David B. Blumenthal",
+      "concepts": [
+        {
+          "heading": "The What, Why, and Types of Outliers",
+          "body": "**Outlier detection** is the process of identifying data points that deviate from normal data. The hard part is the *key question*: what counts as **'normal'**? Depending on the data, different notions of outlierness apply — e.g. deviation from the center, or deviation from a trend.\n\n**Sources of outliers:**\n- Errors in data collection or entry\n- Rare but important events (fraud, system failures)\n- Novel or emerging patterns\n\n**Why it matters:**\n- **Noise removal** — strip out outliers caused by noise or technical errors *before* analysis → better data quality and more robust results.\n- **Early detection of critical issues** — fraud detection, quality control, cybersecurity, healthcare, finance.\n\n**Types of outliers:**\n\n| Type | Definition | Example |\n|------|-----------|---------|\n| Point | A single instance differs from the rest | Sudden temperature spike |\n| Contextual | Anomalous only in a specific context | Warm winter day |\n| Collective | A group of related points jointly deviate | Sequence of unusual logins |\n\n**Global vs. local:** a *global* outlier deviates significantly from the **entire** dataset; a *local* outlier deviates only **within its neighborhood/cluster** and may look perfectly normal globally.\n\n**Challenges:** curse of dimensionality (distances lose meaning in high dimensions); differing feature scales (need normalization) and within-class variability; noise and missing values; and no clear definition of 'normal', which can drift over time (**concept drift**).\n\n**Four families of detection techniques:**\n\n| Family | Core idea | Example |\n|--------|-----------|---------|\n| Statistical | Assume a distribution (e.g. Gaussian); flag low-probability points | Z-scores |\n| Distance-based | Outliers lie far from their nearest neighbors | $k$-NN |\n| Density-based | Outliers lie in low-density regions vs. neighbors | LOF |\n| Model-based | Build a model; outliers fit poorly or deviate from learned behavior | Isolation forests, autoencoders, regression |"
+        },
+        {
+          "heading": "Evaluating Detectors: Precision@k and Average Precision",
+          "body": "A detector outputs an **outlier ranking** x₁, …, xₙ of dataset X (size n); the set O ⊂ X holds the m known outliers, and rank(x) = i where x = xᵢ.\n\n**Precision at $k$** — fraction of the top-$k$ ranked points that are truly outliers:\n```\nP@k = (1/k) · |{ x ∈ O | rank(x) ≤ k }|\n\nMaximum possible value:   min{1, m/k}\nExpected (random order):  m/n\nAdjusted for chance:      max{0, P@k − m/n} / ( min{1, m/k} − m/n )\n```\n\n**Picking $k$ is tricky.** Example: n = 10000, m = 10, and the method ranks the true outliers at positions 11–20. The ranking is clearly good, yet **P@10 = 0** and adjusted P@10 = 0.\n\n**Solution — Average Precision (AP):** average P@k over the ranks of the ground-truth outliers only:\n```\nAP = (1/m) · Σ_{x ∈ O} P@rank(x)\n\nMaximum possible value:   1\nExpected (random order):  m/n\nAdjusted for chance:      max{0, AP − m/n} / ( 1 − m/n )\n```\n\nThe **adjustment for chance** answers: how much better than a random ranking is the produced ordering? A negative raw advantage is clipped to 0 via the outer `max{0, ·}`."
+        },
+        {
+          "heading": "Isolation Forests I: Easy Separability and Isolation Trees",
+          "body": "**Scenario:** find outliers in a numeric dataset X = {x¹, …, xⁿ} of $d$-dimensional points xⁱ = (x_{i,j}) ∈ ℝᵈ.\n\n**Concept of outlierness:** a point is an outlier **iff it is *easy to separate*** from the rest. Intuitively, **few** random axis-parallel splits isolate an outlier, whereas a normal point deep in a dense region needs **many** splits.\n\n**Isolation tree (iTree) — inner node** `(S, h, j, τ, l, r)`:\n```\nS ⊆ X   sub-collection of points      h   height of the node in the tree\nj       split feature, drawn at RANDOM from {1, …, d}\nτ       split threshold, drawn at RANDOM from [min, max] of feature j over S\nl.S = { xⁱ ∈ S | x_{i,j} < τ }         r.S = S ∖ l.S   (feature ≥ τ)\nroot:   special inner node with S = X and h = 0\n```\n\n**Leaf** `(S, h, ·, ·, ·, ·)` — stops on one of three conditions:\n1. $S$ contains only **one** data point (isolated), **or**\n2. all points in $S$ are **identical** (multi-sets are maintained, not true sets), **or**\n3. $h ≥ hlim$ (maximal height, a hyper-parameter).\n\n**Building an iTree:** keep a worklist O (partially processed) and a result set T; start with the root in O. Repeatedly pop a node v; if it meets a leaf condition, move it to T; otherwise draw v.j and v.τ, create both children at height h+1, push them onto O. iTrees are thus **special binary trees**: inner nodes hold not-yet-separated sets plus a split rule; leaves hold isolated ($|v.S| = 1$) or difficult-to-isolate ($v.h = hlim$) points."
+        },
+        {
+          "heading": "Isolation Forests II: Subsampling, Outlier Score, and the BST Connection",
+          "body": "An **isolation forest** F = {(T′, X′) | X′ ⊆ X} is a collection of iTrees, each built on a random subsample X′ of size ψ ≤ n, drawn **without replacement**.\n```\nDefaults (paper):  ψ = min{n, 256}   (subsample size)\n                   |F| = 100          (number of trees)\n```\n**Why subsample?** (1) sparsifying the data removes normal points that would otherwise *mask* outliers; (2) different sparse subsamples represent different outlier sets. Small ψ tends to perform **better**.\n\n**Outlier score.** Let $F(x)$ be the trees covering x and ℓ_T(x) the root-to-leaf path length of x in tree T. With average path length ℓ(x) = |F(x)|⁻¹ · Σ ℓ_T(x):\n```\ns(x) = 2^( −ℓ(x) / c(ψ) )          range:  s(x) ∈ (0, 1)\n```\nc(ψ) is the **expected** path length and does **not** depend on x.\n\n| Path length | Score | Meaning |\n|-------------|-------|---------|\n| ℓ(x) < c(ψ) | s(x) → 1 | outlier (easy to isolate) |\n| ℓ(x) ≈ c(ψ) | s(x) ≈ 0.5 | normal |\n| ℓ(x) > c(ψ) | s(x) → 0 | denser-than-normal region |\n\ns(x) is a **global, model-based** score.\n\n**BST connection.** iTrees and **binary search trees (BSTs)** have equivalent structure, and paths to isolated points correspond to *unsuccessful searches* in BSTs. Using known BST properties:\n```\nc(ψ)  = 2·H(ψ−1) − 2(ψ−1)/ψ      H(k) ≈ ln(k) + 0.577   (k-th harmonic number)\nhlim  = log₂(ψ)                   (average BST height)\n```\nThe height limit is acceptable because we only care about *shorter-than-average* paths; longer ones are **approximated** to save time — for a non-isolated leaf v covering x, set ℓ_T(x) = d(o, v) + c(|v.S|)."
+        },
+        {
+          "heading": "Local Outlier Factor I: Local Outliers, k-Distance, k-Neighborhood",
+          "body": "**Scenario:** find outliers in X = {x₁, …, xₙ} given a suitable distance function `d : X × X → ℝ≥0` (**required as input**).\n\n**Concept of outlierness:** x is a **(local) outlier iff its neighborhood is less dense than the neighborhoods of its neighbors.**\n\n**Motivating example.** With a dense cluster C₂ and a sparse cluster C₁, both o₁ and o₂ look like outliers, but only o₁ is *global*. Point o₂ is a **local** outlier: it lies far from *its* cluster C₂, yet its distance to C₂ is comparable to the typical distances *inside* the sparse cluster C₁. Global / distance methods miss o₂; **LOF catches it.**\n\n**Key question 1 — neighbors.** Order X ∖ {x} by increasing distance to x as y₁, …, y_{n−1}.\n```\nk-distance:      d_k(x) = d(x, y_k)        (distance to the k-th nearest point)\nk-neighborhood:  N_k(x) = { y ∈ X | d(x, y) ≤ d_k(x) }\n```\n**Two subtleties:**\n- $|N_k(x)|$ **can exceed $k$** if several points tie at exactly the $k$-distance $d_k(x)$.\n- The neighbor relation is **not symmetric**: $y ∈ N_k(x)$ does **not** imply $x ∈ N_k(y)$."
+        },
+        {
+          "heading": "Local Outlier Factor II: Reachability Density and the LOF Score",
+          "body": "**Key question 2 — density.** A naive density (inverse of the mean distance to neighbors) is unstable: since `1/x` explodes for small x, tiny differences in average distance produce huge density differences. **Fix:** round small distances *up* to the $k$-distance.\n```\nReachability distance:   d_k(x, y) = max{ d_k(y), d(x, y) }     (NOT symmetric → not a true metric)\nLocal reach. density:    LRD_k(x) = ( |N_k(x)|⁻¹ · Σ_{y∈N_k(x)} d_k(x, y) )⁻¹\nLocal Outlier Factor:    LOF_k(x) = |N_k(x)|⁻¹ · Σ_{y∈N_k(x)} LRD_k(y) / LRD_k(x)\n```\nPoints inside y's $k$-neighborhood all share the value d_k(y); farther points keep their real distance. Range $LOF_k(x) ∈ (0, ∞)$:\n\n| Value | Interpretation |\n|-------|----------------|\n| ≈ 1 | density similar to neighbors (normal) |\n| < 1 | neighborhood **denser** than neighbors' (inlier) |\n| > 1 | neighborhood **less dense** than neighbors' → **outlier** |\n\n**Homogeneous-cluster guarantee.** Define the relative $k$-reachability spread ε(C) = M_k(C)/m_k(C) − 1 of a cluster C, where M_k and m_k are the max and min reachability distances within C. A point buried deep inside (x ∈ C and its two-hop neighborhood N²_k(x) ⊆ C) is bounded by\n```\n(1 + ε(C))⁻¹ ≤ LOF_k(x) ≤ 1 + ε(C)\n```\nso when all reachability distances in C are similar (ε(C) → 0), $LOF_k(x) → 1$."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L9Q1",
+          "conceptIndex": 0,
+          "text": "What distinguishes a local outlier from a global outlier?",
+          "options": [
+            "A local outlier deviates from the entire dataset, while a global outlier deviates only within its cluster",
+            "A local outlier deviates only within its neighborhood or cluster and may appear normal globally, while a global outlier deviates significantly from the entire dataset",
+            "Local and global outliers are identical; the two terms are interchangeable",
+            "A local outlier is always also a collective outlier"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "Per the slides, a global outlier deviates significantly from the entire dataset, whereas a local outlier deviates only within a local neighborhood or cluster and can look perfectly normal globally. Option A reverses the two definitions. Option C is false — they are explicitly different categories. Option D conflates unrelated concepts (collective outliers are groups of points; locality is about neighborhood-relative deviation).",
+          "type": "single"
+        },
+        {
+          "id": "L9Q2",
+          "conceptIndex": 0,
+          "text": "Which of the following statements about the types and sources of outliers are correct? Select ALL that apply.",
+          "options": [
+            "A contextual outlier is anomalous only in a specific context, such as a warm winter day",
+            "Collective outliers are single data instances that differ from all other points",
+            "Rare but important events such as fraud or system failures are a legitimate source of outliers",
+            "A point outlier refers to a group of related points that jointly deviate from the norm"
+          ],
+          "correct": [
+            0,
+            2
+          ],
+          "explanation": "A is correct: a contextual outlier is anomalous only in a specific context (warm winter day). C is correct: rare but important events (fraud, system failures) are one of the three listed sources of outliers. B is wrong — that describes a point outlier; a collective outlier is a *group* of related points that together deviate. D is wrong — that is the definition of a collective outlier; a point outlier is a single instance.",
+          "type": "multiple"
+        },
+        {
+          "id": "L9Q3",
+          "conceptIndex": 1,
+          "text": "A dataset has n = 200 points and m = 8 known outliers. A detector's top-20 ranked points contain 6 true outliers. What is P@20?",
+          "options": [
+            "0.30",
+            "0.04",
+            "0.40",
+            "0.75"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "P@k = (1/k) · |{outliers in top k}| = 6 / 20 = 0.30. The distractors are other quantities from the same slide: 0.04 = m/n = 8/200 is the chance-expected value; 0.40 = min{1, m/k} = 8/20 is the maximum possible P@20; 0.75 = 6/8 is the recall (fraction of all outliers recovered), not precision.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q4",
+          "conceptIndex": 1,
+          "text": "Under a completely random ranking, what is the expected value of P@k?",
+          "options": [
+            "m/n",
+            "m/k",
+            "min{1, m/k}",
+            "k/n"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slide derives the expected P@k under a random ordering as k⁻¹ · Σ_{x∈O} P[rank(x) ≤ k] = k⁻¹ · Σ_{x∈O} k/n = m/n. Option C, min{1, m/k}, is the *maximum possible* value of P@k, not the expected one. Options B and D do not appear as either bound.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q5",
+          "conceptIndex": 2,
+          "text": "In isolation forests, when is a data point considered an outlier?",
+          "options": [
+            "When it requires many random splits to be isolated from the other points",
+            "When it can be isolated from the other points with only a few random splits",
+            "When it lies within a high-density region of the feature space",
+            "When all of its k nearest neighbors belong to the same cluster"
+          ],
+          "correct": [
+            1
+          ],
+          "explanation": "The isolation-forest notion of outlierness is 'easy to separate': an outlier can be isolated with only a few random axis-parallel splits, so it ends up in leaves close to the root. Option A describes a normal point (many splits needed). Option C also describes an inlier — dense regions need many splits. Option D mixes in a neighborhood idea that belongs to LOF, not isolation forests.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q6",
+          "conceptIndex": 3,
+          "text": "Which statements about isolation forests are correct? Select ALL that apply.",
+          "options": [
+            "The default subsample size in the original paper is ψ = min{n, 256}",
+            "The outlier score s(x) always lies in the open range (0, 1)",
+            "A score s(x) close to 1 indicates a normal (inlier) point",
+            "Subsampling helps because sparsifying the data removes normal points that would otherwise mask outliers"
+          ],
+          "correct": [
+            0,
+            1,
+            3
+          ],
+          "explanation": "A is correct: the paper default is ψ = min{n, 256} (with |F| = 100 trees). B is correct: s(x) = 2^(−ℓ(x)/c(ψ)) ∈ (0, 1). D is correct: this is the first stated reason for subsampling (the second is that sparse subsamples can represent different outlier sets). C is wrong — s(x) close to 1 means an outlier (short average path length); a normal point has s(x) ≈ 0.5.",
+          "type": "multiple"
+        },
+        {
+          "id": "L9Q7",
+          "conceptIndex": 3,
+          "text": "A point's average path length in an isolation forest is approximately equal to the normalizing constant c(ψ). What is its outlier score s(x), and what does it indicate?",
+          "options": [
+            "s(x) ≈ 0.5, indicating a normal point",
+            "s(x) ≈ 1, indicating a clear outlier",
+            "s(x) ≈ 0, indicating a clear outlier",
+            "s(x) ≈ 0.5, indicating a clear outlier"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "With ℓ(x) ≈ c(ψ), the exponent −ℓ(x)/c(ψ) ≈ −1, so s(x) = 2^(−1) ≈ 0.5, which the slide labels a normal point. A score close to 1 arises when ℓ(x) < c(ψ) (outlier); a score close to 0 arises when ℓ(x) > c(ψ) (denser-than-normal region). Option D states the right number but the wrong interpretation.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q8",
+          "conceptIndex": 4,
+          "text": "Which statement about the k-neighborhood N_k(x) is correct?",
+          "options": [
+            "|N_k(x)| is always exactly k",
+            "The neighbor relation is symmetric: y ∈ N_k(x) implies x ∈ N_k(y)",
+            "|N_k(x)| may exceed k when several points tie at exactly the k-distance, and the relation is not symmetric",
+            "N_k(x) can only be computed when the data lives in Euclidean space"
+          ],
+          "correct": [
+            2
+          ],
+          "explanation": "The slides note two subtleties: |N_k(x)| can be greater than k when multiple points sit exactly at distance d_k(x) (ties), and the relation {(x,y) | y ∈ N_k(x)} is not symmetric. So A and B are false. D is false — LOF only requires a suitable distance function d : X × X → ℝ≥0, not specifically a Euclidean embedding.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q9",
+          "conceptIndex": 5,
+          "text": "Which of the following statements about local reachability density and the LOF score are correct? Select ALL that apply.",
+          "options": [
+            "The k-reachability distance is d_k(x, y) = max{ d_k(y), d(x, y) }",
+            "LOF_k(x) > 1 means x's neighborhood is less dense than its neighbors', suggesting an outlier",
+            "LOF_k(x) < 1 indicates a stronger outlier than a point with LOF_k(x) ≈ 1",
+            "Rounding small distances up to the k-distance makes the local density estimate more robust to small differences"
+          ],
+          "correct": [
+            0,
+            1,
+            3
+          ],
+          "explanation": "A is correct: the reachability distance of x from y is max{d_k(y), d(x, y)}. B is correct: LOF_k(x) > 1 means the point's neighborhood is less dense than those of its neighbors, the outlier case. D is correct: rounding small distances up to the k-distance is exactly the motivation for the LRD (the naive 1/mean-distance density is unstable for small distances). C is wrong — LOF_k(x) < 1 means the neighborhood is *denser* than its neighbors', i.e. a strong inlier, not an outlier.",
+          "type": "multiple"
+        },
+        {
+          "id": "L9Q10",
+          "conceptIndex": 5,
+          "text": "Why does a point buried deep inside a homogeneous cluster have LOF_k(x) ≈ 1?",
+          "options": [
+            "Because its two-hop neighborhood lies inside the cluster and all k-reachability distances there are similar, so the bound (1+ε(C))⁻¹ ≤ LOF_k(x) ≤ 1+ε(C) squeezes toward 1 as ε(C) → 0",
+            "Because deep points always have the largest local reachability density in the whole dataset",
+            "Because LOF is undefined inside clusters and defaults to 1 by convention",
+            "Because the k-distance of every deep point is exactly zero"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slides prove that if x ∈ C and its two-hop neighborhood N²_k(x) ⊆ C, then (1+ε(C))⁻¹ ≤ LOF_k(x) ≤ 1+ε(C), where ε(C) = M_k(C)/m_k(C) − 1 measures how uniform the cluster's reachability distances are. As ε(C) → 0 (homogeneous cluster), both bounds tighten to 1. Option B is false — density is compared *relative* to neighbors, not globally maximal. Option C is false — LOF is well-defined. Option D is false — k-distances are not zero for distinct points.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is outlier detection, and what is its central difficulty?",
+          "back": "The process of identifying data points that deviate from normal data. The central difficulty is defining what counts as 'normal' — different data call for different notions of outlierness (e.g. deviation from the center vs. deviation from a trend)."
+        },
+        {
+          "front": "Name the three sources of outliers.",
+          "back": "(1) Errors in data collection or entry; (2) rare but important events such as fraud or system failures; (3) novel or emerging patterns."
+        },
+        {
+          "front": "Distinguish point, contextual, and collective outliers.",
+          "back": "Point: a single instance differs from the rest (temperature spike). Contextual: anomalous only in a specific context (warm winter day). Collective: a group of related points jointly deviate (a sequence of unusual logins)."
+        },
+        {
+          "front": "Global vs. local outlier?",
+          "back": "A global outlier deviates significantly from the entire dataset. A local outlier deviates only within its neighborhood or cluster and may appear perfectly normal globally."
+        },
+        {
+          "front": "Name the four families of outlier-detection techniques with one example each.",
+          "back": "Statistical (z-scores), distance-based (k-NN), density-based (LOF), and model-based (isolation forests / autoencoders / regression models)."
+        },
+        {
+          "front": "Define Precision@k and give its maximum and chance-expected values.",
+          "back": "P@k = k⁻¹ · |{ x ∈ O | rank(x) ≤ k }| — the fraction of the top-k that are true outliers. Maximum possible = min{1, m/k}; expected under a random ranking = m/n."
+        },
+        {
+          "front": "Why is Average Precision (AP) preferred over a single P@k, and how is it defined?",
+          "back": "A single k can score 0 even for a good ranking (e.g. true outliers ranked 11–20 give P@10 = 0). AP averages P@k over the ranks of the ground-truth outliers: AP = m⁻¹ · Σ_{x∈O} P@rank(x). Maximum = 1, expected (random) = m/n."
+        },
+        {
+          "front": "What is the isolation-forest concept of outlierness?",
+          "back": "A point is an outlier iff it is easy to separate from the rest — only a few random axis-parallel splits are needed to isolate it, so it lands in leaves close to the root. Normal points deep in dense regions need many splits."
+        },
+        {
+          "front": "Give the inner-node tuple of an isolation tree and the three leaf conditions.",
+          "back": "Inner node (S, h, j, τ, l, r): sub-collection S, height h, random split feature j, random threshold τ ∈ [min, max] of feature j over S, children l (x_{i,j} < τ) and r (≥ τ). Leaf if: S has one point; OR all points in S are identical; OR h ≥ hlim."
+        },
+        {
+          "front": "State the isolation-forest defaults and the two reasons for subsampling.",
+          "back": "Defaults: ψ = min{n, 256} (subsample size), |F| = 100 trees. Subsampling helps because (1) sparsifying removes normal points that mask outliers, and (2) different sparse subsamples represent different outlier sets. Small ψ tends to perform better."
+        },
+        {
+          "front": "State the isolation-forest outlier score and how to interpret it.",
+          "back": "s(x) = 2^(−ℓ(x)/c(ψ)), with ℓ(x) the average root-to-leaf path length and c(ψ) the expected path length (independent of x). Range (0,1): s ≈ 1 → outlier (short paths); s ≈ 0.5 → normal; s ≈ 0 → denser-than-normal region."
+        },
+        {
+          "front": "How are c(ψ) and hlim derived from binary search trees (BSTs)?",
+          "back": "iTrees and BSTs share structure, and paths to isolated points correspond to unsuccessful BST searches. c(ψ) = 2·H(ψ−1) − 2(ψ−1)/ψ with H(k) ≈ ln(k) + 0.577 (k-th harmonic number, average unsuccessful-search length); hlim = log₂(ψ) (average BST height)."
+        },
+        {
+          "front": "Define the k-distance and the k-neighborhood.",
+          "back": "Order X∖{x} by increasing distance to x: d_k(x) = d(x, y_k) is the distance to the k-th nearest point. N_k(x) = { y ∈ X | d(x, y) ≤ d_k(x) }. Note: |N_k(x)| can exceed k under ties, and the neighbor relation is not symmetric."
+        },
+        {
+          "front": "Define the k-reachability distance and explain the 'rounding up' trick.",
+          "back": "d_k(x, y) = max{ d_k(y), d(x, y) } — the reachability distance of x from y. Small distances are rounded up to y's k-distance, so the local density is robust to tiny differences (the naive 1/mean-distance density explodes for small distances). It is not symmetric, hence not a true metric."
+        },
+        {
+          "front": "State the LOF score and its three interpretation ranges.",
+          "back": "LOF_k(x) = |N_k(x)|⁻¹ · Σ_{y∈N_k(x)} LRD_k(y) / LRD_k(x), range (0, ∞). ≈ 1: density like its neighbors (normal); < 1: denser than neighbors (inlier); > 1: less dense than neighbors → outlier."
+        },
+        {
+          "front": "Why do points deep inside a homogeneous cluster have LOF ≈ 1?",
+          "back": "With ε(C) = M_k(C)/m_k(C) − 1, any x with two-hop neighborhood N²_k(x) ⊆ C satisfies (1+ε(C))⁻¹ ≤ LOF_k(x) ≤ 1+ε(C). When all k-reachability distances in C are similar, ε(C) → 0 and the bounds squeeze LOF to 1."
+        }
+      ]
     }
   ]
 }
