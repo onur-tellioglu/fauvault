@@ -1817,6 +1817,536 @@ export const content: Content = {
           "back": "DNA = deoxyribose (no 2′ –OH); RNA = ribose (2′ –OH). Blood groups: terminal surface sugar defines type — A adds N-acetylgalactosamine, B adds galactose, AB has both, O has neither."
         }
       ]
+    },
+    {
+      "id": 8,
+      "title": "Genomics: Genome Sequencing, Genetic Variation & AI Interpretation",
+      "speaker": "Katja Kobow",
+      "concepts": [
+        {
+          "heading": "Genomics vs. Genetics & a Short History of Sequencing",
+          "body": "**Genomics** and **genetics** are related but distinct fields:\n\n| Field | Studies | Focus |\n|---|---|---|\n| **Genomics** | The **entire genome** — the full set of DNA, including all genes *and* noncoding sequences | How this information influences **biology, health, and disease** |\n| **Genetics** | **Individual genes** and how **hereditary traits** pass from one generation to the next | The **function, variation, and inheritance** of *specific* genes |\n\n**From micro to macro:** the body is organized across scales. The *visible* levels run brain → grey/white matter → cells → nucleus with chromatin. These are produced from *invisible* molecular **building blocks** following the central dogma: **DNA → RNA (transcription) → Protein (translation)**.\n\n**Short history of sequencing (key milestones):**\n- **1980** — Nobel Prize for DNA sequencing (Berg, Gilbert, Sanger)\n- **2001** — **Human Genome Project completed** (Sanger sequencing)\n- **2005** — **NGS** (next-generation / massively parallel sequencing); cost dropped from the ~**2.7 billion USD** Human Genome Project toward **under 1,000 USD per genome**\n- **2014** — 3rd-generation **long-read sequencing** (Nanopore)\n- **2021** — Nobel Prize for **CRISPR/Cas** (Charpentier, Doudna)"
+        },
+        {
+          "heading": "From Reads to Reference: Genome Assembly & Reference Genomes",
+          "body": "**Genome assembly** reconstructs a genome from sequencing reads:\n- Reads are resolved into **nucleotide bases** (A, T, G, C — plus *ambiguous* base calls).\n- Reads are **randomly distributed** across the target DNA.\n- Reads represent an **oversampling** of the target, so individual reads **repeatedly overlap** (higher *coverage* = better quality).\n- Genome **assemblers calculate overlaps** between reads and (usually) represent them as a **graph/network**, then **\"walk\" the graph** to determine the original sequence.\n\nA **reference genome** is a *digital, annotated representation* of the complete set of DNA sequences of a species — a **standard template** for comparing and interpreting individual genomes.\n- It is **NOT** the genome of a single individual; it is a **composite**.\n- It acts as a **scaffold** for aligning reads, identifying genetic variants, and annotating genes.\n\n| Reference | Year | Note |\n|---|---|---|\n| **GRCh38** | 2013 | Most widely used human reference; assembled by the **Genome Reference Consortium** |\n| **T2T** | 2022 | First **telomere-to-telomere** complete human genome; fills gaps in GRCh38 |\n\n**Limitations of (linear) reference genomes:**\n\n| Limitation | Impact |\n|---|---|\n| **Lack of diversity** | GRCh38 is based mostly on individuals of **European ancestry** → may bias variant detection/interpretation |\n| **Structural gaps** | Centromeres, telomeres, segmental duplications were incomplete/missing until T2T |\n| **Non-representativeness** | A single linear reference cannot reflect population-wide variation or structural diversity |\n| **Annotation lag** | Gene models and regulatory-element annotations can be incomplete or inaccurate |\n| **Somatic/mosaic variation ignored** | References represent **germline** DNA and miss context-specific variation (e.g. cancer genomes, brain mosaicism) |"
+        },
+        {
+          "heading": "Genetic Variation: HGVS Nomenclature, SNP Consequences & Splice Variants",
+          "body": "Variants are described with **HGVS nomenclature** using three coordinate systems:\n\n| Code | Refers to | Example |\n|---|---|---|\n| **g.** | **Genomic** DNA coordinate | g. chr13:32340128G>A (GRCh38/hg38) |\n| **c.** | **Coding / complementary DNA** | c.5353C>T |\n| **p.** | **Protein** | p.Ser1785Leu |\n\nThe example above is a **missense** change: a wild-type **Ser** becomes **Leu**.\n\n**Consequences of single-nucleotide variants (SNPs):**\n\n| Type | Example | Consequence |\n|---|---|---|\n| **Missense** | G→A | Single amino-acid change |\n| **Nonsense** | CAA→TAA | **Premature stop** codon |\n| **Frameshift** | insertion (+A) | Wrong sequence, with or without a premature stop |\n| **Regulatory-region** | promoter hit | **No mRNA → no protein** |\n\n**Splice variants (interpreted with SpliceAI):** e.g. **c.275-1G>T** affects the **last base of intron 2**, immediately upstream of *SLC35A2* exon 3. It alters the **canonical acceptor splice site (invariant AG)** → likely **exon skipping or aberrant splicing**. The protein effect **cannot be precisely predicted** without transcript-level splicing analysis (likely a frameshift or exon skipping). SpliceAI is an **AI application** for splice-variant interpretation."
+        },
+        {
+          "heading": "Common vs. Rare Variants: GWAS, Penetrance & Detection Methods",
+          "body": "**Common variants — GWAS (Genome-Wide Association Study):**\n- Collect a trait (e.g. height) plus genetic data across many individuals.\n- Run **single-variant association tests** for candidate variants (e.g. rs123) — here *A* alleles increase height on average, $P = 5 \\times 10^{-10}$.\n- A significant variant **may not be causal** — it can be a measured **proxy** in linkage with the true causal variant (e.g. rs123 tags rs456).\n- GWAS use **evenly spaced proxies** across the genome; a **Manhattan plot** shows whether $-\\log_{10}(P)$ passes the **genome-wide significance threshold**.\n- Follow-up: **fine-mapping, functional work, meta-analysis** to identify causal variants and their function.\n\n**Penetrance vs. allele frequency** (how variants relate to disease):\n\n| Category | Penetrance | Allele frequency |\n|---|---|---|\n| **Mendelian disease** | High | Rare |\n| Highly unusual for common disease | High | Common |\n| Hard to identify genetically | Low / modest | Rare |\n| **Most variants found by GWA studies** | Low / modest | Common |\n\nLow-frequency variants with **intermediate penetrance** sit between these corners.\n\n**Detection methods scale with how much of the genome is read:**\n\n| Method | Bases covered |\n|---|---|\n| **Targeted sequencing** | ~1 to hundreds of genes |\n| **GWAS SNP arrays** | ~1 million bases detected (~10–60 million imputed from haplotypes) |\n| **Exome sequencing** | ~30 million bases (coding exons) |\n| **Genome sequencing** | ~3 billion bases (whole genome) |"
+        },
+        {
+          "heading": "Structural Variants, Chromosomal Instability, Mosaicism & Inheritance",
+          "body": "**Structural variants & copy-number variants (CNVs)** are larger than SNPs. Six types from the slide:\n**deletion, tandem duplication, interspersed duplication, insertion, translocation, inversion.**\n\n**Numerical vs. structural chromosomal instability:**\n\n| Numerical (whole-chromosome) | Structural (within/between chromosomes) |\n|---|---|\n| Small-scale **gains** → **trisomy** | **Deletions** |\n| Small-scale **losses** → **monosomy** | **Amplifications** |\n| Large-scale gains → extra set (**polyploidy**) | **Inversions** and **translocations** |\n\n**Mosaicism — germline vs. somatic origin:**\n- **Germline** mutations are **inherited** and present in **all cells**.\n- **Somatic** mutations are **acquired** and present in **only some cells** → **mosaicism**.\n- Timing during development matters: from the zygote, ~**50–100 founder progenitors** seed the brain. An **early** mTOR mutation gives a **high mosaic fraction (~50%) → hemimegalencephaly**; a **late** mutation gives a **low fraction (~10%) → focal cortical dysplasia (FCD)**. CNVs (e.g. a chr1 gain) can drive epilepsy-associated brain lesions.\n\n**Inheritance terminology & patterns:**\n\n| Axis | Options |\n|---|---|\n| **Chromosomal location** | **Autosomal** (chr 1–22) vs **gonosomal** (X or Y) |\n| **Expression pattern** | **Dominant** (one copy is enough) vs **recessive** (two copies needed) |\n| **Origin of mutation** | **Germline** (inherited, all cells) vs **somatic** (acquired, some cells) |\n\nClassic Mendelian patterns: **autosomal dominant, autosomal recessive, X-linked dominant, X-linked recessive**."
+        },
+        {
+          "heading": "AI in Genomics & the Non-Coding Genome",
+          "body": "**Interpreting the other ~99% of the genome (the non-coding part):** beyond coding exons lies **non-coding regulatory sequence** — **chromatin state, histone marks, and transcription-factor binding** that control target genes. AI learns this **regulatory code** with **deep-learning sequence models**.\n\n**AI to predict variant effects:** deep-learning models trained on genome-wide chromatin profiles (**ENCODE, Roadmap Epigenomics, CLIP**) output **allele-specific regulatory predictions** (RBP binding, histone modification, TF binding). A second **pathogenicity model**, trained on curated disease regulatory mutations, then predicts **variant pathogenicity** (e.g. higher disease-impact scores in autism probands vs. siblings).\n\n**Systems-level interpretation — functional module discovery** identifies groups of genes **tightly connected in a molecular network** likely to share biological processes (co-expressed, co-regulated, converging on similar functions). It can implicate a **gene of unknown function** by its module membership.\n\n**Selected AI applications in genomics:**\n\n| Task | Example |\n|---|---|\n| **Variant calling** | **DeepVariant** (Google) |\n| **Genome annotation** | **Evo2** (promoters, enhancers, splice sites) |\n| **Pathogenicity prediction** | **SpliceAI, AlphaFold** |\n| **Phenotype matching** | **Face2Gene** (matches facial gestalt to genetic disorders) |\n| **Multi-omics integration** | combining genomics, transcriptomics, epigenomics |\n\n**Multi-omics cascade:** **genomics (DNA) → transcriptomics (mRNA) → proteomics (protein) → metabolomics (metabolites) → phenotypic change.**\n\n**Summary:** genomics is a **data-rich, AI-relevant** field; sequencing is now **fast and cheap**, so **AI is essential for extracting meaning** — which also raises **ethical and societal questions** (e.g. *\"Would you sequence your own genome?\"*)."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L8Q1",
+          "conceptIndex": 0,
+          "text": "How does genomics differ from genetics?",
+          "options": [
+            "Genomics studies the entire genome (all genes and noncoding DNA); genetics studies individual genes and how hereditary traits are inherited",
+            "Genomics studies only single genes; genetics studies the whole genome",
+            "Genomics studies proteins, while genetics studies RNA",
+            "They are two different names for exactly the same field"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Genomics is the study of the entire genome — the full set of DNA including all genes and noncoding sequences — and how it influences biology, health, and disease. Genetics focuses on individual genes and the function, variation, and inheritance of specific genes. Option 1 reverses the two; the others are simply wrong.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q2",
+          "conceptIndex": 0,
+          "text": "Select ALL correct statements about the history of DNA sequencing.",
+          "options": [
+            "The Human Genome Project was completed in 2001 using Sanger sequencing",
+            "NGS (massively parallel sequencing, ~2005) dropped the cost from the ~2.7 billion USD Human Genome Project toward under 1,000 USD per genome",
+            "Nanopore long-read sequencing is the 3rd-generation technology (2014)",
+            "The 2021 Nobel Prize for CRISPR/Cas was awarded to Berg, Gilbert, and Sanger"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "The HGP finished in 2001 with Sanger sequencing; NGS (~2005) collapsed cost from ~2.7 billion USD toward under 1,000 USD per genome; Nanopore is the 3rd-generation long-read method (2014). Option 3 is false: the 2021 CRISPR/Cas Nobel went to Charpentier and Doudna — Berg, Gilbert, and Sanger won the 1980 DNA-sequencing Nobel.",
+          "type": "multiple"
+        },
+        {
+          "id": "L8Q3",
+          "conceptIndex": 1,
+          "text": "Which statement best describes a reference genome?",
+          "options": [
+            "A digital, annotated composite of a species' DNA that serves as a standard template and scaffold — not the genome of one single individual",
+            "The complete genome of one specific named individual",
+            "A list of only the disease-causing variants found in a population",
+            "The RNA sequence of all expressed genes in a cell"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "A reference genome is a digital, annotated representation of a species' complete DNA, used as a standard template and scaffold for aligning reads, calling variants, and annotating genes. It is explicitly a composite, not a single individual's genome (option 1), and it is neither a variant list nor an RNA catalogue.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q4",
+          "conceptIndex": 1,
+          "text": "Select ALL true limitations of standard (linear) reference genomes such as GRCh38.",
+          "options": [
+            "Lack of diversity — GRCh38 is based mostly on individuals of European ancestry, which can bias variant interpretation",
+            "Structural gaps (centromeres, telomeres, segmental duplications) were incomplete until the T2T assembly",
+            "They represent germline DNA and miss somatic/mosaic variation (e.g. cancer, brain mosaicism)",
+            "GRCh38 is the fully complete, gap-free genome of a single individual"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "Listed limitations include ancestry bias (lack of diversity), structural gaps filled only by T2T in 2022, and the fact that references capture germline DNA and miss somatic/mosaic variation. Option 3 is false: GRCh38 is a composite (not one individual) and contained gaps until T2T.",
+          "type": "multiple"
+        },
+        {
+          "id": "L8Q5",
+          "conceptIndex": 2,
+          "text": "In HGVS nomenclature, what do the g-, c-, and p- prefixes denote?",
+          "options": [
+            "g- = genomic DNA coordinate, c- = coding/complementary DNA, p- = protein",
+            "g- = gene, c- = chromosome, p- = phenotype",
+            "g- = germline, c- = clonal, p- = polymorphism",
+            "g- = guanine, c- = cytosine, p- = purine"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "HGVS uses g. for the genomic coordinate (e.g. chr13:32340128G>A), c. for the coding/complementary-DNA position (e.g. c.5353C>T), and p. for the protein change (e.g. p.Ser1785Leu). The other options are invented expansions.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q6",
+          "conceptIndex": 2,
+          "text": "A single-base change turns the codon CAA into the stop codon TAA. What is this mutation and its consequence?",
+          "options": [
+            "Nonsense mutation → introduces a premature stop codon",
+            "Missense mutation → a single amino-acid substitution",
+            "Frameshift mutation → shifts the reading frame",
+            "Regulatory mutation → prevents mRNA production"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Converting an amino-acid codon into a stop codon (CAA→TAA) is a nonsense mutation, which truncates the protein with a premature stop. A missense change swaps one amino acid (e.g. G→A), a frameshift arises from insertions/deletions such as +A, and a regulatory-region mutation can abolish mRNA (no mRNA → no protein).",
+          "type": "single"
+        },
+        {
+          "id": "L8Q7",
+          "conceptIndex": 3,
+          "text": "In a GWAS, a variant (rs123) passes genome-wide significance for height. Why might it still not be the causal variant?",
+          "options": [
+            "It may be a measured proxy in linkage with the true causal variant (e.g. rs456), so fine-mapping and functional work are needed",
+            "GWAS can never detect any real associations",
+            "A significant variant is always guaranteed to be the direct cause",
+            "Height is not a heritable trait"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "GWAS test evenly spaced markers, so a significant SNP (rs123) is often just a proxy tagging the real causal variant (rs456) through linkage. Follow-up fine-mapping, functional work, and meta-analysis are needed to pinpoint causality. The other options contradict how GWAS works.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q8",
+          "conceptIndex": 3,
+          "text": "On the penetrance vs. allele-frequency map, where do classic Mendelian diseases fall?",
+          "options": [
+            "High penetrance and rare allele frequency",
+            "Low penetrance and common allele frequency",
+            "Low penetrance and rare allele frequency",
+            "High penetrance and common allele frequency"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Mendelian diseases sit in the high-penetrance, rare-frequency corner. Low-penetrance/common variants are 'most variants identified by GWA studies'; low-penetrance/rare variants are 'hard to identify genetically'; high-penetrance/common is 'highly unusual for common diseases'.",
+          "type": "single"
+        },
+        {
+          "id": "L8Q9",
+          "conceptIndex": 4,
+          "text": "Select ALL aberrations classified as NUMERICAL chromosomal changes (rather than structural).",
+          "options": [
+            "Trisomy (small-scale gain)",
+            "Monosomy (small-scale loss)",
+            "Polyploidy (an extra whole chromosome set)",
+            "Translocation"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "Numerical instability changes chromosome counts: trisomy (gain), monosomy (loss), and polyploidy (extra set). Translocation is a structural change (rearrangement between chromosomes), alongside deletions, amplifications, and inversions.",
+          "type": "multiple"
+        },
+        {
+          "id": "L8Q10",
+          "conceptIndex": 5,
+          "text": "Which AI tool is correctly matched to its genomics task?",
+          "options": [
+            "DeepVariant → variant calling",
+            "SpliceAI → multi-omics integration",
+            "Evo2 → variant calling",
+            "AlphaFold → genome assembly"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "DeepVariant (Google) is used for variant calling. SpliceAI is for pathogenicity/splice prediction (not multi-omics), Evo2 is for genome annotation (promoters, enhancers, splice sites), and AlphaFold is a pathogenicity/protein-structure tool, not a genome assembler.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "Genomics vs. genetics — define each.",
+          "back": "Genomics = study of the entire genome (all genes + noncoding DNA) and how it shapes biology, health, and disease. Genetics = study of individual genes and the function, variation, and inheritance of specific genes."
+        },
+        {
+          "front": "Key milestones in sequencing history (1980 → 2021).",
+          "back": "1980 Nobel for DNA sequencing (Berg, Gilbert, Sanger); 2001 Human Genome Project completed (Sanger); 2005 NGS / massively parallel sequencing; 2014 3rd-generation long-read (Nanopore); 2021 Nobel for CRISPR/Cas (Charpentier, Doudna)."
+        },
+        {
+          "front": "How much did NGS cut sequencing cost?",
+          "back": "From the ~2.7 billion USD Human Genome Project toward under 1,000 USD per genome (massively parallel / next-generation sequencing, ~2005)."
+        },
+        {
+          "front": "Core principles of genome assembly.",
+          "back": "Reads are resolved into bases (ATGC + ambiguous calls), randomly distributed, and oversample the target so they repeatedly overlap (higher coverage = better quality). Assemblers compute overlaps, build a graph/network, then 'walk' it to recover the original sequence."
+        },
+        {
+          "front": "What is a reference genome — and what is it NOT?",
+          "back": "A digital, annotated representation of a species' complete DNA — a standard template and scaffold for aligning reads, calling variants, and annotating genes. It is a composite, NOT the genome of a single individual."
+        },
+        {
+          "front": "GRCh38 vs. T2T.",
+          "back": "GRCh38 (2013): most widely used human reference, assembled by the Genome Reference Consortium. T2T (2022): first telomere-to-telomere complete human genome; fills gaps in GRCh38."
+        },
+        {
+          "front": "Limitations of linear reference genomes.",
+          "back": "Lack of diversity (European-ancestry bias); structural gaps (centromeres/telomeres/segmental duplications) until T2T; non-representativeness of a single linear sequence; annotation lag; and ignoring somatic/mosaic variation (germline-only)."
+        },
+        {
+          "front": "HGVS codes: g., c., p.",
+          "back": "g. = genomic DNA coordinate (e.g. chr13:32340128G>A); c. = coding/complementary DNA (e.g. c.5353C>T); p. = protein change (e.g. p.Ser1785Leu = Ser→Leu missense)."
+        },
+        {
+          "front": "Consequences of single-nucleotide variants (SNPs).",
+          "back": "Missense = one amino-acid change (G→A); nonsense = premature stop (CAA→TAA); frameshift = wrong sequence with/without premature stop (+A); regulatory-region mutation = no mRNA → no protein."
+        },
+        {
+          "front": "Splice variants and SpliceAI.",
+          "back": "Example c.275-1G>T hits the last base of intron 2 (upstream of SLC35A2 exon 3), disrupting the canonical acceptor splice site (invariant AG) → exon skipping / aberrant splicing. SpliceAI is an AI tool that predicts such splice effects."
+        },
+        {
+          "front": "What is a GWAS and how is significance shown?",
+          "back": "Genome-Wide Association Study: tests evenly spaced variants for association with a trait. A Manhattan plot shows whether -log10(P) passes the genome-wide significance threshold. A hit may be a proxy in linkage with the true causal variant — needs fine-mapping / functional work / meta-analysis."
+        },
+        {
+          "front": "Penetrance vs. allele-frequency framework.",
+          "back": "High penetrance + rare = Mendelian disease; high penetrance + common = highly unusual for common disease; low penetrance + rare = hard to identify genetically; low penetrance + common = most variants found by GWAS; intermediate penetrance + low frequency sits between."
+        },
+        {
+          "front": "Detection methods by genome coverage.",
+          "back": "Targeted sequencing: ~1 to hundreds of genes; GWAS SNP arrays: ~1 million bases (10–60 million imputed from haplotypes); exome sequencing: ~30 million bases (coding); genome sequencing: ~3 billion bases (whole genome)."
+        },
+        {
+          "front": "Structural variants/CNVs and numerical vs. structural instability.",
+          "back": "SV/CNV types: deletion, tandem duplication, interspersed duplication, insertion, translocation, inversion. Numerical instability = trisomy/monosomy/polyploidy (whole-chromosome counts); structural = deletions, amplifications, inversions, translocations (rearrangements)."
+        },
+        {
+          "front": "Mosaicism: germline vs. somatic (and brain example).",
+          "back": "Germline = inherited, present in all cells; somatic = acquired, present in only some cells (mosaicism). From the zygote, ~50–100 founder progenitors seed the brain. Early mTOR mutation → high mosaic fraction (~50%) → hemimegalencephaly; late mutation → low fraction (~10%) → focal cortical dysplasia (FCD)."
+        },
+        {
+          "front": "Inheritance terminology + AI applications in genomics.",
+          "back": "Inheritance axes: autosomal (chr 1-22) vs gonosomal (X/Y); dominant (one copy) vs recessive (two copies); germline vs somatic. AI in genomics: DeepVariant (variant calling), Evo2 (annotation), SpliceAI/AlphaFold (pathogenicity), Face2Gene (phenotype gestalt matching), multi-omics integration (genomics→transcriptomics→proteomics→metabolomics→phenotype)."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Transcriptomics: From Gene Expression to Single-Cell & Spatial RNA-Seq",
+      "speaker": "Katja Kobow",
+      "concepts": [
+        {
+          "heading": "The Transcriptome & Gene Expression",
+          "body": "**Transcriptomics** = the study of the **complete collection of all RNA transcripts in an organism** (the *transcriptome*). The central goal is to **quantify gene expression levels**.\n\n**The central dogma & RNA's fates:** information flows **DNA → (transcription) → RNA → (translation) → Protein**. DNA can also self-replicate, and **reverse transcription** runs the arrow backward (RNA → DNA). Crucially, **not all RNA is translated** — RNA can instead act as a **scaffold**, a **ribozyme**, or **regulatory non-coding RNA (ncRNA)**.\n\n**Gene content of the human genome:**\n- **~20,000 protein-coding genes**\n- **~25,000 pure RNA-coding (non-coding) genes**\n\nSo thousands of human genes produce **ncRNA as their ultimate product** (gene → RNA, with no protein).\n\n**Genes are expressed with different efficiencies.** How much product a gene yields depends on three things:\n- **Efficiency of transcription**\n- **Stability of the mRNA**\n- **Efficiency of translation**\n\nA highly expressed gene produces many RNA copies (and much protein); a weakly expressed gene produces few. Transcriptomics measures these differences across genes, tissues, and conditions."
+        },
+        {
+          "heading": "Alternative Splicing, Poison Exons & Nonsense-Mediated Decay",
+          "body": "**Alternative splicing** lets one gene produce multiple mRNA **isoforms** by joining different combinations of exons, combined with alternative **3′ cleavage/polyadenylation**. This generates **tissue-specific transcripts** — e.g., the **α-tropomyosin** gene yields distinct striated-muscle, smooth-muscle, fibroblast, and brain mRNAs.\n\n**Dravet syndrome & the 'poison' exon (SCN1A):**\n- **Exon 20N** is a cryptic, **evolutionarily conserved 'poison' exon** lying inside **intron 20**; normally it **should be excised**.\n- The Dravet-patient pathogenic variant **SCN1A:c.3969+2451G>C** causes **aberrant inclusion of exon 20N**.\n- Inclusion creates a **frame shift + premature stop codon in exon 21**.\n- That premature stop triggers **nonsense-mediated mRNA decay (NMD)**.\n\n**Nonsense-mediated mRNA decay (NMD):**\n- A **quality-control mechanism** found in **all eukaryotes** (evolutionarily conserved).\n- **Degrades mRNAs containing premature termination codons (PTCs)**, preventing production of truncated, potentially harmful proteins before they can be translated.\n- Mechanism involves **removal of the 5′ cap**, the **exon junction complex (EJC)**, and the **Up-frameshift proteins UPF1, UPF2, UPF3**. If the EJC is **displaced by the ribosome → no NMD**; if an EJC is **retained downstream of a stop → NMD induced** (with UPF1 phosphorylation).\n- **NMD escape** occurs if: the **PTC is in the last exon**, or the **PTC is <50 bp from an exon boundary**."
+        },
+        {
+          "heading": "Measuring the Transcriptome: Reverse Transcription, Microarrays & RNA-Seq",
+          "body": "To read RNA, it is usually first converted to **cDNA** by **reverse transcription**.\n\n**Recipe for reverse transcription (RT):**\n| Ingredient | Role |\n|---|---|\n| **Reverse transcriptase** | An **RNA-dependent DNA polymerase** |\n| **dNTPs** | Building blocks |\n| **Primers** | **sequence-specific**, **oligo-dT** (anneals to the poly-A tail), OR **random hexamer** |\n| **RNase H** | Degrades the RNA strand of the RNA–DNA hybrid |\n| **DNA polymerase** | DNA-dependent; synthesizes the complementary 2nd strand → **double-stranded cDNA** |\n\n**Two technologies to study the transcriptome:**\n| | Microarray | RNA-Sequencing |\n|---|---|---|\n| Principle | Nucleic-acid **probes affixed to a surface** | **NGS-based**, high-throughput |\n| Coverage | Quantifies a set of **predetermined sequences** — captures **only what we already know** | In theory, **unbiased** |\n\n**Bulk tissue analysis** workflow: **Sample → RNA extraction → library prep → sequencing → alignment → quantification**. Data types: **raw reads, TPM/FPKM, DEG**.\n- **Strengths:** cost-effective; robust for **homogeneous tissues / cell lines**.\n- **Limitation:** it **averages across all cell populations** (e.g., transcriptome profiling of liver vs. brain tissue)."
+        },
+        {
+          "heading": "Resolution Matters: Heterogeneity, Single-Cell & Spatial Transcriptomics",
+          "body": "**Tissue is heterogeneous** — it contains many cell types in different proportions and cellular **states** (active/inactive, mature/immature, quiescent/active). The human brain alone holds **excitatory neurons, inhibitory interneurons, astrocytes, microglia, oligodendrocytes, and OPCs** (~2 × 86 billion cells; ~500 kcal/day). Because bulk RNA-seq gives only an **average**, **resolution matters**:\n\n| Method | Resolution |\n|---|---|\n| **Bulk RNA-seq** | One averaged profile per sample |\n| **Single-nucleus / single-cell RNA-seq** | Per-cell profiles |\n| **Spatial transcriptomics** | Expression **with spatial location** |\n\n**Single-cell RNA-Seq (scRNA-Seq)** — *Nature* **Method of the Year 2013**:\n- Cells/nuclei + barcoded **beads** are co-encapsulated in **oil droplets** → **barcoding → library prep → sequencing**.\n- Cells are grouped by **putative cell clustering** (e.g., **UMAP**); **marker genes** (differential gene expression across clusters) annotate each cluster.\n- **Pseudotime / lineage inference** orders cells along a trajectory (**0 → 1**) from a manually selected starting cell.\n- **CellChat** infers **cell–cell communication** from ligand–receptor expression (law of mass action).\n- **Limitations of scRNA-Seq:** **loss of tissue architecture, batch effects, data sparsity**.\n\n**Spatially resolved transcriptomics** — **Method of the Year 2020**: e.g., the **Visium** slide with **~5,000 barcoded spots**, each capturing transcripts via a **spatial barcode + UMI + poly(dT)**, preserving histological location (e.g., SNAP25 in gray-matter neurons, MBP in white matter)."
+        },
+        {
+          "heading": "Downstream Analysis: Differential Expression, WGCNA & Gene Ontology",
+          "body": "After quantification, **differential gene expression (DGE)** traditionally identifies **individual genes that change between conditions**, visualized in **volcano plots** (−log10 p-value vs log2 fold change). But to 'see the forest from the trees,' we move to **gene networks**.\n\n**WGCNA (Weighted Gene Co-expression Network Analysis)** uses **graph theory** (nodes, edges, edge weights, hubs, modules) to find **tissue-specific, co-expressed gene modules**. Relationships are defined by **correlation between every pair of genes** (e.g., **Spearman, Kendall, Blomqvist**, averaged into a single weight).\n\n| WGCNA Step | Purpose |\n|---|---|\n| **Correlation matrix** | Identify co-expressed genes |\n| **Soft threshold** | Build a **scale-free network** |\n| **Module detection** | Find co-expression clusters |\n| **Module–trait analysis** | Link biology to phenotype |\n| **Hub genes** | Predict regulators & potential **drug targets** |\n\n**Functional interpretation:** **Gene Ontology (GO)** is a standardized, **species-independent hierarchical** database (broad parent terms → specific child terms, increasing granularity) that answers *which cellular processes are active vs dormant*. Reference resources: **GTEx, Reactome, KEGG**. Example application: WGCNA in a mouse model of focal epilepsy links color-coded modules (e.g., MEred, MEbrown) to traits like epilepsy vs sham and to processes such as synapse organization and gliogenesis."
+        },
+        {
+          "heading": "Machine Learning in Transcriptomics & FAIR Data Sharing",
+          "body": "**Why machine learning in transcriptomics?** Transcriptomic datasets — especially single-cell and spatial — are:\n- **High-dimensional** (thousands of genes)\n- **Noisy**\n- **Heterogeneous** (many cell types, states, and transitions)\n\nML is well-suited to **extract patterns**, **predict labels** (e.g., cell types), and **reveal hidden gene programs/modules**. **Common challenges:** **reference bias and overfitting**, plus **ambiguous or novel cell types not present in the training data**.\n\n**Data sharing & the FAIR principles** — data should be:\n- **F**indable — persistent identifier (e.g., DOI) + metadata\n- **A**ccessible — open where possible; otherwise metadata + access info\n- **I**nteroperable — open/non-proprietary file formats\n- **R**eusable — annotated metadata, clear methods, version control\n\n**Repositories:** GEO, ArrayExpress, Human Cell Atlas, scBaseCount, Tahoe-100M, Bioconductor, GitHub, Zenodo. Many transcriptomics studies appear as **preprints (e.g., bioRxiv) before peer review**, so results must be **critically assessed**. **Ethics:** consent, re-identifiability, inclusion."
+        }
+      ],
+      "questions": [
+        {
+          "id": "L9Q1",
+          "conceptIndex": 0,
+          "text": "What does the transcriptome refer to, and roughly how many genes does the human genome contain?",
+          "options": [
+            "The complete collection of all RNA transcripts in an organism; ~20,000 protein-coding and ~25,000 pure RNA-coding genes",
+            "The complete set of proteins in a cell; ~20,000 genes total",
+            "All DNA in an organism; ~3 billion genes",
+            "Only the mRNA that codes for protein; ~45,000 protein-coding genes"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The transcriptome is the complete collection of all RNA transcripts in an organism. The slides give ~20,000 protein-coding genes plus ~25,000 pure RNA-coding (non-coding) genes. The transcriptome is RNA (not protein or total DNA), and thousands of genes make ncRNA as their final product, so it is not limited to protein-coding mRNA.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q2",
+          "conceptIndex": 1,
+          "text": "In the Dravet-syndrome example, what is the consequence of aberrant inclusion of the SCN1A 'poison' exon 20N?",
+          "options": [
+            "A frame shift and premature stop codon in exon 21, triggering nonsense-mediated mRNA decay",
+            "Increased production of functional SCN1A channel protein",
+            "Deletion of exon 21 and a longer, gain-of-function channel",
+            "Silencing of transcription at the SCN1A promoter"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Exon 20N normally sits in intron 20 and should be excised. The variant SCN1A:c.3969+2451G>C causes its aberrant inclusion, producing a frame shift and a premature stop codon in exon 21, which triggers nonsense-mediated mRNA decay. It does not increase functional protein, delete exon 21, or silence the promoter.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q3",
+          "conceptIndex": 1,
+          "text": "Which statements about nonsense-mediated mRNA decay (NMD) are correct? (Select all that apply.)",
+          "options": [
+            "It degrades mRNAs containing premature termination codons (PTCs)",
+            "It is a quality-control mechanism conserved in all eukaryotes",
+            "An mRNA escapes NMD if the PTC is in the last exon or lies <50 bp from an exon boundary",
+            "It boosts translation of truncated proteins"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "NMD is an evolutionarily conserved eukaryotic quality-control pathway that degrades PTC-containing mRNAs (via 5′-cap removal, the EJC, and UPF1/2/3). Escape occurs when the PTC is in the last exon or <50 bp from an exon boundary. The last option is wrong: NMD prevents, not promotes, production of truncated proteins.",
+          "type": "multiple"
+        },
+        {
+          "id": "L9Q4",
+          "conceptIndex": 2,
+          "text": "What enzymatic activity does reverse transcriptase have?",
+          "options": [
+            "RNA-dependent DNA polymerase (synthesizes DNA from an RNA template)",
+            "DNA-dependent RNA polymerase",
+            "RNA-dependent RNA polymerase",
+            "A protease that degrades RNA"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The RT recipe defines reverse transcriptase as an RNA-dependent DNA polymerase: it reads an RNA template and synthesizes cDNA. A DNA-dependent RNA polymerase performs transcription; an RNA-dependent RNA polymerase copies RNA into RNA; and RNA degradation is the job of RNase H, not reverse transcriptase.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q5",
+          "conceptIndex": 2,
+          "text": "Which of the following are valid primer options or components for reverse transcription, as given in the 'recipe for RT'? (Select all that apply.)",
+          "options": [
+            "Oligo-dT primers (anneal to the poly-A tail)",
+            "Random hexamer primers",
+            "Sequence-specific primers",
+            "RNA polymerase added to generate the primers de novo"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "The RT recipe lists three primer choices: sequence-specific, oligo-dT (binds the poly-A tail), or random hexamer (alongside dNTPs, RNase H, and DNA polymerase). RNA polymerase is not part of the reverse-transcription recipe, and RT does not generate its primers de novo.",
+          "type": "multiple"
+        },
+        {
+          "id": "L9Q6",
+          "conceptIndex": 2,
+          "text": "How do microarrays differ from RNA-sequencing for studying the transcriptome?",
+          "options": [
+            "Microarrays quantify a set of predetermined sequences (only what we already know), whereas RNA-seq is NGS-based and, in theory, unbiased",
+            "Microarrays are NGS-based and unbiased; RNA-seq only detects known sequences",
+            "Both can only detect predetermined sequences",
+            "RNA-seq cannot quantify expression levels"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Microarrays use probes affixed to a surface and so quantify only a predetermined set of sequences (capturing only what we already know). RNA-seq is NGS-based, high-throughput, and in theory unbiased, able to detect novel transcripts. The other options reverse or misstate these properties.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q7",
+          "conceptIndex": 3,
+          "text": "Which pairing of method and 'Method of the Year' recognition is correct?",
+          "options": [
+            "Single-cell RNA-Seq = Method of the Year 2013; spatially resolved transcriptomics = Method of the Year 2020",
+            "Single-cell RNA-Seq = 2020; spatially resolved transcriptomics = 2013",
+            "Bulk RNA-seq = 2013; microarrays = 2020",
+            "Both single-cell and spatial transcriptomics = 2013"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slides label single-cell RNA-Seq as Method of the Year 2013 and spatially resolved transcriptomics as Method of the Year 2020. The other pairings swap the years or assign them to the wrong methods.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q8",
+          "conceptIndex": 3,
+          "text": "Which of the following are stated limitations of single-cell RNA-Seq? (Select all that apply.)",
+          "options": [
+            "Loss of tissue architecture",
+            "Batch effects",
+            "Data sparsity",
+            "Inability to distinguish different cell types"
+          ],
+          "correct": [
+            0,
+            1,
+            2
+          ],
+          "explanation": "The lecture lists loss of tissue architecture, batch effects, and data sparsity as the limitations of scRNA-Seq. Distinguishing cell types is actually a strength of scRNA-Seq (cells are grouped by clustering and marker genes), so the last option is false.",
+          "type": "multiple"
+        },
+        {
+          "id": "L9Q9",
+          "conceptIndex": 4,
+          "text": "In WGCNA, what is the purpose of the 'soft threshold' step, and how are gene relationships defined?",
+          "options": [
+            "The soft threshold builds a scale-free network; gene relationships are defined by correlation (e.g., Spearman, Kendall, Blomqvist) between each pair of genes",
+            "The soft threshold removes all low-expression genes; relationships are defined by physical DNA proximity",
+            "The soft threshold detects modules; relationships are based on protein-protein binding assays",
+            "The soft threshold links modules to traits; relationships are assigned randomly"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "Per the WGCNA step table, the soft threshold is used to build a scale-free network, and relationships between genes are defined by correlation measures (Spearman, Kendall, Blomqvist, averaged into a weight) across all gene pairs. Module detection (not soft threshold) finds clusters, and module-trait analysis (not soft threshold) links modules to phenotype.",
+          "type": "single"
+        },
+        {
+          "id": "L9Q10",
+          "conceptIndex": 5,
+          "text": "According to the lecture, which statement about machine learning in transcriptomics is correct?",
+          "options": [
+            "Transcriptomic data are high-dimensional, noisy, and heterogeneous; ML can extract patterns and predict cell types but faces reference bias, overfitting, and novel cell types absent from training data",
+            "Transcriptomic data are low-dimensional and clean, so ML is rarely needed",
+            "ML eliminates all batch effects and never overfits",
+            "ML can be applied only to bulk RNA-seq, not single-cell data"
+          ],
+          "correct": [
+            0
+          ],
+          "explanation": "The slides describe transcriptomic data (especially single-cell and spatial) as high-dimensional, noisy, and heterogeneous; ML extracts patterns, predicts labels such as cell types, and reveals gene modules, while facing reference bias, overfitting, and ambiguous/novel cell types not in the training data. The other options contradict these points.",
+          "type": "single"
+        }
+      ],
+      "flashcards": [
+        {
+          "front": "What is the transcriptome, and what is the goal of transcriptomics?",
+          "back": "The transcriptome is the complete collection of all RNA transcripts in an organism. Transcriptomics aims to quantify gene expression levels."
+        },
+        {
+          "front": "How many protein-coding vs RNA-coding genes does the human genome have?",
+          "back": "~20,000 protein-coding genes and ~25,000 pure RNA-coding (non-coding) genes. Thousands of genes make ncRNA as their final product."
+        },
+        {
+          "front": "Besides translation, what can RNA do (central dogma)?",
+          "back": "DNA→transcription→RNA→translation→Protein, but not all RNA is translated. RNA can act as a scaffold, a ribozyme, or regulatory ncRNA. Reverse transcription also runs RNA→DNA."
+        },
+        {
+          "front": "Three factors that set how strongly a gene is expressed?",
+          "back": "Efficiency of transcription, stability of the mRNA, and efficiency of translation."
+        },
+        {
+          "front": "What does alternative splicing achieve? Give an example.",
+          "back": "It produces multiple mRNA isoforms from one gene (plus alternative 3′ cleavage/polyadenylation), generating tissue-specific transcripts. Example: the α-tropomyosin gene → striated-muscle, smooth-muscle, fibroblast, and brain mRNAs."
+        },
+        {
+          "front": "What is the SCN1A 'poison' exon 20N and its effect in Dravet syndrome?",
+          "back": "A cryptic, conserved exon inside intron 20 that should be excised. The variant SCN1A:c.3969+2451G>C causes aberrant inclusion → frame shift + premature stop in exon 21 → nonsense-mediated mRNA decay."
+        },
+        {
+          "front": "What is NMD, what does it degrade, and which proteins are involved?",
+          "back": "Nonsense-mediated mRNA decay: a quality-control pathway (in all eukaryotes) that degrades mRNAs with premature termination codons (PTCs) via 5′-cap removal and the exon junction complex, using UPF1, UPF2, and UPF3."
+        },
+        {
+          "front": "When does an mRNA escape NMD?",
+          "back": "If the PTC is in the last exon, or the PTC is <50 bp from an exon boundary."
+        },
+        {
+          "front": "What is reverse transcriptase, and what's in the RT recipe?",
+          "back": "An RNA-dependent DNA polymerase. RT recipe: reverse transcriptase, dNTPs, primers, RNase H, and DNA polymerase, producing double-stranded cDNA."
+        },
+        {
+          "front": "What three primer types can be used for reverse transcription?",
+          "back": "Sequence-specific primers, oligo-dT primers (anneal to the poly-A tail), or random hexamers. RNase H then degrades the RNA of the RNA–DNA hybrid."
+        },
+        {
+          "front": "Microarray vs RNA-Seq for studying the transcriptome?",
+          "back": "Microarray: probes on a surface that quantify predetermined sequences — captures only what we already know. RNA-Seq: NGS-based, high-throughput, and in theory unbiased."
+        },
+        {
+          "front": "Bulk RNA-seq workflow, data types, and key limitation?",
+          "back": "Sample → RNA extraction → library prep → sequencing → alignment → quantification. Data types: raw reads, TPM/FPKM, DEG. Cost-effective and robust for homogeneous tissues, but it averages across cell populations."
+        },
+        {
+          "front": "What is scRNA-Seq, when was it Method of the Year, and how are cells grouped?",
+          "back": "Single-cell RNA-Seq: cells/nuclei + barcoded beads in oil droplets → barcoding → library prep → sequencing. Method of the Year 2013. Cells are grouped by clustering (e.g., UMAP) and annotated with marker genes."
+        },
+        {
+          "front": "Three limitations of scRNA-Seq?",
+          "back": "Loss of tissue architecture, batch effects, and data sparsity."
+        },
+        {
+          "front": "What is spatial transcriptomics, and when was it Method of the Year?",
+          "back": "Method of the Year 2020. It measures gene expression with spatial location, e.g., the Visium slide with ~5,000 barcoded spots, each using a spatial barcode + UMI + poly(dT) to preserve histological context."
+        },
+        {
+          "front": "What are the WGCNA steps and their purposes?",
+          "back": "Correlation matrix (identify co-expressed genes) → soft threshold (build a scale-free network) → module detection (find clusters) → module-trait analysis (link biology to phenotype) → hub genes (predict regulators / drug targets). Correlations use Spearman, Kendall, Blomqvist."
+        }
+      ]
     }
   ]
 }
