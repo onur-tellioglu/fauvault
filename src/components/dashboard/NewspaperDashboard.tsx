@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { EXAM_LOCATION } from '@/lib/exam-config'
+import { LiveCountdown } from './LiveCountdown'
 
 export interface CurrentLectureInfo {
   id: number
@@ -185,35 +186,39 @@ export function NewspaperDashboard(props: NewspaperDashboardProps) {
         {/* Right — sidebar */}
         <aside style={{ borderLeft: '1px solid var(--border-subtle)', paddingLeft: 'var(--density-gap)' }}>
 
-          {/* Countdown */}
+          {/* Countdown — live d/h/m/s in the final week, big day count before that */}
           {daysUntilExam !== null && daysUntilExam > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{
-                fontFamily: 'var(--font-geist-mono)',
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: '0.5rem',
-              }}>Countdown</div>
-              <div style={{
-                fontFamily: 'var(--font-fraunces)',
-                fontSize: 'clamp(4rem, 8vw, 5.5rem)',
-                fontWeight: 300,
-                color: daysUntilExam <= 7 ? 'var(--error)' : 'var(--accent)',
-                lineHeight: 1,
-                letterSpacing: '-0.02em',
-              }}>
-                {daysUntilExam}
+            daysUntilExam <= 7 ? (
+              <LiveCountdown examIso={examDate} />
+            ) : (
+              <div style={{ marginBottom: '2rem' }}>
+                <div style={{
+                  fontFamily: 'var(--font-geist-mono)',
+                  fontSize: '0.65rem',
+                  color: 'var(--text-muted)',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.5rem',
+                }}>Countdown</div>
+                <div style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 'clamp(4rem, 8vw, 5.5rem)',
+                  fontWeight: 300,
+                  color: 'var(--accent)',
+                  lineHeight: 1,
+                  letterSpacing: '-0.02em',
+                }}>
+                  {daysUntilExam}
+                </div>
+                <div style={{
+                  fontSize: '0.8rem',
+                  color: 'var(--text-muted)',
+                  marginTop: '0.25rem',
+                }}>
+                  days until the exam
+                </div>
               </div>
-              <div style={{
-                fontSize: '0.8rem',
-                color: 'var(--text-muted)',
-                marginTop: '0.25rem',
-              }}>
-                days until the exam
-              </div>
-            </div>
+            )
           )}
 
           {/* Lecture progress */}
